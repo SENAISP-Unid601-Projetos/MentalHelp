@@ -1,0 +1,11 @@
+Criem uma branch com a documentação pedida hoje e deem pull request.
+
+SUGESTÃO: 
+Criar UMA branch de cada área e andar os documentos pedidos para o líder (ou qualquer pessoa do grupo). Assim, existirão apenas uma branch de documentação de back e uma de front, facilitando alterações futuras (que existirão, provavelmente).
+
+NOMES DAS BRANCHES:
+docs/backend
+docs/frontend
+
+
+NÃO COMMITAR NA MAIN.
