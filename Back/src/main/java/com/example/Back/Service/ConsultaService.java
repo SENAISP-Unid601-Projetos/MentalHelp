@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -102,7 +103,7 @@ public class ConsultaService {
         return new ResponseEntity<>(consultas, HttpStatus.OK);
     }
 
-    public ResponseEntity<List<ConsultaDTO>> buscarConsultasPorData(LocalDate data) {
+    public ResponseEntity<List<ConsultaDTO>> buscarConsultasPorData(LocalDateTime data) {
         List<ConsultaDTO> consultas = consultaRepository.findByData(data)
                 .stream()
                 .map(consulta -> toDTO((Consulta) consulta))
