@@ -15,6 +15,7 @@ public class ProfissionalDTO {
     private String nome;
     private String crm;
     private String email;
+    private String senha;
     private String especialidade;
 
     private List<Long> id_consultas;
