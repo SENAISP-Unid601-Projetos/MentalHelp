@@ -8,6 +8,13 @@ Para rodar o projeto localmente, siga os seguintes passos:
 2. Suba o back-end utilizando o **IntelliJ IDEA**.
 3. Suba o front-end utilizando o **VSCode**.
 
+## **Configure o Intellij**
+
+1. Clique em Run options
+2. adicione uma nova aplicação para rodar
+3. Clique em mais opções e selecione VM OPTIONS
+4. coloque esse código: -Dspring.profiles.active=dev
+
 ---
 
 ## **Ambiente de Homologação**
