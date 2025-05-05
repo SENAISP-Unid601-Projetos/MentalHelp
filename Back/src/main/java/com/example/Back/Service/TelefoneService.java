@@ -1,4 +1,4 @@
-package com.example.Back.Service;
+package com.example.Back.service;
 
 import com.example.Back.DTO.TelefoneDTO;
 import com.example.Back.entity.Telefone;

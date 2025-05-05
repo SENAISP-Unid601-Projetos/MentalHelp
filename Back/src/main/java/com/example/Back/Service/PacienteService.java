@@ -1,4 +1,4 @@
-package com.example.Back.Service;
+package com.example.Back.service;
 
 import com.example.Back.Repository.PacienteRepository;
 import com.example.Back.entity.Paciente;
