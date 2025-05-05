@@ -19,6 +19,7 @@ public class Paciente {
     private String nome;
     private String cpf;
     private String email;
+    private String senha;
 
     @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Consulta> consultas;

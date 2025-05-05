@@ -1,19 +1,15 @@
-package com.example.Back.entity;
+package com.example.Back.DTO;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Profissional {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ProfissionalDTO {
     private Long idProfissional;
 
     private String nome;
@@ -22,6 +18,5 @@ public class Profissional {
     private String senha;
     private String especialidade;
 
-    @OneToMany(mappedBy = "profissional", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Consulta> consultas;
+    private List<Long> id_consultas;
 }
