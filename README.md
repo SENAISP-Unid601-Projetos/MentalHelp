@@ -31,6 +31,8 @@ Postgres
 - user: postgres
 - senha: 12345
 
+Swagger: http://10.110.12.10:9500/swagger-ui/index.html
+
 PS: lembrar que a conexão do servidor de homologação pode mudar o IP. Então verificar a conexão se houver falha.
 
 ## Ambiente de Produção
