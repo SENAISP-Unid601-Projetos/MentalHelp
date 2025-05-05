@@ -9,4 +9,5 @@ public interface ProfissionalRepository  extends JpaRepository<Profissional, Lon
 
    Optional <Profissional> findByIdConsulta(Long idProfissional);
 
+    Optional<Profissional> findByEmail(String email);
 }
