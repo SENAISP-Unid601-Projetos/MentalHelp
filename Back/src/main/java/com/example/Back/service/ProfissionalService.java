@@ -20,7 +20,7 @@ public class ProfissionalService {
     public String salvarProfissional(ProfissionalDTO profissionalDTO) {
         Profissional profissional = toEntity(profissionalDTO);
         profissionalRepository.save(profissional);
-        return "Profissional cadastrado com sucesso";
+        return "Profissional cadastrado com sucesso!";
     }
 
     public List<ProfissionalDTO> listarProfissional() {
