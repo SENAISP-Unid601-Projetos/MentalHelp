@@ -1,6 +1,6 @@
 package com.example.Back.DTO;
 
-public class ProfissionalLoginDTO {
+public class PacienteLoginDTO {
     private String email;
     private String senha;
 }
