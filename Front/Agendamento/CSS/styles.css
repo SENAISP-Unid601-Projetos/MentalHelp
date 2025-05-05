@@ -1,114 +1,164 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-  }
-  
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+}
+
+.left-panel {
+  background-color: #e9d5ff;
+  color: #4b0082;
+  padding: 40px 20px;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tipo-atendimento {
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.perfil {
+  text-align: center;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.especialidade {
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+/* Calendário */
+.calendario {
+  margin: 30px 0;
+  text-align: center;
+  width: 100%;
+  max-width: 320px;
+}
+
+.mes-navegacao {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.mes-navegacao button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #4b0082;
+  cursor: pointer;
+}
+
+.dias-semana {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  font-weight: bold;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.dias {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.dias button {
+  background-color: #fff;
+  color: #4b0082;
+  padding: 6px 0;
+  border-radius: 6px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.dias button.ativo {
+  background-color: #a855f7;
+  color: white;
+}
+
+/* Ilustração */
+.ilustracao img {
+  margin-top: auto;
+  max-width: 80%;
+}
+
+.right-panel {
+  width: 50%;
+  padding: 40px;
+  background-color: white;
+}
+
+.right-panel h2 {
+  color: #4b0082;
+}
+
+.subtexto {
+  font-size: 12px;
+  color: gray;
+  margin-bottom: 20px;
+}
+
+.horarios {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.horarios button {
+  padding: 12px;
+  border: 2px solid #e9d5ff;
+  background-color: white;
+  color: #a855f7;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.horarios button:hover {
+  background-color: #f3e8ff;
+}
+
+@media (max-width: 768px) {
   .container {
-    display: flex;
-    height: 100vh;
-  }
-  
-  /* Painel esquerdo (roxo) */
-  .left-panel {
-    background-color: #e9d5ff;
-    color: #4b0082;
-    padding: 40px 20px;
-    width: 50%;
-    display: flex;
     flex-direction: column;
-    align-items: center;
   }
-  
-  .tipo-atendimento {
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-  
-  .perfil {
-    text-align: center;
-  }
-  
-  .avatar {
-    border-radius: 50%;
-    margin-bottom: 10px;
-  }
-  
-  .especialidade {
-    margin-top: 5px;
-    font-size: 14px;
-  }
-  
-  .calendario {
-    margin: 30px 0;
-    text-align: center;
-  }
-  
-  .dias-semana {
-    font-weight: bold;
-    margin-top: 10px;
-    font-size: 12px;
-  }
-  
-  .dias {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 10px;
-  }
-  
-  .dias span {
-    background-color: #fff;
-    color: #4b0082;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-weight: bold;
-  }
-  
-  .dias .ativo {
-    background-color: #a855f7;
-    color: white;
-  }
-  
-  .ilustracao img {
-    margin-top: auto;
-    max-width: 80%;
-  }
-  
-  /* Painel direito (branco) */
+
+  .left-panel,
   .right-panel {
-    width: 50%;
-    padding: 40px;
-    background-color: white;
+    width: 100%;
   }
-  
-  .right-panel h2 {
-    color: #4b0082;
-  }
-  
-  .subtexto {
-    font-size: 12px;
-    color: gray;
-    margin-bottom: 20px;
-  }
-  
+
   .horarios {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
   }
-  
+
   .horarios button {
-    padding: 12px;
-    border: 2px solid #e9d5ff;
-    background-color: white;
-    color: #a855f7;
-    font-size: 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    width: 45%;
   }
-  
-  .horarios button:hover {
-    background-color: #f3e8ff;
-  }
-  
+}
