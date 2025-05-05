@@ -1,6 +1,8 @@
 package com.example.Back.Repository;
 
 import com.example.Back.entity.Consulta;
+import com.example.Back.entity.Paciente;
+import com.example.Back.entity.Profissional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
@@ -12,7 +14,7 @@ public interface ConsultaRepository extends JpaRepository<Consulta, Long> {
 
     Optional<Object> findByData(LocalDateTime data);
 
-    Optional<Object> findByIdProfissional(Long idProfissional);
+    Optional<Object> findByProfissional(Profissional Profissional);
 
-    Optional<Object> findByIdPaciente(Long idPaciente);
+    Optional<Object> findByPaciente(Paciente paciente);
 }
