@@ -1,0 +1,23 @@
+body {
+    font-family: 'Georgia', serif;
+  }
+  
+  .titulo-principal {
+    color: #3b2e2e;
+    font-size: 3.5rem;
+  }
+  
+  .search-bar input {
+    width: 200px;
+    border: 1px solid #ccc;
+  }
+  
+  .imagem-container {
+    overflow: hidden;
+  }
+  
+  .object-fit-cover {
+    object-fit: cover;
+    height: 100%;
+  }
+  
