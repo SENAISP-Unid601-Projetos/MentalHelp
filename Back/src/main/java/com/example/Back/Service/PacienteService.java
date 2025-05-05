@@ -14,7 +14,4 @@ public class PacienteService {
     Paciente paciente = new Paciente();
 
 
-
-
-
 }

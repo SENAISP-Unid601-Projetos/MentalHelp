@@ -40,18 +40,20 @@ public class TelefoneService {
     }
 
     public ResponseEntity<TelefoneDTO> criarTelefone(TelefoneDTO telefoneDTO) {
-        if (telefoneDTO.getTelefone() == null ||
-                telefoneRepository.existsById(telefoneDTO.getTelefone()) ||
-                pacienteRepository.findById(telefoneDTO.getIdPaciente()).isEmpty()) {
+        if (telefoneDTO.getTelefone() == null || telefoneRepository.existsById(telefoneDTO.getTelefone())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Paciente paciente = pacienteRepository.findById(telefoneDTO.getIdPaciente()).get();
+        Optional<Paciente> pacienteOpt = pacienteRepository.findById(telefoneDTO.getIdPaciente());
+        if (pacienteOpt.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Paciente paciente = pacienteOpt.get();
 
         Telefone telefone = toEntity(telefoneDTO);
         telefone.setPaciente(paciente);
-
         Telefone novoTelefone = telefoneRepository.save(telefone);
+
         paciente.getTelefones().add(novoTelefone);
         pacienteRepository.save(paciente);
         return new ResponseEntity<>(toDTO(novoTelefone), HttpStatus.CREATED);
@@ -75,16 +77,35 @@ public class TelefoneService {
     }
 
     public ResponseEntity<TelefoneDTO> atualizarTelefone(String numero, TelefoneDTO telefoneDTO) {
-        Optional<Telefone> telefoneExistente = telefoneRepository.findById(numero);
-        if (telefoneExistente.isPresent()) {
-            Telefone telefone = telefoneExistente.get();
-            telefone.setTipo(telefoneDTO.getTipo());
-            telefone.setPaciente(pacienteRepository.findById(telefoneDTO.getIdPaciente()).get());
-            Telefone telefoneSalvo = telefoneRepository.save(telefone);
-            return new ResponseEntity<>(toDTO(telefoneSalvo), HttpStatus.OK);
-        } else {
+        Optional<Telefone> telefoneOpt = telefoneRepository.findById(numero);
+        if (telefoneOpt.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
+        Optional<Paciente> pacienteOpt = pacienteRepository.findById(telefoneDTO.getIdPaciente());
+        if (pacienteOpt.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Telefone telefone = telefoneOpt.get();
+        Paciente novoPaciente = pacienteOpt.get();
+        Paciente pacienteAntigo = telefone.getPaciente();
+
+        if (pacienteAntigo != null && !pacienteAntigo.equals(novoPaciente)) {
+            pacienteAntigo.getTelefones().remove(telefone);
+            pacienteRepository.save(pacienteAntigo);
+        }
+
+        telefone.setTipo(telefoneDTO.getTipo());
+        telefone.setPaciente(novoPaciente);
+
+        if (!novoPaciente.getTelefones().contains(telefone)) {
+            novoPaciente.getTelefones().add(telefone);
+        }
+
+        telefoneRepository.save(telefone);
+        pacienteRepository.save(novoPaciente);
+        return new ResponseEntity<>(toDTO(telefone), HttpStatus.OK);
     }
 
     public ResponseEntity<Void> deletarTelefone(String numero) {
