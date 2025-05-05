@@ -1,6 +1,6 @@
 package com.example.Back.Service;
 
-import com.example.Back.dto.ConsultaDTO;
+import com.example.Back.DTO.ConsultaDTO;
 import com.example.Back.entity.Consulta;
 import com.example.Back.Repository.ConsultaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,15 +48,18 @@ public class ConsultaService {
     public ResponseEntity<List<ConsultaDTO>> listarConsultas() {
         List<ConsultaDTO> consultas = consultaRepository.findAll()
                 .stream()
-                .map(this::toDTO)
+                .map(consulta -> toDTO(consulta))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(consultas, HttpStatus.OK);
     }
 
     public ResponseEntity<ConsultaDTO> buscarConsultaPorId(Long id) {
         Optional<Consulta> consulta = consultaRepository.findById(id);
-        return consulta.map(value -> new ResponseEntity<>(toDTO(value), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        if (consulta.isPresent()) {
+            return new ResponseEntity<>(toDTO(consulta.get()), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     public ResponseEntity<ConsultaDTO> atualizarConsulta(Long id, ConsultaDTO consultaDTO) {
@@ -73,6 +76,7 @@ public class ConsultaService {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
     public ResponseEntity<Void> deletarConsulta(Long id) {
         if (consultaRepository.existsById(id)) {
             consultaRepository.deleteById(id);
@@ -85,7 +89,7 @@ public class ConsultaService {
     public ResponseEntity<List<ConsultaDTO>> buscarConsultasPorPaciente(Long idPaciente) {
         List<ConsultaDTO> consultas = consultaRepository.findByIdPaciente(idPaciente)
                 .stream()
-                .map(this::toDTO)
+                .map(consulta -> toDTO((Consulta) consulta))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(consultas, HttpStatus.OK);
     }
@@ -93,7 +97,7 @@ public class ConsultaService {
     public ResponseEntity<List<ConsultaDTO>> buscarConsultasPorProfissional(Long idProfissional) {
         List<ConsultaDTO> consultas = consultaRepository.findByIdProfissional(idProfissional)
                 .stream()
-                .map(this::toDTO)
+                .map(consulta -> toDTO((Consulta) consulta))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(consultas, HttpStatus.OK);
     }
@@ -101,7 +105,7 @@ public class ConsultaService {
     public ResponseEntity<List<ConsultaDTO>> buscarConsultasPorData(LocalDate data) {
         List<ConsultaDTO> consultas = consultaRepository.findByData(data)
                 .stream()
-                .map(this::toDTO)
+                .map(consulta -> toDTO((Consulta) consulta))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(consultas, HttpStatus.OK);
     }

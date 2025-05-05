@@ -1,6 +1,6 @@
 package com.example.Back.Service;
 
-import com.example.Back.dto.TelefoneDTO;
+import com.example.Back.DTO.TelefoneDTO;
 import com.example.Back.entity.Telefone;
 import com.example.Back.Repository.TelefoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ public class TelefoneService {
     @Autowired
     private TelefoneRepository telefoneRepository;
 
-
     private TelefoneDTO toDTO(Telefone telefone) {
         TelefoneDTO dto = new TelefoneDTO();
         dto.setTelefone(telefone.getTelefone());
@@ -26,7 +25,6 @@ public class TelefoneService {
         dto.setIdPaciente(telefone.getIdPaciente());
         return dto;
     }
-
 
     private Telefone toEntity(TelefoneDTO dto) {
         Telefone telefone = new Telefone();
@@ -36,29 +34,31 @@ public class TelefoneService {
         return telefone;
     }
 
-
     public ResponseEntity<TelefoneDTO> criarTelefone(TelefoneDTO telefoneDTO) {
+        if (telefoneDTO.getTelefone() == null || telefoneRepository.existsById(telefoneDTO.getTelefone())) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         Telefone telefone = toEntity(telefoneDTO);
         Telefone novoTelefone = telefoneRepository.save(telefone);
         return new ResponseEntity<>(toDTO(novoTelefone), HttpStatus.CREATED);
     }
 
-
     public ResponseEntity<List<TelefoneDTO>> listarTelefones() {
         List<TelefoneDTO> telefones = telefoneRepository.findAll()
                 .stream()
-                .map(this::toDTO)
+                .map(telefone -> toDTO(telefone))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(telefones, HttpStatus.OK);
     }
 
-
     public ResponseEntity<TelefoneDTO> buscarTelefonePorNumero(String numero) {
         Optional<Telefone> telefone = telefoneRepository.findById(numero);
-        return telefone.map(value -> new ResponseEntity<>(toDTO(value), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        if (telefone.isPresent()) {
+            return new ResponseEntity<>(toDTO(telefone.get()), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
-
 
     public ResponseEntity<TelefoneDTO> atualizarTelefone(String numero, TelefoneDTO telefoneDTO) {
         Optional<Telefone> telefoneExistente = telefoneRepository.findById(numero);
@@ -73,7 +73,6 @@ public class TelefoneService {
         }
     }
 
-
     public ResponseEntity<Void> deletarTelefone(String numero) {
         if (telefoneRepository.existsById(numero)) {
             telefoneRepository.deleteById(numero);
@@ -83,11 +82,10 @@ public class TelefoneService {
         }
     }
 
-
     public ResponseEntity<List<TelefoneDTO>> buscarTelefonesPorPaciente(Long idPaciente) {
         List<TelefoneDTO> telefones = telefoneRepository.findByIdPaciente(idPaciente)
                 .stream()
-                .map(this::toDTO)
+                .map(telefone -> toDTO(telefone))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(telefones, HttpStatus.OK);
     }
