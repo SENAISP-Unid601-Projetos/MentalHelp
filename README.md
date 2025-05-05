@@ -21,6 +21,10 @@ Para configurar e rodar o ambiente de homologação, siga os passos abaixo:
    `sudo chmod 777 /var/run/docker.sock`
 
 ---
+# Acesso a aplicação
+Acesse em: [http://10.110.12.10:3000/](http://10.110.12.10:3000/) 
+
+---
 
 ### **Ferramentas de Gestão**
 
