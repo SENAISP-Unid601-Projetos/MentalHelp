@@ -1,4 +1,4 @@
-package com.example.Back.service;
+package com.example.Back.Service;
 
 import com.example.Back.DTO.ProfissionalDTO;
 import com.example.Back.DTO.ProfissionalLoginDTO;

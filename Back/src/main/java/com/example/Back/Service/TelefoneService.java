@@ -1,6 +1,7 @@
 package com.example.Back.Service;
 
 import com.example.Back.DTO.TelefoneDTO;
+import com.example.Back.Repository.PacienteRepository;
 import com.example.Back.entity.Telefone;
 import com.example.Back.Repository.TelefoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class TelefoneService {
         TelefoneDTO dto = new TelefoneDTO();
         dto.setTelefone(telefone.getTelefone());
         dto.setTipo(telefone.getTipo());
-        dto.setIdPaciente(telefone.getIdPaciente());
+        dto.setIdPaciente(telefone.getPaciente().getIdPaciente());
         return dto;
     }
 
@@ -30,7 +31,7 @@ public class TelefoneService {
         Telefone telefone = new Telefone();
         telefone.setTelefone(dto.getTelefone());
         telefone.setTipo(dto.getTipo());
-        telefone.setIdPaciente(dto.getIdPaciente());
+        telefone.setPaciente(PacienteRepository.findByIdPaciente(dto.getIdPaciente()).get());
         return telefone;
     }
 
