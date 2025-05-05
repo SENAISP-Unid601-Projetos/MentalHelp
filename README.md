@@ -27,9 +27,15 @@ PGADMIN - gestão do banco de dados - http://10.110.12.10:5000/
 - user: senaisc@senai.com
 - senha: 123456
 
+Postgres
+- user: postgres
+- senha: 12345
+
 PS: lembrar que a conexão do servidor de homologação pode mudar o IP. Então verificar a conexão se houver falha.
 
 ## Ambiente de Produção
 
 Será hospedado no Render (back-end) e o front-end será hospedado no Github Pages.
-<ainda em construção>
+
+- Front: https://senaisp-unid601-projetos.github.io/MentalHelp/Front/
+- 
