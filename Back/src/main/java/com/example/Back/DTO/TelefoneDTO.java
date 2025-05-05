@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 public class TelefoneDTO {
     private String telefone;
     private String tipo;
-
     private Long idPaciente;
 }

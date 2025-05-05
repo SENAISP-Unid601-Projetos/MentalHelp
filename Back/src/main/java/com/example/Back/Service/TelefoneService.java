@@ -2,6 +2,7 @@ package com.example.Back.Service;
 
 import com.example.Back.DTO.TelefoneDTO;
 import com.example.Back.Repository.PacienteRepository;
+import com.example.Back.entity.Paciente;
 import com.example.Back.entity.Telefone;
 import com.example.Back.Repository.TelefoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class TelefoneService {
     @Autowired
     private TelefoneRepository telefoneRepository;
 
+    @Autowired
+    private PacienteRepository pacienteRepository;
+
     private TelefoneDTO toDTO(Telefone telefone) {
         TelefoneDTO dto = new TelefoneDTO();
         dto.setTelefone(telefone.getTelefone());
@@ -34,16 +38,25 @@ public class TelefoneService {
         Telefone telefone = new Telefone();
         telefone.setTelefone(dto.getTelefone());
         telefone.setTipo(dto.getTipo());
-        telefone.setPaciente(pacienteRepository.findPacienteById(dto.getIdPaciente()).get());
+        telefone.setPaciente(pacienteRepository.findById(dto.getIdPaciente()).get());
         return telefone;
     }
 
     public ResponseEntity<TelefoneDTO> criarTelefone(TelefoneDTO telefoneDTO) {
-        if (telefoneDTO.getTelefone() == null || telefoneRepository.existsById(telefoneDTO.getTelefone())) {
+        if (telefoneDTO.getTelefone() == null ||
+                telefoneRepository.existsById(telefoneDTO.getTelefone()) ||
+                pacienteRepository.findById(telefoneDTO.getIdPaciente()).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
+        Paciente paciente = pacienteRepository.findById(telefoneDTO.getIdPaciente()).get();
+
         Telefone telefone = toEntity(telefoneDTO);
+        telefone.setPaciente(paciente);
+
         Telefone novoTelefone = telefoneRepository.save(telefone);
+        paciente.getTelefones().add(novoTelefone);
+        pacienteRepository.save(paciente);
         return new ResponseEntity<>(toDTO(novoTelefone), HttpStatus.CREATED);
     }
 
@@ -69,7 +82,7 @@ public class TelefoneService {
         if (telefoneExistente.isPresent()) {
             Telefone telefone = telefoneExistente.get();
             telefone.setTipo(telefoneDTO.getTipo());
-            telefone.setPaciente(pacienteRepository.findPacienteById(telefoneDTO.getIdPaciente()).get());
+            telefone.setPaciente(pacienteRepository.findById(telefoneDTO.getIdPaciente()).get());
             Telefone telefoneSalvo = telefoneRepository.save(telefone);
             return new ResponseEntity<>(toDTO(telefoneSalvo), HttpStatus.OK);
         } else {
@@ -87,7 +100,7 @@ public class TelefoneService {
     }
 
     public ResponseEntity<List<TelefoneDTO>> buscarTelefonesPorPaciente(Long idPaciente) {
-        List<TelefoneDTO> telefones = telefoneRepository.findByIdPaciente(idPaciente)
+        List<TelefoneDTO> telefones = telefoneRepository.findByPaciente(pacienteRepository.findById(idPaciente).get())
                 .stream()
                 .map(telefone -> toDTO(telefone))
                 .collect(Collectors.toList());

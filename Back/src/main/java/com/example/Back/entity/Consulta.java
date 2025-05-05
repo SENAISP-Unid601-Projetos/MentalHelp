@@ -19,10 +19,10 @@ public class Consulta {
     private Double valorConsulta;
 
     @ManyToOne
-    @JoinColumn(name="paciente")
+    @JoinColumn(name="paciente_id")
     private Paciente paciente;
 
     @ManyToOne
-    @JoinColumn(name="profissional")
+    @JoinColumn(name="profissional_id")
     private Profissional profissional;
 }

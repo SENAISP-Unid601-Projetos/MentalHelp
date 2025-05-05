@@ -19,8 +19,6 @@ public class Telefone {
     private String tipo;
 
     @ManyToOne
-    @JoinColumn(name="pacienteTelefone")
-    private Paciente pacienteTel;
-    @JoinColumn(name="paciente_id")
+    @JoinColumn(name = "paciente_id")
     private Paciente paciente;
 }
