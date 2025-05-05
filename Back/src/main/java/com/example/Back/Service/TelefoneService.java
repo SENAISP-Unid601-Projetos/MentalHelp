@@ -18,10 +18,10 @@ import java.util.stream.Collectors;
 public class TelefoneService {
 
     @Autowired
-    private TelefoneRepository telefoneRepository;
+    private PacienteRepository pacienteRepository;
 
     @Autowired
-    private PacienteRepository pacienteRepository;
+    private TelefoneRepository telefoneRepository;
 
     private TelefoneDTO toDTO(Telefone telefone) {
         TelefoneDTO dto = new TelefoneDTO();

@@ -1,17 +1,82 @@
 package com.example.Back.Service;
-
+import com.example.Back.DTO.PacienteDTO;
+import com.example.Back.DTO.PacienteLoginDTO;
 import com.example.Back.Repository.PacienteRepository;
+import com.example.Back.Repository.TelefoneRepository;
 import com.example.Back.entity.Paciente;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.Back.entity.Telefone;
+
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @Service
+@RequiredArgsConstructor
 public class PacienteService {
 
-    @Autowired
-    private PacienteRepository repository;
+    private final PacienteRepository pacienteRepository;
+    private final TelefoneRepository telefoneRepository;
 
-    Paciente paciente = new Paciente();
+    @Transactional
+    public PacienteDTO salvarPaciente(PacienteDTO dto) {
+        Paciente paciente = new Paciente();
+        paciente.setNome(dto.getNome());
+        paciente.setCpf(dto.getCpf());
+        paciente.setEmail(dto.getEmail());
+        paciente.setSenha(dto.getSenha());
 
+        List<Telefone> telefones = new ArrayList<>();
+        if (dto.getId_telefones() != null) {
+            for (Long telId : dto.getId_telefones()) {
+                Optional<Telefone> optTelefone = telefoneRepository.findById(telId.toString());
+                if (optTelefone.isPresent()) {
+                    Telefone telefone = optTelefone.get();
+                    telefone.setPaciente(paciente);
+                    telefones.add(telefone);
+                }
+            }
+        }
 
+        paciente.setTelefones(telefones);
+        paciente = pacienteRepository.save(paciente);
+
+        return toDTO(paciente);
+    }
+
+    public PacienteDTO autenticar(PacienteLoginDTO loginDTO) {
+        Optional<Paciente> pacienteOpt = pacienteRepository.findByEmailAndSenha(loginDTO.getEmail(), loginDTO.getSenha());
+        return pacienteOpt.map(this::toDTO).orElse(null);
+    }
+
+    public List<PacienteDTO> listarTodos() {
+        List<Paciente> pacientes = pacienteRepository.findAll();
+        List<PacienteDTO> dtos = new ArrayList<>();
+        for (Paciente paciente : pacientes) {
+            dtos.add(toDTO(paciente));
+        }
+        return dtos;
+    }
+
+    private PacienteDTO toDTO(Paciente paciente) {
+        List<Long> idsTelefones = new ArrayList<>();
+        if (paciente.getTelefones() != null) {
+            for (Telefone t : paciente.getTelefones()) {
+                idsTelefones.add(Long.parseLong(t.getTelefone()));
+            }
+        }
+
+        return new PacienteDTO(
+                paciente.getIdPaciente(),
+                paciente.getNome(),
+                paciente.getCpf(),
+                paciente.getEmail(),
+                paciente.getSenha(),
+                null, // consulta IDs se necessário
+                idsTelefones
+        );
+    }
 }
