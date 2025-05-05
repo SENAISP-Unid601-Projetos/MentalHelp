@@ -19,7 +19,7 @@ public class ProfissionalController {
     @PostMapping("/login")
     public ResponseEntity<String> loginProfissional(@RequestBody Profissional loginReq) {
         String email = loginReq.getEmail();
-        String senha = loginReq.geT
+        String senha = loginReq.getSenha();
     }
 
     @PostMapping("/post")

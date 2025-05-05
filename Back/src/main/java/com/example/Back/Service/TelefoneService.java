@@ -17,6 +17,9 @@ import java.util.stream.Collectors;
 public class TelefoneService {
 
     @Autowired
+    private PacienteRepository pacienteRepository;
+
+    @Autowired
     private TelefoneRepository telefoneRepository;
 
     private TelefoneDTO toDTO(Telefone telefone) {
@@ -31,7 +34,7 @@ public class TelefoneService {
         Telefone telefone = new Telefone();
         telefone.setTelefone(dto.getTelefone());
         telefone.setTipo(dto.getTipo());
-        telefone.setPaciente(PacienteRepository.findByIdPaciente(dto.getIdPaciente()).get());
+        telefone.setPaciente(pacienteRepository.findPacienteById(dto.getIdPaciente()).get());
         return telefone;
     }
 
@@ -66,7 +69,7 @@ public class TelefoneService {
         if (telefoneExistente.isPresent()) {
             Telefone telefone = telefoneExistente.get();
             telefone.setTipo(telefoneDTO.getTipo());
-            telefone.setIdPaciente(telefoneDTO.getIdPaciente());
+            telefone.setPaciente(pacienteRepository.findPacienteById(telefoneDTO.getIdPaciente()).get());
             Telefone telefoneSalvo = telefoneRepository.save(telefone);
             return new ResponseEntity<>(toDTO(telefoneSalvo), HttpStatus.OK);
         } else {
