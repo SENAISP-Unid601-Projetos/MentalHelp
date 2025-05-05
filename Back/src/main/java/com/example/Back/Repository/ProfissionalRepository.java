@@ -8,5 +8,6 @@ import java.util.Optional;
 public interface ProfissionalRepository  extends JpaRepository<Profissional, Long> {
 
    Optional <Profissional> findByIdProfissional(Long idProfissional);
+   Optional<Profissional> findByEmail(String email);
 
 }
