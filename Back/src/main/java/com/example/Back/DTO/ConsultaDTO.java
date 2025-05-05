@@ -14,6 +14,6 @@ public class ConsultaDTO {
     private LocalDate data;
     private Double valorConsulta;
 
-    private Long id_paciente;
-    private Long id_profissional;
+    private Long idPaciente;
+    private Long idProfissional;
 }
