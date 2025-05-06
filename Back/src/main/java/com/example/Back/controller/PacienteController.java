@@ -15,7 +15,6 @@ import java.util.Optional;
 public class PacienteController {
 
 
-
     @GetMapping
     public ResponseEntity<List<Paciente>> listAll() {
         return ResponseEntity.ok(pacienteService.listAll());
@@ -42,7 +41,5 @@ public class PacienteController {
         pacienteService.deletar(id);
         return ResponseEntity.noContent().build();
     }
-
-
 
 }

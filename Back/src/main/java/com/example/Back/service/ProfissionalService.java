@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,18 +32,22 @@ public class ProfissionalService {
     }
 
     public String atualizarProfissional(Long idProfissional, ProfissionalDTO profissionalDTO) {
-        if (profissionalRepository.existsById(idProfissional)) {
-            Profissional profissionalExistente = profissionalRepository.findById(idProfissional).get();
-            profissionalExistente.setNome(profissionalDTO.getNome());
-            profissionalExistente.setNome(profissionalDTO.getCrm());
-            profissionalExistente.setEmail(profissionalDTO.getEmail());
-            profissionalExistente.setSenha(profissionalDTO.getSenha());
-            profissionalExistente.setSenha(profissionalDTO.getEspecialidade());
-            profissionalRepository.save(profissionalExistente);
-            return "Profissional atualizado com sucesso";
+        Optional<Profissional> profissionalOpt = profissionalRepository.findById(idProfissional);
+        if (profissionalOpt.isEmpty()) {
+            return "Profissional não encontrado";
         }
-        return "Profissional não encontrado";
+
+        Profissional profissional = profissionalOpt.get();
+        profissional.setNome(profissionalDTO.getNome());
+        profissional.setCrm(profissionalDTO.getCrm());
+        profissional.setEmail(profissionalDTO.getEmail());
+        profissional.setSenha(profissionalDTO.getSenha());
+        profissional.setEspecialidade(profissionalDTO.getEspecialidade());
+
+        profissionalRepository.save(profissional);
+        return "Profissional atualizado com sucesso";
     }
+
 
     public String deletarProfissional(Long idProfissional) {
         if (profissionalRepository.existsById(idProfissional)) {
