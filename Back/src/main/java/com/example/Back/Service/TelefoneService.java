@@ -5,6 +5,7 @@ import com.example.Back.Repository.PacienteRepository;
 import com.example.Back.entity.Paciente;
 import com.example.Back.entity.Telefone;
 import com.example.Back.Repository.TelefoneRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,7 @@ public class TelefoneService {
         return telefone;
     }
 
+    @Transactional
     public ResponseEntity<TelefoneDTO> criarTelefone(TelefoneDTO telefoneDTO) {
         if (telefoneDTO.getTelefone() == null || telefoneRepository.existsById(telefoneDTO.getTelefone())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -76,6 +78,7 @@ public class TelefoneService {
         }
     }
 
+    @Transactional
     public ResponseEntity<TelefoneDTO> atualizarTelefone(String numero, TelefoneDTO telefoneDTO) {
         Optional<Telefone> telefoneOpt = telefoneRepository.findById(numero);
         if (telefoneOpt.isEmpty()) {
