@@ -1,4 +1,4 @@
-package com.example.Back.controller;
+/* package com.example.Back.controller;
 
 import com.example.Back.DTO.ConsultaDTO;
 import com.example.Back.Service.ConsultaService;
@@ -25,3 +25,4 @@ public class ConsultaController {
 
     @DeleteMapping
 }
+*/
