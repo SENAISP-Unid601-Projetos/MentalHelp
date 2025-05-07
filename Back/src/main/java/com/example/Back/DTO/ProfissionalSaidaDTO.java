@@ -16,6 +16,7 @@ public class ProfissionalSaidaDTO {
     private String email;
     private String senha;
     private String especialidade;
+    private String foto;
 
     private List<Long> id_consultas;
 }
