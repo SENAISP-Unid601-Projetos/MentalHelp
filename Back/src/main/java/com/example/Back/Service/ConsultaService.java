@@ -43,8 +43,8 @@ public class ConsultaService {
         consulta.setIdConsulta(dto.getIdConsulta());
         consulta.setData(dto.getData());
         consulta.setValorConsulta(dto.getValorConsulta());
-        consulta.setPaciente(pacienteRepository.findById(dto.getIdPaciente()).get());
-        consulta.setProfissional(profissionalRepository.findById(dto.getIdProfissional()).get());
+        consulta.setPaciente(pacienteRepository.findById(dto.getIdPaciente()).orElseThrow(() -> new RuntimeException("Paciente não encontrado")));
+        consulta.setProfissional(profissionalRepository.findById(dto.getIdProfissional()).orElseThrow(() -> new RuntimeException("Profissional não encontrado")));
         return consulta;
     }
 
@@ -77,8 +77,8 @@ public class ConsultaService {
             Consulta consulta = consultaExistente.get();
             consulta.setData(consultaDTO.getData());
             consulta.setValorConsulta(consultaDTO.getValorConsulta());
-            consulta.setPaciente(pacienteRepository.findById(consultaDTO.getIdPaciente()).get());
-            consulta.setProfissional(profissionalRepository.findById(consultaDTO.getIdProfissional()).get());
+            consulta.setPaciente(pacienteRepository.findById(consultaDTO.getIdPaciente()).orElseThrow(() -> new RuntimeException("Paciente não encontrado")));
+            consulta.setProfissional(profissionalRepository.findById(consultaDTO.getIdProfissional()).orElseThrow(() -> new RuntimeException("Profissional não encontrado")));
             Consulta consultaSalva = consultaRepository.save(consulta);
             return new ResponseEntity<>(toDTO(consultaSalva), HttpStatus.OK);
         } else {
@@ -96,7 +96,7 @@ public class ConsultaService {
     }
 
     public ResponseEntity<List<ConsultaDTO>> buscarConsultasPorPaciente(Long idPaciente) {
-        List<ConsultaDTO> consultas = consultaRepository.findByPaciente(pacienteRepository.findById(idPaciente).get())
+        List<ConsultaDTO> consultas = consultaRepository.findByPaciente(pacienteRepository.findById(idPaciente).orElseThrow(() -> new RuntimeException("Paciente não encontrado")))
                 .stream()
                 .map(consulta -> toDTO((Consulta) consulta))
                 .collect(Collectors.toList());
@@ -104,7 +104,7 @@ public class ConsultaService {
     }
 
     public ResponseEntity<List<ConsultaDTO>> buscarConsultasPorProfissional(Long idProfissional) {
-        List<ConsultaDTO> consultas = consultaRepository.findByProfissional(profissionalRepository.findById(idProfissional).get())
+        List<ConsultaDTO> consultas = consultaRepository.findByProfissional(profissionalRepository.findById(idProfissional).orElseThrow(() -> new RuntimeException("Profissional não encontrado")))
                 .stream()
                 .map(consulta -> toDTO((Consulta) consulta))
                 .collect(Collectors.toList());
