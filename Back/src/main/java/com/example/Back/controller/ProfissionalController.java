@@ -1,6 +1,7 @@
 package com.example.Back.controller;
 
 import com.example.Back.DTO.ProfissionalEntradaDTO;
+
 import com.example.Back.DTO.ProfissionalLoginDTO;
 import com.example.Back.DTO.ProfissionalSaidaDTO;
 import com.example.Back.Service.ProfissionalService;
@@ -10,10 +11,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 @RestController
-@RequestMapping("profissional")
+@RequestMapping("/profissional")
 public class ProfissionalController {
 
     @Autowired

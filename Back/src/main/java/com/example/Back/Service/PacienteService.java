@@ -1,82 +1,138 @@
 package com.example.Back.Service;
-import com.example.Back.DTO.PacienteSaidaDTO;
-import com.example.Back.DTO.PacienteLoginDTO;
+import com.example.Back.DTO.*;
 import com.example.Back.Repository.PacienteRepository;
 import com.example.Back.Repository.TelefoneRepository;
+import com.example.Back.entity.Consulta;
 import com.example.Back.entity.Paciente;
+import com.example.Back.entity.Profissional;
 import com.example.Back.entity.Telefone;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class PacienteService {
 
-    private final PacienteRepository pacienteRepository;
-    private final TelefoneRepository telefoneRepository;
+    @Autowired
+    private PacienteRepository pacienteRepository;
 
-    @Transactional
-    public PacienteSaidaDTO salvarPaciente(PacienteSaidaDTO dto) {
+    @Autowired
+    private TelefoneRepository telefoneRepository;
+
+    public ResponseEntity<PacienteSaidaDTO> salvarPaciente(PacienteEntradaDTO pacienteEntradaDTO) {
+        Paciente paciente = toEntity(pacienteEntradaDTO);
+        pacienteRepository.save(paciente);
+        return new ResponseEntity<>(toPacienteDTO(paciente), HttpStatus.CREATED);
+    }
+
+    public ResponseEntity<List<PacienteSaidaDTO>> listarPaciente() {
+        List<PacienteSaidaDTO> pacientes = pacienteRepository.findAll()
+                .stream()
+                .map(paciente -> toPacienteDTO(paciente))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(pacientes, HttpStatus.OK);
+    }
+
+    public ResponseEntity<PacienteSaidaDTO> atualizarPaciente(Long idPaciente, PacienteEntradaDTO pacienteEntradaDTO) {
+        Optional<Paciente> pacienteOpt = pacienteRepository.findById(idPaciente);
+        if (pacienteOpt.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Paciente paciente = pacienteOpt.get();
+        paciente.setNome(pacienteEntradaDTO.getNome());
+        paciente.setCpf(pacienteEntradaDTO.getCpf());
+        paciente.setEmail(pacienteEntradaDTO.getEmail());
+        paciente.setSenha(pacienteEntradaDTO.getSenha());
+
+        pacienteRepository.save(paciente);
+        return new ResponseEntity<>(toPacienteDTO(paciente), HttpStatus.OK);
+    }
+
+    public ResponseEntity<Void> deletarPaciente(Long idPaciente) {
+        if (pacienteRepository.existsById(idPaciente)) {
+            pacienteRepository.deleteById(idPaciente);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    private PacienteSaidaDTO toPacienteDTO(Paciente paciente) {
+        List<Consulta> consultas = paciente.getConsultas();
+
+        List<Telefone> telefones = paciente.getTelefones();
+
+        if(consultas == null && telefones != null){
+            List<String> telefonesNum = telefones.stream()
+                    .map(Telefone::getTelefone)
+                    .collect(Collectors.toList());
+
+            return new PacienteSaidaDTO(
+                    paciente.getIdPaciente(),
+                    paciente.getNome(),
+                    paciente.getCpf(),
+                    paciente.getEmail(),
+                    paciente.getSenha(),
+                    null,
+                    telefonesNum
+            );
+        } else if (consultas != null && telefones == null){
+            List<Long> consultaIds = consultas.stream()
+                    .map(Consulta::getIdConsulta)
+                    .collect(Collectors.toList());
+
+            return new PacienteSaidaDTO(
+                    paciente.getIdPaciente(),
+                    paciente.getNome(),
+                    paciente.getCpf(),
+                    paciente.getEmail(),
+                    paciente.getSenha(),
+                    consultaIds,
+                    null
+            );
+        } else {
+            List<String> telefonesNum = telefones.stream()
+                    .map(Telefone::getTelefone)
+                    .collect(Collectors.toList());
+
+            List<Long> consultaIds = consultas.stream()
+                    .map(Consulta::getIdConsulta)
+                    .collect(Collectors.toList());
+
+            return new PacienteSaidaDTO(
+                    paciente.getIdPaciente(),
+                    paciente.getNome(),
+                    paciente.getCpf(),
+                    paciente.getEmail(),
+                    paciente.getSenha(),
+                    consultaIds,
+                    telefonesNum
+            );
+        }
+    }
+    private Paciente toEntity(PacienteEntradaDTO dto) {
         Paciente paciente = new Paciente();
         paciente.setNome(dto.getNome());
         paciente.setCpf(dto.getCpf());
         paciente.setEmail(dto.getEmail());
         paciente.setSenha(dto.getSenha());
-
-        List<Telefone> telefones = new ArrayList<>();
-        if (dto.getId_telefones() != null) {
-            for (Long telId : dto.getId_telefones()) {
-                Optional<Telefone> optTelefone = telefoneRepository.findById(telId.toString());
-                if (optTelefone.isPresent()) {
-                    Telefone telefone = optTelefone.get();
-                    telefone.setPaciente(paciente);
-                    telefones.add(telefone);
-                }
-            }
-        }
-
-        paciente.setTelefones(telefones);
-        paciente = pacienteRepository.save(paciente);
-
-        return toDTO(paciente);
+        return paciente;
     }
 
-    public PacienteSaidaDTO autenticar(PacienteLoginDTO loginDTO) {
-        Optional<Paciente> pacienteOpt = pacienteRepository.findByEmailAndSenha(loginDTO.getEmail(), loginDTO.getSenha());
-        return pacienteOpt.map(this::toDTO).orElse(null);
+    public boolean authenticateUser(PacienteLoginDTO pacienteLoginDTO) {
+        return pacienteRepository.findByEmail(pacienteLoginDTO.getEmail())
+                .map(paciente -> paciente.getSenha().equals(pacienteLoginDTO.getSenha()))
+                .orElse(false);
     }
 
-    public List<PacienteSaidaDTO> listarTodos() {
-        List<Paciente> pacientes = pacienteRepository.findAll();
-        List<PacienteSaidaDTO> dtos = new ArrayList<>();
-        for (Paciente paciente : pacientes) {
-            dtos.add(toDTO(paciente));
-        }
-        return dtos;
-    }
-
-    private PacienteSaidaDTO toDTO(Paciente paciente) {
-        List<Long> idsTelefones = new ArrayList<>();
-        if (paciente.getTelefones() != null) {
-            for (Telefone t : paciente.getTelefones()) {
-                idsTelefones.add(Long.parseLong(t.getTelefone()));
-            }
-        }
-
-        return new PacienteSaidaDTO(
-                paciente.getIdPaciente(),
-                paciente.getNome(),
-                paciente.getCpf(),
-                paciente.getEmail(),
-                paciente.getSenha(),
-                null, // consulta IDs se necessário
-                idsTelefones
-        );
-    }
 }

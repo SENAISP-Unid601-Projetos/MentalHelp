@@ -5,15 +5,16 @@ import com.example.Back.Repository.PacienteRepository;
 import com.example.Back.Repository.ProfissionalRepository;
 import com.example.Back.entity.Consulta;
 import com.example.Back.Repository.ConsultaRepository;
-
 import com.example.Back.entity.Paciente;
 import com.example.Back.entity.Profissional;
+import com.example.Back.entity.Telefone;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -46,8 +47,8 @@ public class ConsultaService {
         consulta.setIdConsulta(dto.getIdConsulta());
         consulta.setData(dto.getData());
         consulta.setValorConsulta(dto.getValorConsulta());
-        consulta.setPaciente(pacienteRepository.findById(dto.getIdPaciente()).orElseThrow(() -> new RuntimeException("Paciente não encontrado")));
-        consulta.setProfissional(profissionalRepository.findById(dto.getIdProfissional()).orElseThrow(() -> new RuntimeException("Profissional não encontrado")));
+        consulta.setPaciente(pacienteRepository.findById(dto.getIdPaciente()).get());
+        consulta.setProfissional(profissionalRepository.findById(dto.getIdProfissional()).get());
         return consulta;
     }
 
@@ -98,17 +99,6 @@ public class ConsultaService {
     @Transactional
     public ResponseEntity<ConsultaDTO> atualizarConsulta(Long id, ConsultaDTO consultaDTO) {
         Optional<Consulta> consultaExistente = consultaRepository.findById(id);
-
-        if (consultaExistente.isPresent()) {
-            Consulta consulta = consultaExistente.get();
-            consulta.setData(consultaDTO.getData());
-            consulta.setValorConsulta(consultaDTO.getValorConsulta());
-            consulta.setPaciente(pacienteRepository.findById(consultaDTO.getIdPaciente()).orElseThrow(() -> new RuntimeException("Paciente não encontrado")));
-            consulta.setProfissional(profissionalRepository.findById(consultaDTO.getIdProfissional()).orElseThrow(() -> new RuntimeException("Profissional não encontrado")));
-            Consulta consultaSalva = consultaRepository.save(consulta);
-            return new ResponseEntity<>(toDTO(consultaSalva), HttpStatus.OK);
-        } else {
-
         if (consultaExistente.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -159,6 +149,37 @@ public class ConsultaService {
         profissionalRepository.save(novoProfissional);
         return new ResponseEntity<>(toDTO(consulta), HttpStatus.OK);
     }
+
+    public ResponseEntity<Void> deletarConsulta(Long id) {
+        if (consultaRepository.existsById(id)) {
+            consultaRepository.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
+    public ResponseEntity<List<ConsultaDTO>> buscarConsultasPorPaciente(Long idPaciente) {
+        List<ConsultaDTO> consultas = consultaRepository.findByPaciente(pacienteRepository.findById(idPaciente).get())
+                .stream()
+                .map(consulta -> toDTO((Consulta) consulta))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(consultas, HttpStatus.OK);
+    }
+
+    public ResponseEntity<List<ConsultaDTO>> buscarConsultasPorProfissional(Long idProfissional) {
+        List<ConsultaDTO> consultas = consultaRepository.findByProfissional(profissionalRepository.findById(idProfissional).get())
+                .stream()
+                .map(consulta -> toDTO((Consulta) consulta))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(consultas, HttpStatus.OK);
+    }
+
+    public ResponseEntity<List<ConsultaDTO>> buscarConsultasPorData(LocalDateTime data) {
+        List<ConsultaDTO> consultas = consultaRepository.findByData(data)
+                .stream()
+                .map(consulta -> toDTO((Consulta) consulta))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(consultas, HttpStatus.OK);
+    }
 }

@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProfissionalEntradaDTO {
-    private Long idProfissional;
     private String nome;
     private String crm;
     private String email;
