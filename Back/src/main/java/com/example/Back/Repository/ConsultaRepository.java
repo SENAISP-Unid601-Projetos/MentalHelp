@@ -12,16 +12,10 @@ import java.util.Optional;
 public interface ConsultaRepository extends JpaRepository<Consulta, Long> {
 
 
-    Optional<Consulta> findByIdConsulta(Long idConsulta);
-
     Optional<Object> findByData(LocalDateTime data);
 
     Optional<Object> findByProfissional(Profissional Profissional);
 
     Optional<Object> findByPaciente(Paciente paciente);
-<<<<<<< HEAD
 
 }
-=======
-}
->>>>>>> 207ba4eaed0ed081fb5e89cd6a45ca40c8499c6a
