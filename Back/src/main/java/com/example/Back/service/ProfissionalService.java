@@ -1,7 +1,8 @@
 package com.example.Back.Service;
 
-import com.example.Back.DTO.ProfissionalDTO;
+import com.example.Back.DTO.ProfissionalEntradaDTO;
 import com.example.Back.DTO.ProfissionalLoginDTO;
+import com.example.Back.DTO.ProfissionalSaidaDTO;
 import com.example.Back.Repository.ProfissionalRepository;
 import com.example.Back.entity.Consulta;
 import com.example.Back.entity.Profissional;
@@ -17,34 +18,34 @@ import java.util.stream.Collectors;
 public class ProfissionalService {
 
     @Autowired
-    private static ProfissionalRepository profissionalRepository;
+    private ProfissionalRepository profissionalRepository;
 
-    public ResponseEntity<ProfissionalDTO> salvarProfissional(ProfissionalDTO profissionalDTO) {
-        Profissional profissional = toEntity(profissionalDTO);
+    public ResponseEntity<ProfissionalSaidaDTO> salvarProfissional(ProfissionalEntradaDTO profissionalEntradaDTO) {
+        Profissional profissional = toEntity(profissionalEntradaDTO);
         profissionalRepository.save(profissional);
         return new ResponseEntity<>(toProfissionalDTO(profissional), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<List<ProfissionalDTO>> listarProfissional() {
-        List<ProfissionalDTO> profissionais = profissionalRepository.findAll()
+    public ResponseEntity<List<ProfissionalSaidaDTO>> listarProfissional() {
+        List<ProfissionalSaidaDTO> profissionais = profissionalRepository.findAll()
                 .stream()
                 .map(profissional -> toProfissionalDTO(profissional))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(profissionais, HttpStatus.OK);
     }
 
-    public ResponseEntity<ProfissionalDTO> atualizarProfissional(Long idProfissional, ProfissionalDTO profissionalDTO) {
+    public ResponseEntity<ProfissionalSaidaDTO> atualizarProfissional(Long idProfissional, ProfissionalEntradaDTO profissionalEntradaDTO) {
         Optional<Profissional> profissionalOpt = profissionalRepository.findById(idProfissional);
         if (profissionalOpt.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         Profissional profissional = profissionalOpt.get();
-        profissional.setNome(profissionalDTO.getNome());
-        profissional.setCrm(profissionalDTO.getCrm());
-        profissional.setEmail(profissionalDTO.getEmail());
-        profissional.setSenha(profissionalDTO.getSenha());
-        profissional.setEspecialidade(profissionalDTO.getEspecialidade());
+        profissional.setNome(profissionalEntradaDTO.getNome());
+        profissional.setCrm(profissionalEntradaDTO.getCrm());
+        profissional.setEmail(profissionalEntradaDTO.getEmail());
+        profissional.setSenha(profissionalEntradaDTO.getSenha());
+        profissional.setEspecialidade(profissionalEntradaDTO.getEspecialidade());
 
         profissionalRepository.save(profissional);
         return new ResponseEntity<>(toProfissionalDTO(profissional), HttpStatus.OK);
@@ -59,11 +60,11 @@ public class ProfissionalService {
         }
     }
 
-    private ProfissionalDTO toProfissionalDTO(Profissional profissional) {
+    private ProfissionalSaidaDTO toProfissionalDTO(Profissional profissional) {
         List<Long> consultaIds = profissional.getConsultas().stream()
                 .map(Consulta::getIdConsulta)
                 .collect(Collectors.toList());
-        return new ProfissionalDTO(
+        return new ProfissionalSaidaDTO(
                 profissional.getIdProfissional(),
                 profissional.getNome(),
                 profissional.getCrm(),
@@ -73,7 +74,7 @@ public class ProfissionalService {
                 consultaIds
         );
     }
-    private Profissional toEntity(ProfissionalDTO dto) {
+    private Profissional toEntity(ProfissionalEntradaDTO dto) {
         Profissional profissional = new Profissional();
         profissional.setIdProfissional(dto.getIdProfissional());
         profissional.setNome(dto.getNome());
@@ -81,20 +82,12 @@ public class ProfissionalService {
         profissional.setEmail(dto.getEmail());
         profissional.setSenha(dto.getSenha());
         profissional.setEspecialidade(dto.getEspecialidade());
-        List<Consulta> consultas = dto.getId_consultas().stream()
-                .map(id -> {
-                    Consulta consulta = new Consulta();
-                    consulta.setIdConsulta(id);
-                    return consulta;
-                })
-                .collect(Collectors.toList());
-        profissional.setConsultas(consultas);
         return profissional;
     }
 
-    public static boolean authenticateUser(ProfissionalLoginDTO profissionalDTO) {
-        return profissionalRepository.findByEmail(profissionalDTO.getEmail())
-                .map(profissional -> profissional.getSenha().equals(profissionalDTO.getSenha()))
+    public boolean authenticateUser(ProfissionalLoginDTO profissionalLoginDTO) {
+        return profissionalRepository.findByEmail(profissionalLoginDTO.getEmail())
+                .map(profissional -> profissional.getSenha().equals(profissionalLoginDTO.getSenha()))
                 .orElse(false);
     }
 
