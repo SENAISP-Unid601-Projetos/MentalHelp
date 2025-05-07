@@ -56,3 +56,7 @@ body {
     object-fit: cover;
     height: 100%;
   }
+
+  .mw-50 {
+    max-width: 50%;
+  }
