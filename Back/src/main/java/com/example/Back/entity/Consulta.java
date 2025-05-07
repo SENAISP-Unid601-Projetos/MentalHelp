@@ -21,9 +21,9 @@ public class Consulta {
 
     @ManyToOne
     @JoinColumn(name="paciente_id")
-    private Long idPaciente;
+    private Paciente paciente;
 
     @ManyToOne
     @JoinColumn(name="profissional_id")
-    private Long idProfissional;
+    private Profissional profissional;
 }
