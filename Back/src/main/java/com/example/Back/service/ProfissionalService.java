@@ -61,9 +61,24 @@ public class ProfissionalService {
     }
 
     private ProfissionalSaidaDTO toProfissionalDTO(Profissional profissional) {
-        List<Long> consultaIds = profissional.getConsultas().stream()
+        List<Consulta> consultas = profissional.getConsultas();
+
+        if(consultas == null){
+            return new ProfissionalSaidaDTO(
+                    profissional.getIdProfissional(),
+                    profissional.getNome(),
+                    profissional.getCrm(),
+                    profissional.getEmail(),
+                    profissional.getSenha(),
+                    profissional.getEspecialidade(),
+                    null
+            );
+        }
+
+        List<Long> consultaIds = consultas.stream()
                 .map(Consulta::getIdConsulta)
                 .collect(Collectors.toList());
+
         return new ProfissionalSaidaDTO(
                 profissional.getIdProfissional(),
                 profissional.getNome(),
@@ -73,10 +88,10 @@ public class ProfissionalService {
                 profissional.getEspecialidade(),
                 consultaIds
         );
+
     }
     private Profissional toEntity(ProfissionalEntradaDTO dto) {
         Profissional profissional = new Profissional();
-        profissional.setIdProfissional(dto.getIdProfissional());
         profissional.setNome(dto.getNome());
         profissional.setCrm(dto.getCrm());
         profissional.setEmail(dto.getEmail());
