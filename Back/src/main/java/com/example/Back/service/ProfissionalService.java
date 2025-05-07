@@ -6,8 +6,9 @@ import com.example.Back.Repository.ProfissionalRepository;
 import com.example.Back.entity.Consulta;
 import com.example.Back.entity.Profissional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,23 +19,24 @@ public class ProfissionalService {
     @Autowired
     private ProfissionalRepository profissionalRepository;
 
-    public String salvarProfissional(ProfissionalDTO profissionalDTO) {
+    public ResponseEntity<ProfissionalDTO> salvarProfissional(ProfissionalDTO profissionalDTO) {
         Profissional profissional = toEntity(profissionalDTO);
         profissionalRepository.save(profissional);
-        return "Profissional cadastrado com sucesso!!";
+        return new ResponseEntity<>(toProfissionalDTO(profissional), HttpStatus.CREATED);
     }
 
-    public List<ProfissionalDTO> listarProfissional() {
-        return profissionalRepository.findAll()
+    public ResponseEntity<List<ProfissionalDTO>> listarProfissional() {
+        List<ProfissionalDTO> profissionais = profissionalRepository.findAll()
                 .stream()
-                .map(this::toProfissionalDTO)
+                .map(profissional -> toProfissionalDTO(profissional))
                 .collect(Collectors.toList());
+        return new ResponseEntity<>(profissionais, HttpStatus.OK);
     }
 
-    public String atualizarProfissional(Long idProfissional, ProfissionalDTO profissionalDTO) {
+    public ResponseEntity<ProfissionalDTO> atualizarProfissional(Long idProfissional, ProfissionalDTO profissionalDTO) {
         Optional<Profissional> profissionalOpt = profissionalRepository.findById(idProfissional);
         if (profissionalOpt.isEmpty()) {
-            return "Profissional não encontrado";
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         Profissional profissional = profissionalOpt.get();
@@ -45,16 +47,16 @@ public class ProfissionalService {
         profissional.setEspecialidade(profissionalDTO.getEspecialidade());
 
         profissionalRepository.save(profissional);
-        return "Profissional atualizado com sucesso";
+        return new ResponseEntity<>(toProfissionalDTO(profissional), HttpStatus.OK);
     }
 
-
-    public String deletarProfissional(Long idProfissional) {
+    public ResponseEntity<Void> deletarProfissional(Long idProfissional) {
         if (profissionalRepository.existsById(idProfissional)) {
             profissionalRepository.deleteById(idProfissional);
-            return "Profissional deletado com sucesso";
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return "Profissional não encontrado";
     }
 
     private ProfissionalDTO toProfissionalDTO(Profissional profissional) {
@@ -90,20 +92,10 @@ public class ProfissionalService {
         return profissional;
     }
 
-    public String login(ProfissionalLoginDTO profissionalLoginDTO) {
-        var profissional = profissionalRepository.findByEmail(profissionalLoginDTO.getEmail());
-
-        if (profissional.isPresent()) {
-            if (profissional.get().getSenha().equals(profissionalLoginDTO.getSenha())) {
-                return "Login realizado com sucesso";
-            } else {
-                return "Senha incorreta";
-            }
-        } else {
-            return "Professor não encontrado";
-        }
+    public boolean authenticateUser(ProfissionalDTO profissionalDTO) {
+        return profissionalRepository.findByEmail(profissionalDTO.getEmail())
+                .map(profissional -> profissional.getSenha().equals(profissionalDTO.getSenha()))
+                .orElse(false);
     }
-
-
 
 }
