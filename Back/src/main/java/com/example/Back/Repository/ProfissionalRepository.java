@@ -8,7 +8,5 @@ import java.util.Optional;
 
 public interface ProfissionalRepository  extends JpaRepository<Profissional, Long> {
 
-
-
    static Optional<Profissional> findByEmail(String email);
 
