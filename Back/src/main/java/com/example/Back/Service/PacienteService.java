@@ -1,5 +1,6 @@
 package com.example.Back.Service;
-
+import com.example.Back.DTO.PacienteEntradaDTO;
+import com.example.Back.DTO.PacienteSaidaDTO;
 import com.example.Back.Repository.PacienteRepository;
 import com.example.Back.Repository.TelefoneRepository;
 import com.example.Back.entity.Paciente;
@@ -21,7 +22,7 @@ public class PacienteService {
     private final TelefoneRepository telefoneRepository;
 
     @Transactional
-    public PacienteDTO salvarPaciente(PacienteDTO dto) {
+    public PacienteSaidaDTO salvarPaciente(PacienteSaidaDTO dto) {
         Paciente paciente = new Paciente();
         paciente.setNome(dto.getNome());
         paciente.setCpf(dto.getCpf());
@@ -46,21 +47,21 @@ public class PacienteService {
         return toDTO(paciente);
     }
 
-    public PacienteDTO autenticar(PacienteLoginDTO loginDTO) {
+    public PacienteSaidaDTO autenticar(PacienteEntradaDTO loginDTO) {
         Optional<Paciente> pacienteOpt = pacienteRepository.findByEmailAndSenha(loginDTO.getEmail(), loginDTO.getSenha());
         return pacienteOpt.map(this::toDTO).orElse(null);
     }
 
-    public List<PacienteDTO> listarTodos() {
+    public List<PacienteSaidaDTO> listarTodos() {
         List<Paciente> pacientes = pacienteRepository.findAll();
-        List<PacienteDTO> dtos = new ArrayList<>();
+        List<PacienteSaidaDTO> dtos = new ArrayList<>();
         for (Paciente paciente : pacientes) {
             dtos.add(toDTO(paciente));
         }
         return dtos;
     }
 
-    private PacienteDTO toDTO(Paciente paciente) {
+    private PacienteSaidaDTO toDTO(Paciente paciente) {
         List<Long> idsTelefones = new ArrayList<>();
         if (paciente.getTelefones() != null) {
             for (Telefone t : paciente.getTelefones()) {
@@ -68,7 +69,7 @@ public class PacienteService {
             }
         }
 
-        return new PacienteDTO(
+        return new PacienteSaidaDTO(
                 paciente.getIdPaciente(),
                 paciente.getNome(),
                 paciente.getCpf(),

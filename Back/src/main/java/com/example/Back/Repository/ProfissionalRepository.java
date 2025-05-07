@@ -3,10 +3,12 @@ import com.example.Back.entity.Consulta;
 import com.example.Back.entity.Profissional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.nio.channels.FileChannel;
 import java.util.List;
 import java.util.Optional;
 
 public interface ProfissionalRepository  extends JpaRepository<Profissional, Long> {
 
-   static Optional<Profissional> findByEmail(String email);
+   public Optional<Profissional> findByEmail(String email);
 
+}

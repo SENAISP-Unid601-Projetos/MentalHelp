@@ -10,9 +10,8 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface ConsultaRepository extends JpaRepository<Consulta, Long> {
-<<<<<<< HEAD
-    //Optional<Consulta> findByIdConsulta(Long idConsulta);
-=======
+
+
     Optional<Consulta> findByIdConsulta(Long idConsulta);
 
     Optional<Object> findByData(LocalDateTime data);
@@ -20,5 +19,5 @@ public interface ConsultaRepository extends JpaRepository<Consulta, Long> {
     Optional<Object> findByProfissional(Profissional Profissional);
 
     Optional<Object> findByPaciente(Paciente paciente);
->>>>>>> 9c5eeab6c8c3eec44cbca700c92d0f6f26ef781b
+
 }
