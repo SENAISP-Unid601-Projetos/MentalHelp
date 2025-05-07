@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'TAN Aegean';
-  src: url('../Recursos/TAN_Aegean/TAN - AEGEAN Regular.ttf') format('truetype');
+  src: url('../../Recursos/Fontes/TAN_Aegean/TAN - AEGEAN Regular.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'Signika';
-  src: url('../Recursos/Signika/Signika-VariableFont_wght.ttf') format('truetype');
+  src: url('../../Recursos/Fontes/Signika/Signika-VariableFont_GRAD wght.ttf') format('truetype');
 }
 
 body {
