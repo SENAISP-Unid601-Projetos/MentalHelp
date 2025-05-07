@@ -1,6 +1,7 @@
-package com.example.Back.controller;
+/*package com.example.Back.controller;
 
 import com.example.Back.Repository.PacienteRepository;
+import com.example.Back.Service.PacienteService;
 import com.example.Back.entity.Paciente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,8 +15,10 @@ import java.util.Optional;
 @RequestMapping("/paciente")
 public class PacienteController {
 
+
     @Autowired
     PacienteService pacienteServ;
+
 
     @GetMapping
     public ResponseEntity<List<Paciente>> listAll() {
@@ -57,4 +60,6 @@ public class PacienteController {
         pacienteServ.deletar(id);
         return ResponseEntity.noContent().build();
     }
+
 }
+*/

@@ -11,7 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 public class ProfissionalDTO {
     private Long idProfissional;
-
     private String nome;
     private String crm;
     private String email;

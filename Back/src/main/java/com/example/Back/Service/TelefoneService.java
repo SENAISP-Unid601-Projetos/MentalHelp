@@ -2,8 +2,10 @@ package com.example.Back.Service;
 
 import com.example.Back.DTO.TelefoneDTO;
 import com.example.Back.Repository.PacienteRepository;
+import com.example.Back.entity.Paciente;
 import com.example.Back.entity.Telefone;
 import com.example.Back.Repository.TelefoneRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class TelefoneService {
+
+    @Autowired
+    private PacienteRepository pacienteRepository;
 
     @Autowired
     private TelefoneRepository telefoneRepository;
@@ -31,16 +36,28 @@ public class TelefoneService {
         Telefone telefone = new Telefone();
         telefone.setTelefone(dto.getTelefone());
         telefone.setTipo(dto.getTipo());
-        telefone.setPaciente(PacienteRepository.findByIdPaciente(dto.getIdPaciente()).get());
+        telefone.setPaciente(pacienteRepository.findById(dto.getIdPaciente()).get());
         return telefone;
     }
 
+    @Transactional
     public ResponseEntity<TelefoneDTO> criarTelefone(TelefoneDTO telefoneDTO) {
         if (telefoneDTO.getTelefone() == null || telefoneRepository.existsById(telefoneDTO.getTelefone())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
+        Optional<Paciente> pacienteOpt = pacienteRepository.findById(telefoneDTO.getIdPaciente());
+        if (pacienteOpt.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Paciente paciente = pacienteOpt.get();
+
         Telefone telefone = toEntity(telefoneDTO);
+        telefone.setPaciente(paciente);
         Telefone novoTelefone = telefoneRepository.save(telefone);
+
+        paciente.getTelefones().add(novoTelefone);
+        pacienteRepository.save(paciente);
         return new ResponseEntity<>(toDTO(novoTelefone), HttpStatus.CREATED);
     }
 
@@ -61,17 +78,37 @@ public class TelefoneService {
         }
     }
 
+    @Transactional
     public ResponseEntity<TelefoneDTO> atualizarTelefone(String numero, TelefoneDTO telefoneDTO) {
-        Optional<Telefone> telefoneExistente = telefoneRepository.findById(numero);
-        if (telefoneExistente.isPresent()) {
-            Telefone telefone = telefoneExistente.get();
-            telefone.setTipo(telefoneDTO.getTipo());
-            telefone.setIdPaciente(telefoneDTO.getIdPaciente());
-            Telefone telefoneSalvo = telefoneRepository.save(telefone);
-            return new ResponseEntity<>(toDTO(telefoneSalvo), HttpStatus.OK);
-        } else {
+        Optional<Telefone> telefoneOpt = telefoneRepository.findById(numero);
+        if (telefoneOpt.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
+        Optional<Paciente> pacienteOpt = pacienteRepository.findById(telefoneDTO.getIdPaciente());
+        if (pacienteOpt.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Telefone telefone = telefoneOpt.get();
+        Paciente novoPaciente = pacienteOpt.get();
+        Paciente pacienteAntigo = telefone.getPaciente();
+
+        if (pacienteAntigo != null && !pacienteAntigo.equals(novoPaciente)) {
+            pacienteAntigo.getTelefones().remove(telefone);
+            pacienteRepository.save(pacienteAntigo);
+        }
+
+        telefone.setTipo(telefoneDTO.getTipo());
+        telefone.setPaciente(novoPaciente);
+
+        if (!novoPaciente.getTelefones().contains(telefone)) {
+            novoPaciente.getTelefones().add(telefone);
+        }
+
+        telefoneRepository.save(telefone);
+        pacienteRepository.save(novoPaciente);
+        return new ResponseEntity<>(toDTO(telefone), HttpStatus.OK);
     }
 
     public ResponseEntity<Void> deletarTelefone(String numero) {
@@ -84,7 +121,7 @@ public class TelefoneService {
     }
 
     public ResponseEntity<List<TelefoneDTO>> buscarTelefonesPorPaciente(Long idPaciente) {
-        List<TelefoneDTO> telefones = telefoneRepository.findByIdPaciente(idPaciente)
+        List<TelefoneDTO> telefones = telefoneRepository.findByPaciente(pacienteRepository.findById(idPaciente).get())
                 .stream()
                 .map(telefone -> toDTO(telefone))
                 .collect(Collectors.toList());

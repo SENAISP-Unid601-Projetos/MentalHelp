@@ -1,6 +1,8 @@
 package com.example.Back.Service;
 
 import com.example.Back.DTO.ConsultaDTO;
+import com.example.Back.Repository.PacienteRepository;
+import com.example.Back.Repository.ProfissionalRepository;
 import com.example.Back.entity.Consulta;
 import com.example.Back.Repository.ConsultaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +22,19 @@ public class ConsultaService {
     @Autowired
     private ConsultaRepository consultaRepository;
 
+    @Autowired
+    private PacienteRepository pacienteRepository;
+
+    @Autowired
+    private ProfissionalRepository profissionalRepository;
+
     private ConsultaDTO toDTO(Consulta consulta) {
         ConsultaDTO dto = new ConsultaDTO();
         dto.setIdConsulta(consulta.getIdConsulta());
         dto.setData(consulta.getData());
         dto.setValorConsulta(consulta.getValorConsulta());
-        dto.setIdPaciente(consulta.getIdPaciente());
-        dto.setIdProfissional(consulta.getIdProfissional());
+        dto.setIdPaciente(consulta.getPaciente().getIdPaciente());
+        dto.setIdProfissional(consulta.getProfissional().getIdProfissional());
         return dto;
     }
 
@@ -35,8 +43,8 @@ public class ConsultaService {
         consulta.setIdConsulta(dto.getIdConsulta());
         consulta.setData(dto.getData());
         consulta.setValorConsulta(dto.getValorConsulta());
-        consulta.setIdPaciente(dto.getIdPaciente());
-        consulta.setIdProfissional(dto.getIdProfissional());
+        consulta.setPaciente(pacienteRepository.findById(dto.getIdPaciente()).get());
+        consulta.setProfissional(profissionalRepository.findById(dto.getIdProfissional()).get());
         return consulta;
     }
 
@@ -69,8 +77,8 @@ public class ConsultaService {
             Consulta consulta = consultaExistente.get();
             consulta.setData(consultaDTO.getData());
             consulta.setValorConsulta(consultaDTO.getValorConsulta());
-            consulta.setIdPaciente(consultaDTO.getIdPaciente());
-            consulta.setIdProfissional(consultaDTO.getIdProfissional());
+            consulta.setPaciente(pacienteRepository.findById(consultaDTO.getIdPaciente()).get());
+            consulta.setProfissional(profissionalRepository.findById(consultaDTO.getIdProfissional()).get());
             Consulta consultaSalva = consultaRepository.save(consulta);
             return new ResponseEntity<>(toDTO(consultaSalva), HttpStatus.OK);
         } else {
@@ -88,7 +96,7 @@ public class ConsultaService {
     }
 
     public ResponseEntity<List<ConsultaDTO>> buscarConsultasPorPaciente(Long idPaciente) {
-        List<ConsultaDTO> consultas = consultaRepository.findByIdPaciente(idPaciente)
+        List<ConsultaDTO> consultas = consultaRepository.findByPaciente(pacienteRepository.findById(idPaciente).get())
                 .stream()
                 .map(consulta -> toDTO((Consulta) consulta))
                 .collect(Collectors.toList());
@@ -96,7 +104,7 @@ public class ConsultaService {
     }
 
     public ResponseEntity<List<ConsultaDTO>> buscarConsultasPorProfissional(Long idProfissional) {
-        List<ConsultaDTO> consultas = consultaRepository.findByIdProfissional(idProfissional)
+        List<ConsultaDTO> consultas = consultaRepository.findByProfissional(profissionalRepository.findById(idProfissional).get())
                 .stream()
                 .map(consulta -> toDTO((Consulta) consulta))
                 .collect(Collectors.toList());
