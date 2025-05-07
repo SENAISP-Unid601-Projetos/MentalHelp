@@ -16,7 +16,7 @@ function gerarCalendario(mes, ano) {
 
   tituloMes.textContent = `${nomesMeses[mes]} ${ano}`;
 
-  // Preencher espaço antes do primeiro dia
+  // Espaços em branco
   for (let i = 0; i < primeiroDia; i++) {
     const vazio = document.createElement('div');
     diasContainer.appendChild(vazio);
@@ -33,7 +33,6 @@ function gerarCalendario(mes, ano) {
   }
 }
 
-// Botões de navegação
 document.getElementById('anterior').addEventListener('click', () => {
   mesAtual--;
   if (mesAtual < 0) {
@@ -52,5 +51,4 @@ document.getElementById('proximo').addEventListener('click', () => {
   gerarCalendario(mesAtual, anoAtual);
 });
 
-// Inicia com o mês atual
 gerarCalendario(mesAtual, anoAtual);

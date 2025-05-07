@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Agendamento</title>
+  <link rel="stylesheet" href="../CSS/styles.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="left-panel">
+      <h1 class="tipo-atendimento">Atendimento selecionado: adulto</h1>
+        <div class="perfil">
+        <img src="../IMG/perfil.png" alt="Foto de Vagner" class="avatar" />
+        <h3 class="especialidade">Especialista em: Desenvolvimento pessoal</h3>
+      </div>
+
+      <div class="calendario">
+        <div class="mes-navegacao">
+          <button id="anterior">‹</button>
+          <h3 id="mes"></h3>
+          <button id="proximo">›</button>
+        </div>
+        <div class="dias-semana">
+          <span>DOM</span><span>SEG</span><span>TER</span><span>QUA</span><span>QUI</span><span>SEX</span><span>SAB</span>
+        </div>
+        <div class="dias" id="dias"></div>
+      </div>
+
+      <div class="ilustracoes">
+        <img src="../IMG/imagem de fundo.png" alt="Ilustração 1" />
+        <img src="../IMG/imagem familia.png" alt="Ilustração 2" />
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <h2>Qual o horário é melhor?</h2>
+      <p class="subtexto">UTC -3 (Horário de Brasília)</p>
+      <div class="horarios">
+        <button>10:00</button>
+        <button>11:30</button>
+        <button>14:30</button>
+        <button>16:00</button>
+        <button>17:30</button>
+        <button>19:00</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../JS/script.js"></script>
+</body>
+</html>
