@@ -42,5 +42,4 @@ public class PacienteService {
         pacienteRepository.deleteById(id);
     }
 
-    // Os outros métodos baseados em DTOs podem continuar aqui
 }
