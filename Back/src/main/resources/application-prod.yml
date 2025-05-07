@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://senaisc:2xBM2IjxdpXZdsbfZ7SwvpnrOCoZonMr@dpg-d0cfsia4d50c73cgpcs0-a.oregon-postgres.render.com/mentalhelp
+    url: jdbc:postgresql://dpg-d0cfsia4d50c73cgpcs0-a.oregon-postgres.render.com/mentalhelp
     username: senaisc
     password: 2xBM2IjxdpXZdsbfZ7SwvpnrOCoZonMr
     driver-class-name: org.postgresql.Driver
@@ -13,4 +13,4 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true  
+        format_sql: true
