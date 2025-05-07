@@ -1,61 +1,61 @@
 body {
-    background-color: #f1e2ff;
+    background-color: #f3e7f8;
 }
 
-/* Container do formulário */
-.login-container {
-    background-color: white; /* Cor do fundo do formulário */
-    border-radius: 15px; /* Bordas arredondadas */
-    padding: 40px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+.text-purple {
+    color: #4b006e;
 }
 
-/* Cabeçalho com logo e título no canto superior esquerdo */
-.login-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 30px;
+.btn-purple {
+    background-color: #4b006e;
+    color: white;
+    border-radius: 999px;
+    padding: 10px 0;
+    font-weight: bold;
 }
 
-.login-header img {
-    max-width: 50px;
-    margin-right: 10px;
+.btn-purple:hover {
+    background-color: #36004e;
 }
 
-.login-header h1 {
-    font-size: 2rem;
+.login-card {
+    background-color: white;
+    border-radius: 24px;
+    max-width: 1100px !important;
+    width: 100%;
 }
 
-/* Título "Log in" centralizado */
-.login-title {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 2rem;
+.input-icon {
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    transform: translateY(-50%);
+    color: #666;
+    font-size: 1.1rem;
 }
 
-/* Estilo do botão */
-.btn-primary {
-    background-color: #6f42c1; /* Cor roxa para o botão */
-    border-color: #6f42c1;
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    color: #999;
+    cursor: pointer;
 }
 
-.btn-primary:hover {
-    background-color: #5a34a4; /* Cor mais escura ao passar o mouse */
-    border-color: #5a34a4;
+.custom-input {
+    border-radius: 999px;
+    background-color: #f2f2f2;
+    border: none;
+    padding: 10px 16px;
+    font-size: 0.95rem;
+    color: #333;
 }
 
-/* Estilos para os inputs */
-input.form-control {
-    background-color: #f2f2f2; /* Cor de fundo cinza claro para os inputs */
-    border-radius: 8px; /* Bordas levemente arredondadas */
-    border: 1px solid #ccc; /* Cor do contorno dos inputs */
+.custom-input::placeholder {
+    color: #888;
 }
 
-input.form-control::placeholder {
-    color: #888; /* Cor cinza para o texto do placeholder */
-}
-
-input.form-control:focus {
-    border-color: #6f42c1; /* Cor roxa quando o input estiver em foco */
-    box-shadow: 0 0 5px rgba(111, 66, 193, 0.5); /* Sombra roxa para o input em foco */
+.object-fit-cover {
+    object-fit: cover;
 }
