@@ -53,7 +53,6 @@ public class TelefoneService {
         Paciente paciente = pacienteOpt.get();
 
         Telefone telefone = toEntity(telefoneDTO);
-        telefone.setPaciente(paciente);
         Telefone novoTelefone = telefoneRepository.save(telefone);
 
         paciente.getTelefones().add(novoTelefone);
