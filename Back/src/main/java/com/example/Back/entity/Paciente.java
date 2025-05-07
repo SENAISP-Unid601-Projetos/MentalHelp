@@ -25,5 +25,9 @@ public class Paciente {
 
     @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Telefone> telefones;
+<<<<<<< HEAD
 
 }
+=======
+}
+>>>>>>> 207ba4eaed0ed081fb5e89cd6a45ca40c8499c6a

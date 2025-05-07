@@ -1,7 +1,6 @@
 package com.example.Back.controller;
 
 import com.example.Back.DTO.ConsultaDTO;
-i
 import com.example.Back.Service.ConsultaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

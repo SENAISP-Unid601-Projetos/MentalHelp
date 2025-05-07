@@ -96,4 +96,5 @@ public class PacienteService {
                 .map(paciente -> paciente.getSenha().equals(pacienteLoginDTO.getSenha()))
                 .orElse(false);
     }
+
 }

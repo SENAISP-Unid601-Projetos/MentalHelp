@@ -1,8 +1,6 @@
 package com.example.Back.controller;
 
-import com.example.Back.DTO.ProfissionalEntradaDTO;
-
-import com.example.Back.DTO.ProfissionalLoginDTO;
+import com.example.Back.DTO.ProfissionalEntradaDTO;;
 import com.example.Back.DTO.ProfissionalSaidaDTO;
 import com.example.Back.Service.ProfissionalService;
 import org.springframework.beans.factory.annotation.Autowired;

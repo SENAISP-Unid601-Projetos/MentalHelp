@@ -1,6 +1,5 @@
 package com.example.Back.Service;
 
-import com.example.Back.DTO.PacienteEntradaDTO;
 import com.example.Back.DTO.ProfissionalEntradaDTO;
 
 import com.example.Back.DTO.ProfissionalSaidaDTO;
@@ -101,7 +100,7 @@ public class ProfissionalService {
         return profissional;
     }
 
-    public boolean authenticateUser(PacienteEntradaDTO profissionalLoginDTO) {
+    public boolean authenticateUser(ProfissionalEntradaDTO profissionalLoginDTO) {
         return profissionalRepository.findByEmail(profissionalLoginDTO.getEmail())
                 .map(profissional -> profissional.getSenha().equals(profissionalLoginDTO.getSenha()))
                 .orElse(false);
