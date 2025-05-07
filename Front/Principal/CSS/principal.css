@@ -56,22 +56,3 @@ body {
     object-fit: cover;
     height: 100%;
   }
-
-  .rounded-start-pill {
-    border-top-left-radius: 50rem;
-    border-bottom-left-radius: 50rem;
-  }
-
-  .rounded-end-pill {
-    border-top-right-radius: 50rem;
-    border-bottom-right-radius: 50rem;
-  }
-
-  .bg-semi, #search:focus {
-    background-color: rgba(255, 255, 255, 0.5);
-  }
-
-  #search::placeholder {
-    color: #fff;
-  }
-  
