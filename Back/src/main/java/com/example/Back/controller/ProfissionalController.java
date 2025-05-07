@@ -22,7 +22,7 @@ public class ProfissionalController {
         String email = loginReq.getEmail();
         String senha = loginReq.getSenha();
 
-        Optional<Profissional> profissional = ProfissionalRepository.findByEmail(email);
+        Optional<Profissional> profissional = Prof.findByEmail(email);
         if (profissional.isPresent() && profissional.get().getSenha().equals(senha)) {
             return ResponseEntity.ok("Login bem-sucedido!");
         } else {
