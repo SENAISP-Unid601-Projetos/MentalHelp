@@ -1,6 +1,5 @@
 package com.example.Back.Service;
-import com.example.Back.DTO.PacienteDTO;
-import com.example.Back.DTO.PacienteLoginDTO;
+
 import com.example.Back.Repository.PacienteRepository;
 import com.example.Back.Repository.TelefoneRepository;
 import com.example.Back.entity.Paciente;
