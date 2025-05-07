@@ -71,6 +71,7 @@ public class ProfissionalService {
                     profissional.getEmail(),
                     profissional.getSenha(),
                     profissional.getEspecialidade(),
+                    profissional.getFoto(),
                     null
             );
         }
@@ -86,6 +87,7 @@ public class ProfissionalService {
                 profissional.getEmail(),
                 profissional.getSenha(),
                 profissional.getEspecialidade(),
+                profissional.getFoto(),
                 consultaIds
         );
 
