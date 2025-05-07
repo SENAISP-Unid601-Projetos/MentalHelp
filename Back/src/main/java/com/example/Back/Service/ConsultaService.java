@@ -5,11 +5,19 @@ import com.example.Back.Repository.PacienteRepository;
 import com.example.Back.Repository.ProfissionalRepository;
 import com.example.Back.entity.Consulta;
 import com.example.Back.Repository.ConsultaRepository;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.element.Paragraph;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.Document;
+import javax.swing.text.Element;
+import java.awt.*;
+import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -102,7 +110,6 @@ public class ConsultaService {
                 .collect(Collectors.toList());
         return new ResponseEntity<>(consultas, HttpStatus.OK);
     }
-
     public ResponseEntity<List<ConsultaDTO>> buscarConsultasPorProfissional(Long idProfissional) {
         List<ConsultaDTO> consultas = consultaRepository.findByProfissional(profissionalRepository.findById(idProfissional).orElseThrow(() -> new RuntimeException("Profissional não encontrado")))
                 .stream()
@@ -119,3 +126,4 @@ public class ConsultaService {
         return new ResponseEntity<>(consultas, HttpStatus.OK);
     }
 }
+
