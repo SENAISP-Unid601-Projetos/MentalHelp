@@ -13,8 +13,4 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-<<<<<<< HEAD
         format_sql: true
-=======
-        format_sql: true  
->>>>>>> 02e41b5472d716aa495949068413714166d549e1
