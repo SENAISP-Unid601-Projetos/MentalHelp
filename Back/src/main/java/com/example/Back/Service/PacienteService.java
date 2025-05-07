@@ -8,6 +8,7 @@ import com.example.Back.entity.Telefone;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,8 +19,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PacienteService {
 
-    private final PacienteRepository pacienteRepository;
-    private final TelefoneRepository telefoneRepository;
+    @Autowired
+     PacienteRepository pacienteRepository;
+    TelefoneRepository telefoneRepository;
 
     @Transactional
     public PacienteSaidaDTO salvarPaciente(PacienteSaidaDTO dto) {
@@ -75,6 +77,7 @@ public class PacienteService {
                 paciente.getCpf(),
                 paciente.getEmail(),
                 paciente.getSenha(),
+                paciente.getFotoPac(),
                 null, // consulta IDs se necessário
                 idsTelefones
         );
