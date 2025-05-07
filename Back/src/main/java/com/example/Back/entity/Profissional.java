@@ -20,6 +20,7 @@ public class Profissional {
     private String crm;
     private String email;
     private String especialidade;
+    private  String senha;
 
     @OneToMany(mappedBy = "profissional", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Consulta> consultas;
