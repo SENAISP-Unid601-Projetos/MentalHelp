@@ -35,3 +35,6 @@ public class Profissional {
         this.foto = foto;
     }
 }
+
+
+
