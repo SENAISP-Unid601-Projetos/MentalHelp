@@ -1,0 +1,61 @@
+body {
+    background-color: #f1e2ff;
+}
+
+/* Container do formulário */
+.login-container {
+    background-color: white; /* Cor do fundo do formulário */
+    border-radius: 15px; /* Bordas arredondadas */
+    padding: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+
+/* Cabeçalho com logo e título no canto superior esquerdo */
+.login-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.login-header img {
+    max-width: 50px;
+    margin-right: 10px;
+}
+
+.login-header h1 {
+    font-size: 2rem;
+}
+
+/* Título "Log in" centralizado */
+.login-title {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2rem;
+}
+
+/* Estilo do botão */
+.btn-primary {
+    background-color: #6f42c1; /* Cor roxa para o botão */
+    border-color: #6f42c1;
+}
+
+.btn-primary:hover {
+    background-color: #5a34a4; /* Cor mais escura ao passar o mouse */
+    border-color: #5a34a4;
+}
+
+/* Estilos para os inputs */
+input.form-control {
+    background-color: #f2f2f2; /* Cor de fundo cinza claro para os inputs */
+    border-radius: 8px; /* Bordas levemente arredondadas */
+    border: 1px solid #ccc; /* Cor do contorno dos inputs */
+}
+
+input.form-control::placeholder {
+    color: #888; /* Cor cinza para o texto do placeholder */
+}
+
+input.form-control:focus {
+    border-color: #6f42c1; /* Cor roxa quando o input estiver em foco */
+    box-shadow: 0 0 5px rgba(111, 66, 193, 0.5); /* Sombra roxa para o input em foco */
+}

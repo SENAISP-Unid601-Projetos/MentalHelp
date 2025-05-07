@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="LoginPage.css">
+    <title>Login MentalHelp</title>
+</head>
+<body>
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+        <div class="row w-100">
+            <div class="col-12 col-md-6 offset-md-3 login-container">
+                <!-- Cabeçalho com logo e título no canto superior esquerdo -->
+                <div class="login-header">
+                    <img src="logo.png" alt="MentalHelp Logo" class="img-fluid">
+                    <h1 class="text-start">MentalHelp</h1>
+                </div>
+
+                <!-- Título "Log in" centralizado -->
+                <div class="login-title">
+                    <h2>Log in</h2>
+                </div>
+
+                <!-- Formulário -->
+                <form>
+                    <div class="mb-3">
+                        <input type="email" class="form-control" id="email" placeholder="Digite seu email">
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" class="form-control" id="senha" placeholder="Digite sua senha">
+                    </div>
+                    <div class="mb-3 d-flex justify-content-between">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="lembrar">
+                            <label class="form-check-label" for="lembrar">Lembrar-me</label>
+                        </div>
+                        <a href="#">Esqueci a senha</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Log in</button>
+                </form>
+                <div class="text-center mt-3">
+                    <p>Ainda não tem uma conta? <a href="#">Cadastre-se</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
