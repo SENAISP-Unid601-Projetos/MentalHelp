@@ -16,6 +16,7 @@ public class ConsultaController {
     @PostMapping
     public ResponseEntity<String> createConsulta(@RequestBody ConsultaDTO c){
         consultaService.criarConsulta(c);
+        return
     }
 
     @GetMapping

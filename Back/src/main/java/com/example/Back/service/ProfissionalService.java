@@ -76,7 +76,6 @@ public class ProfissionalService {
     }
     private Profissional toEntity(ProfissionalEntradaDTO dto) {
         Profissional profissional = new Profissional();
-        profissional.setIdProfissional(dto.getIdProfissional());
         profissional.setNome(dto.getNome());
         profissional.setCrm(dto.getCrm());
         profissional.setEmail(dto.getEmail());
