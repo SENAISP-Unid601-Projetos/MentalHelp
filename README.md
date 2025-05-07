@@ -29,24 +29,24 @@ Para configurar e rodar o ambiente de homologação, siga os passos abaixo:
 
 ---
 # Acesso a aplicação
-Acesse em: [http://10.110.12.10:3000/](http://10.110.12.10:3000/) 
+Acesse em: [http://10.110.12.4:3000/](http://10.110.12.4:3000/) 
 
 ---
 
 ### **Ferramentas de Gestão**
 
 - **Jenkins** (Ferramenta de Build Automático):  
-   Acesse em: [http://10.110.12.10:8080/](http://10.110.12.10:8080/)  
+   Acesse em: [http://10.110.12.4:8080/](http://10.110.12.4:8080/)  
    - Usuário: `senaisc`  
    - Senha: `Senai123`
 
 - **Portainer** (Gestão de Containers):  
-   Acesse em: [http://10.110.12.10:9000/](http://10.110.12.10:9000/)  
+   Acesse em: [http://10.110.12.4:9000/](http://10.110.12.4:9000/)  
    - Usuário: `admin`  
    - Senha: `123456789101112`
 
 - **PGAdmin** (Gestão do Banco de Dados):  
-   Acesse em: [http://10.110.12.10:5000/](http://10.110.12.10:5000/)  
+   Acesse em: [http://10.110.12.4:5000/](http://10.110.12.4:5000/)  
    - Usuário: `senaisc@senai.com`  
    - Senha: `123456`
 
@@ -55,7 +55,7 @@ Acesse em: [http://10.110.12.10:3000/](http://10.110.12.10:3000/)
    - Senha: `12345`
 
 - **Swagger** (Documentação da API):  
-   Acesse em: [http://10.110.12.10:9500/swagger-ui/index.html](http://10.110.12.10:9500/swagger-ui/index.html)
+   Acesse em: [http://10.110.12.4:9500/swagger-ui/index.html](http://10.110.12.4:9500/swagger-ui/index.html)
 
 ---
 
