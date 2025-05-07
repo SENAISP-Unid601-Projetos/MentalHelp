@@ -2,55 +2,77 @@ package com.example.Back.Service;
 
 import com.example.Back.Repository.ConsultaRepository;
 import com.example.Back.entity.Consulta;
+import com.itextpdf.io.font.constants.StandardFonts;
+import com.itextpdf.kernel.colors.ColorConstants;
+import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Text;
+import com.itextpdf.layout.properties.TextAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
-import static com.itextpdf.kernel.pdf.PdfName.Font;
-import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.Element;
 
 @Service
 public class AtestadoService {
+
 
     @Autowired
     private ConsultaRepository consultaRepository;
 
     public byte[] gerarAtestadoPDF(Long idConsulta) throws Exception {
-        // Recupera a consulta pelo ID
-        Optional<Consulta> consultaOptional = consultaRepository.findById(idConsulta);
+        Consulta consulta = consultaRepository.findById(idConsulta)
+                .orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
 
-        if (!consultaOptional.isPresent()) {
-            throw new Exception("Consulta não encontrada");
-        }
-
-        Consulta consulta = consultaOptional.get(); // Obtém o objeto consulta
-
-        // Criação do PdfWriter para gravar o PDF em memória
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PdfWriter writer = new PdfWriter(out); // Criando o PdfWriter
+        PdfWriter writer = new PdfWriter(out);
+        PdfDocument pdf = new PdfDocument(writer);
+        Document document = new Document(pdf, PageSize.A4);
+        document.setMargins(70, 50, 70, 50); // Margens: top, right, bottom, left
 
-        // Criando o PdfDocument a partir do PdfWriter
-        PdfDocument pdfDocument = new PdfDocument(writer);
+        // Fonte padrão
+        var font = PdfFontFactory.createFont(StandardFonts.HELVETICA);
+        var bold = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
 
-        // Criando o Document usando o PdfDocument
-        Document document = new Document(pdfDocument);
+        // Título centralizado
+        Paragraph titulo = new Paragraph("ATESTADO MÉDICO")
+                .setFont(bold)
+                .setFontSize(18)
+                .setTextAlignment(TextAlignment.CENTER)
+                .setFontColor(ColorConstants.BLACK);
+        document.add(titulo);
 
-        // Adicionando conteúdo ao documento
-        document.add(new Paragraph("ATESTADO MÉDICO"));
-        document.add(new Paragraph("Paciente: " + consulta.getPaciente().getNome()));
-        document.add(new Paragraph("Profissional: " + consulta.getProfissional().getNome()));
-        document.add(new Paragraph("Data: " + consulta.getData().toString()));
-        document.close(); // Fecha o documento após a adição de conteúdo
+        document.add(new Paragraph("\n"));
 
-        return out.toByteArray(); // Retorna o conteúdo do PDF gerado
+        // Corpo do atestado
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+        Paragraph corpo = new Paragraph()
+                .setFont(font)
+                .setFontSize(12)
+                .add("Paciente: ").add(new Text(consulta.getPaciente().getNome()).setFont(bold)).add("\n")
+                .add("Profissional: ").add(new Text(consulta.getProfissional().getNome()).setFont(bold)).add("\n")
+                .add("Data da consulta: ").add(new Text(consulta.getData().format(formatter)).setFont(bold)).add("\n\n")
+                .add("Atesto, para os devidos fins, que o(a) paciente acima esteve sob meus cuidados na data mencionada.");
+        document.add(corpo);
+
+        // Espaço para assinatura
+        document.add(new Paragraph("\n\n\n"));
+        document.add(new Paragraph("_______________________________")
+                .setTextAlignment(TextAlignment.CENTER));
+        document.add(new Paragraph("Assinatura do Profissional")
+                .setTextAlignment(TextAlignment.CENTER)
+                .setFontSize(10));
+
+        document.close();
+        return out.toByteArray();
     }
 
 }
