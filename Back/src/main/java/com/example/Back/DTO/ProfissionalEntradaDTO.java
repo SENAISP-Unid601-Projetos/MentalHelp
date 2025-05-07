@@ -4,18 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class PacienteDTO {
-    private Long idPaciente;
+@NoArgsConstructor
+public class ProfissionalEntradaDTO {
+    private Long idProfissional;
     private String nome;
-    private String cpf;
+    private String crm;
     private String email;
     private String senha;
+    private String especialidade;
 
-    private List<Long> id_consultas;
-    private List<Long> id_telefones;
 }
