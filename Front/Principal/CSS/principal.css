@@ -57,6 +57,23 @@ body {
     height: 100%;
   }
 
-  .mw-50 {
-    max-width: 50%;
+  .rounded-start-pill {
+    border-top-left-radius: 50rem;
+    border-bottom-left-radius: 50rem;
   }
+
+  .rounded-end-pill {
+    border-top-right-radius: 50rem;
+    border-bottom-right-radius: 50rem;
+  }
+
+<<<<<<< Updated upstream
+  .bg-semi, #search:focus {
+    background-color: rgba(255, 255, 255, 0.5);
+=======
+  .nav-link-hover {
+    color: #3b2e2e;
+    transition:  0.5s ease;
+>>>>>>> Stashed changes
+  }
+  
