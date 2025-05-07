@@ -13,5 +13,6 @@ public class ProfissionalEntradaDTO {
     private String email;
     private String senha;
     private String especialidade;
+    private String foto;
 
 }

@@ -20,8 +20,24 @@ public class Profissional {
     private String crm;
     private String email;
     private String especialidade;
+
     private  String senha;
+
+    private String foto;
+
+
 
     @OneToMany(mappedBy = "profissional", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Consulta> consultas;
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
 }
+
+
+
