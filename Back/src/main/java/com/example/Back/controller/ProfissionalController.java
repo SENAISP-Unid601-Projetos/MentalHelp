@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("profissional")
@@ -20,6 +21,13 @@ public class ProfissionalController {
     public ResponseEntity<String> loginProfissional(@RequestBody Profissional loginReq) {
         String email = loginReq.getEmail();
         String senha = loginReq.getSenha();
+
+        Optional<Profissional> profissional = ProfissionalRepository.findByEmail(email);
+        if (profissional.isPresent() && profissional.get().getSenha().equals(senha)) {
+            return ResponseEntity.ok("Login bem-sucedido!");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email ou senha inválidos.");
+        }
     }
 
     @PostMapping("/post")
@@ -32,7 +40,7 @@ public class ProfissionalController {
     @GetMapping("/get")
     public ResponseEntity<List<Profissional>> getProffisional() {
         List<Profissional> ProfList = Prof.findAll();
-        return new ResponseEntity(ProfList, HttpStatus.OK);
+        return new ResponseEntity<>(ProfList, HttpStatus.OK);
 
     }
 
