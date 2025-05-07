@@ -92,20 +92,10 @@ public class ProfissionalService {
         return profissional;
     }
 
-    public String login(ProfissionalLoginDTO profissionalLoginDTO) {
-        var profissional = profissionalRepository.findByEmail(profissionalLoginDTO.getEmail());
-
-        if (profissional.isPresent()) {
-            if (profissional.get().getSenha().equals(profissionalLoginDTO.getSenha())) {
-                return "Login realizado com sucesso";
-            } else {
-                return "Senha incorreta";
-            }
-        } else {
-            return "Professor não encontrado";
-        }
+    public boolean authenticateUser(ProfissionalDTO profissionalDTO) {
+        return profissionalRepository.findByEmail(profissionalDTO.getEmail())
+                .map(profissional -> profissional.getSenha().equals(profissionalDTO.getSenha()))
+                .orElse(false);
     }
-
-
 
 }
