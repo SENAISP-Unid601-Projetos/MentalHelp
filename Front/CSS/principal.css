@@ -1,10 +1,46 @@
+@font-face {
+  font-family: 'TAN Aegean';
+  src: url('../Recursos/TAN_Aegean/TAN - AEGEAN Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Signika';
+  src: url('../Recursos/Signika/Signika-VariableFont_wght.ttf') format('truetype');
+}
+
 body {
-    font-family: 'Georgia', serif;
+  font: 1em sans-serif;
   }
   
+
   .titulo-principal {
     color: #3b2e2e;
-    font-size: 3.5rem;
+    font-size: 5.5rem;
+    font-family: "TAN Aegean";
+  }
+  
+  .text-color {
+    color: #a7afff;
+    font-family: "Signika";
+    font-size: 2rem;
+  }
+
+  .text-colorParagrafo {
+    color: black;
+    font-family: "Signika";
+    font-size: 1.5rem;
+  }
+
+  .text-colorLogo{
+    font-family: "Signika";
+    color: #a7afff;
+    font-size: 1.5rem;
+  }
+
+  .textHeader{
+    color: black;
+    font-family: "Signika";
+    font-size: 1.25rem;
   }
   
   .search-bar input {
