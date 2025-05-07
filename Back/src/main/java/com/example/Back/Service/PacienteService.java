@@ -100,7 +100,17 @@ public class PacienteService {
                     consultaIds,
                     null
             );
-        } else {
+        } else if(consultas == null && telefones == null){
+            return new PacienteSaidaDTO(
+                    paciente.getIdPaciente(),
+                    paciente.getNome(),
+                    paciente.getCpf(),
+                    paciente.getEmail(),
+                    paciente.getSenha(),
+                    null,
+                    null
+            );
+        } else{
             List<String> telefonesNum = telefones.stream()
                     .map(Telefone::getTelefone)
                     .collect(Collectors.toList());
