@@ -107,7 +107,7 @@ public class ProfissionalController {
     @GetMapping("/foto/{nome}")
     public ResponseEntity<byte[]> getFoto(@PathVariable String nome) {
         try {
-            Optional<Profissional> profissional = profissionalRepository.findByName(nome);
+            Optional<Profissional> profissional = profissionalRepository.findByNome(nome);
 
             if (profissional.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

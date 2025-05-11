@@ -46,15 +46,15 @@ public class TelefoneController {
     public ResponseEntity<Map<String, Object>> getTelefonePorNumero(@PathVariable String numero) {
         ResponseEntity<TelefoneDTO> responseEntity = telefoneService.buscarTelefonePorNumero(numero);
         Map<String, Object> response = new HashMap<>();
+
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            response.put("message", messageSource.getMessage("fetch.success", null, Locale.getDefault()));
             response.put("telefone", responseEntity.getBody());
             return ResponseEntity.ok(response);
         } else {
-            response.put("message", messageSource.getMessage("fetch.notfound", null, Locale.getDefault()));
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
 
     @PutMapping("/{numero}")
     public ResponseEntity<Map<String, Object>> updateTelefone(@PathVariable String numero, @RequestBody TelefoneDTO telefoneDTO) {
@@ -87,12 +87,11 @@ public class TelefoneController {
     public ResponseEntity<Map<String, Object>> getTelefonesPorPaciente(@PathVariable Long idPaciente) {
         ResponseEntity<List<TelefoneDTO>> responseEntity = telefoneService.buscarTelefonesPorPaciente(idPaciente);
         Map<String, Object> response = new HashMap<>();
+
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            response.put("message", messageSource.getMessage("fetch.success", null, Locale.getDefault()));
             response.put("telefones", responseEntity.getBody());
             return ResponseEntity.ok(response);
         } else {
-            response.put("message", messageSource.getMessage("fetch.notfound", null, Locale.getDefault()));
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
