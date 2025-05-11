@@ -99,6 +99,7 @@ public class ProfissionalService {
         profissional.setEmail(dto.getEmail());
         profissional.setSenha(dto.getSenha());
         profissional.setEspecialidade(dto.getEspecialidade());
+        profissional.setFoto(dto.getFoto());
         return profissional;
     }
 
