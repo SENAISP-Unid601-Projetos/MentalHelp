@@ -90,6 +90,7 @@ public class PacienteService {
                     paciente.getEmail(),
                     paciente.getSenha(),
                     paciente.getFoto(),
+                    paciente.getTipoPaciente(),
                     null,
                     telefonesNum
             );
@@ -105,6 +106,7 @@ public class PacienteService {
                     paciente.getEmail(),
                     paciente.getSenha(),
                     paciente.getFoto(),
+                    paciente.getTipoPaciente(),
                     consultaIds,
                     null
             );
@@ -116,6 +118,7 @@ public class PacienteService {
                     paciente.getEmail(),
                     paciente.getSenha(),
                     paciente.getFoto(),
+                    paciente.getTipoPaciente(),
                     null,
                     null
             );
@@ -135,6 +138,7 @@ public class PacienteService {
                     paciente.getEmail(),
                     paciente.getSenha(),
                     paciente.getFoto(),
+                    paciente.getTipoPaciente(),
                     consultaIds,
                     telefonesNum
             );
@@ -147,6 +151,7 @@ public class PacienteService {
         paciente.setEmail(dto.getEmail());
         paciente.setSenha(dto.getSenha());
         paciente.setFoto(dto.getFoto());
+        paciente.setTipoPaciente(dto.getTipoPaciente());
         return paciente;
     }
 

@@ -22,6 +22,10 @@ public class Paciente {
     private String senha;
     private String foto;
 
+    @Enumerated(EnumType.STRING)
+    private TipoPaciente tipoPaciente;
+
+
     @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Consulta> consultas;
 

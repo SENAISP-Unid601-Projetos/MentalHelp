@@ -1,5 +1,6 @@
 package com.example.Back.DTO;
 
+import com.example.Back.entity.TipoPaciente;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,4 +17,6 @@ public class PacienteEntradaDTO {
 
     @JsonIgnore
     private String foto;
+
+    private TipoPaciente tipoPaciente;
 }
