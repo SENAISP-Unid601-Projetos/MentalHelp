@@ -137,3 +137,19 @@ body {
     margin: 15% 10%;
 
   }
+
+  .footer {
+  background-color: #b1afff; /* Roxo claro da imagem */
+  color: white;
+}
+
+.footer a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.footer .btn {
+  background-color: #d7d6fd;
+  color: black;
+  border: none;
+}
