@@ -1,8 +1,10 @@
 package com.example.Back.controller;
 
 import com.example.Back.Repository.ArquivoEnviadoRepository;
+import com.example.Back.Repository.PacienteRepository;
 import com.example.Back.Repository.ProfissionalRepository;
 import com.example.Back.entity.ArquivoEnviado;
+import com.example.Back.entity.Paciente;
 import com.example.Back.entity.Profissional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -26,20 +28,28 @@ public class ArquivoController {
     @Autowired
     private ProfissionalRepository profissionalRepository;
 
+    @Autowired
+    private PacienteRepository pacienteRepository;
+
     @PostMapping(value = "/enviar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> enviarArquivo(
             @RequestParam("arquivo") MultipartFile arquivo,
-            @RequestParam("idProfissional") Long idProfissional) {
+            @RequestParam("idProfissional") Long idProfissional,
+            @RequestParam("idPaciente") Long idPaciente) {
 
         try {
             Profissional profissional = profissionalRepository.findById(idProfissional)
                     .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
 
+            Paciente paciente = pacienteRepository.findById(idPaciente)
+                    .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
+
             ArquivoEnviado novoArquivo = new ArquivoEnviado();
             novoArquivo.setNomeArquivo(arquivo.getOriginalFilename());
             novoArquivo.setDataEnvio(LocalDateTime.now());
             novoArquivo.setProfissional(profissional);
-            novoArquivo.setConteudo(arquivo.getBytes()); // salva conteúdo binário do PDF
+            novoArquivo.setPaciente(paciente);
+            novoArquivo.setConteudo(arquivo.getBytes()); // caso esteja salvando o conteúdo
 
             arquivoEnviadoRepository.save(novoArquivo);
 

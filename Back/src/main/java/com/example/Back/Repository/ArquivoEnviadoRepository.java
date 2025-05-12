@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface ArquivoEnviadoRepository extends JpaRepository<ArquivoEnviado, Long> {
     List<ArquivoEnviado> findByProfissionalIdProfissional(Long idProfissional);
+    List<ArquivoEnviado> findByPacienteIdPaciente(Long idPaciente);
+
 }
 
 
