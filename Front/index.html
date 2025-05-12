@@ -29,9 +29,9 @@
             
           </div>
           <nav class="d-none d-md-flex gap-5">
-            <a href="#" class="text-decoration-none textHeader nav-link-hover">Profissionais</a>
-            <a href="#" id="contact" class="text-decoration-none textHeader nav-link nav-link-hover">Contato</a>
-            <a href="#" class="text-decoration-none textHeader nav-link nav-link-hover">Apoio</a>
+            <a id="professionals" class="text-decoration-none textHeader nav-link-hover">Profissionais</a>
+            <a id="contact" class="text-decoration-none textHeader nav-link nav-link-hover">Contato</a>
+            <a id="apoioLink" class="text-decoration-none textHeader nav-link nav-link-hover">Apoio</a>
             <a href="LoginPage/LoginPage.html"
               class="text-decoration-none textHeader nav-link nav-link-hover">Entrar</a>
           </nav>
@@ -47,7 +47,7 @@
   </div>
 
   <!-- Conteúdo principal -->
-  <div class="container-fluid d-flex p-0 position-relative" style="z-index: 2">
+  <div class="container-fluid d-flex p-0 position-relative border-bottom  p-5" style="z-index: 2">
     <!-- Esquerda: Conteúdo de texto -->
     <div class="col-md-8 bg-white d-flex flex-column justify-content-between p-5 pt-0">
 
@@ -65,7 +65,7 @@
           para transformar sua vida — Estamos com você.
         </p>
         <div class="w-100 d-flex justify-content-end">
-          <a href="#vemAqui" class="text-decoration-none text-colorLogo text-center custom-hover-btn">
+          <a id="btnAgende" class="text-decoration-none text-colorLogo text-center custom-hover-btn">
             Agende uma Consulta!
           </a>
         </div>
@@ -73,7 +73,7 @@
     </div>
   </div>
 
-  <section id="vemAqui" class="marginTopParagrafo2">
+  <section id="vemAqui" class="p-5 ">
     <div class="row align-items-center mb-5">
       <div class="col-md-2 text-center">
         <img src="Recursos/img/Mykael.png" alt="Dr. Mykael Balbino" class="img-fluid" />
@@ -128,12 +128,61 @@
       </div>
     </div>
   </section>
-  <footer class="footer text-white text-center py-4">
+  <section id="apoio" class="container my-5 border-top p-5">
+    <h2 class="fw-bold text-color mb-4">TRANSTORNOS MAIS COMUNS</h2>
+
+    <!-- Transtorno de Ansiedade Generalizada (TAG) -->
+    <div class="mb-5 border-2 pt-3">
+      <h5 class="fw-semibold text-color">Transtorno de Ansiedade Generalizada (TAG)</h5>
+      <p class="text-colorParagrafo lh-base">
+        O TAG é um transtorno caracterizado por uma preocupação excessiva e persistente, mesmo quando não há motivo
+        claro para tanta apreensão.
+        Pessoas com TAG costumam se sentir constantemente tensas, nervosas e têm dificuldade para controlar os
+        pensamentos ansiosos.
+        Os sintomas incluem inquietação, fadiga, dificuldade de concentração, irritabilidade e alterações no sono.
+        O TAG pode afetar adultos e crianças, interferindo nas atividades diárias, no rendimento escolar e nas relações
+        sociais.
+        Com acompanhamento psicológico e, em alguns casos, apoio médico, é possível controlar a ansiedade e melhorar
+        significativamente a qualidade de vida.
+      </p>
+      <div class="ratio ratio-16x9">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/KZTKzXWBcNk?si=C1yS9CULqPwGSa_z"
+          title="YouTube video player" frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <!-- Depressão Maior -->
+    <div class="mb-5 border-2 border-primary pt-3">
+      <h5 class="fw-semibold text-color">Depressão Maior (Transtorno Depressivo Maior)</h5>
+      <p class="text-colorParagrafo lh-base">
+        A Depressão Maior é um transtorno mental sério que vai muito além da tristeza passageira.
+        Ela se caracteriza por um estado persistente de desânimo, perda de interesse em atividades antes prazerosas,
+        cansaço constante,
+        alterações no sono e no apetite, dificuldades de concentração e, em casos mais graves, pensamentos de
+        inutilidade ou suicídio.
+        Em crianças e adolescentes, pode se manifestar como irritabilidade, isolamento, baixo rendimento escolar e
+        mudanças bruscas de comportamento.
+        O diagnóstico deve ser feito por um profissional, e o tratamento pode envolver psicoterapia, apoio familiar e,
+        em alguns casos, medicação.
+        Reconhecer os sinais precocemente é essencial para garantir uma intervenção eficaz e o bem-estar da pessoa
+        afetada.
+      </p>
+      <div class="ratio ratio-16x9">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/l16BskCD0cM?si=CdGuBt9gWeCgH7OG"
+          title="YouTube video player" frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+    </div>
+  </section>
+  <footer id="contatoFooter" class="footer text-white text-center py-4">
     <div class="container text-colorFooter ">
       <div class="row align-items-center mb-3">
         <div class="col-md-4 mb-3 mb-md-0 d-flex align-items-center justify-content-center">
           <img src="Recursos/img/Logo.png" alt="Logo" class="w-25">
-          <strong >MentalHelp</strong>
+          <strong>MentalHelp</strong>
         </div>
         <div class="col-md-4">
           <h5 class="fw-bold footerTitle">Contato Emergencial</h5>

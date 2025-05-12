@@ -170,3 +170,6 @@ body {
   color: black;
   border: none;
 }
+.border-bottom {
+  width: 90%;
+}
