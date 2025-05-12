@@ -11,150 +11,152 @@
 
 body {
   font: 1em sans-serif;
-  }
-  
-  .mt-10 {
-    margin-top: 6rem;
-  }
+}
 
-  .titulo-principal {
-    color: #3b2e2e;
-    font-size: 5.5rem;
-    font-family: "TAN Aegean";
-  } 
-  
-  .text-color {
-    color: #a7afff;
-    font-family: "Signika";
-    font-size: 2rem;
-      
-  }
+.mt-10 {
+  margin-top: 6rem;
+}
 
-  .text-colorFooter {
-    color: white;
-    font-family: "Signika";
-    font-size: 1.2rem;
-  }
+.titulo-principal {
+  color: #3b2e2e;
+  font-size: 5.5rem;
+  font-family: "TAN Aegean";
+}
 
-  .footerTitle{
-    color: white;
-    font-family: "Signika";
-    font-size:2rem;
-  }
+.text-color {
+  color: #a7afff;
+  font-family: "Signika";
+  font-size: 2rem;
 
-  .text-colorParagrafo {
-    color: black;
-    font-family: "Signika";
-    font-size: 1.5rem;
-  }
+}
 
-  .text-colorLogo{
-    font-family: "Signika";
-    color: #a7afff;
-    font-size: 1.5rem;
-  }
+.text-colorFooter {
+  color: white;
+  font-family: "Signika";
+  font-size: 1.2rem;
+}
 
-  .textHeader{
-    color: black;
-    font-family: "Signika";
-    font-size: 1.25rem;
-  }
-  
-  .search-bar input {
-    width: 200px;
-    border: 1px solid #ccc;
-  }
-  
-  .imagem-container {
-    overflow: hidden;
-  }
-  
-  .object-fit-cover {
-    object-fit: cover;
-    height: 100%;
-  }
+.footerTitle {
+  color: white;
+  font-family: "Signika";
+  font-size: 2rem;
+}
 
-  .rounded-start-pill {
-    border-top-left-radius: 50rem;
-    border-bottom-left-radius: 50rem;
-  }
+.text-colorParagrafo {
+  color: black;
+  font-family: "Signika";
+  font-size: 1.5rem;
+}
 
-  .rounded-end-pill {
-    border-top-right-radius: 50rem;
-    border-bottom-right-radius: 50rem;
-  }
+.text-colorLogo {
+  font-family: "Signika";
+  color: #a7afff;
+  font-size: 1.5rem;
+}
 
-  .nav-link-hover {
-    color: #3b2e2e;
-    transition:  0.5s ease;
-  }
+.textHeader {
+  color: black;
+  font-family: "Signika";
+  font-size: 1.25rem;
+}
 
-  .custom-hover-btn {
-    --color: #a7afff;
-    font-family: "Signika";
-    display: inline-block;
-    width: 10em;
-    height: 2.6em;
-    line-height: 2.5em;
-    margin: 20px;
-    position: relative;
-    cursor: pointer;
-    overflow: hidden;
-    border: 2px solid var(--color);
-    transition: color 0.5s;
-    z-index: 1;
-    font-size: 20px;
-    border-radius: 6px;
-    font-weight: 500;
-    color: var(--color);
-  }
-  
-  .custom-hover-btn:before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    background: var(--color);
-    height: 100%;
-    width: 100%;
-    
-  }
-  
-  .custom-hover-btn:hover {
-    color: #fff;
-  }
-  
-  .custom-hover-btn:before {
-    top: 100%;
-    left: 100%;
-    transition: all 0.7s;
-  }
-  
-  .custom-hover-btn:hover:before {
-    top: auto;
-    left: 0px;
-  }
+.search-bar input {
+  width: 200px;
+  border: 1px solid #ccc;
+}
 
-  .nav-link-hover {
-    transition:  0.5s ease;
-  }
-  
-  .nav-link-hover:hover {
-    transform: scale(1.15); /* Aumenta um pouco o tamanho ao passar o mouse */
-  }
+.imagem-container {
+  overflow: hidden;
+}
 
-  .titulo-principal {
-    color: #3b2e2e;
-    width: 100%;
-    font-family: "TAN Aegean";
-  }
+.object-fit-cover {
+  object-fit: cover;
+  height: 100%;
+}
 
-  .marginTopParagrafo2 {
-    margin: 15% 10%;
+.rounded-start-pill {
+  border-top-left-radius: 50rem;
+  border-bottom-left-radius: 50rem;
+}
 
-  }
+.rounded-end-pill {
+  border-top-right-radius: 50rem;
+  border-bottom-right-radius: 50rem;
+}
 
-  .footer {
-  background-color: #b1afff; /* Roxo claro da imagem */
+.nav-link-hover {
+  color: #3b2e2e;
+  transition: 0.5s ease;
+}
+
+.custom-hover-btn {
+  --color: #a7afff;
+  font-family: "Signika";
+  display: inline-block;
+  width: 10em;
+  height: 2.6em;
+  line-height: 2.5em;
+  margin: 20px;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  border: 2px solid var(--color);
+  transition: color 0.5s;
+  z-index: 1;
+  font-size: 20px;
+  border-radius: 6px;
+  font-weight: 500;
+  color: var(--color);
+}
+
+.custom-hover-btn:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: var(--color);
+  height: 100%;
+  width: 100%;
+
+}
+
+.custom-hover-btn:hover {
+  color: #fff;
+}
+
+.custom-hover-btn:before {
+  top: 100%;
+  left: 100%;
+  transition: all 0.7s;
+}
+
+.custom-hover-btn:hover:before {
+  top: auto;
+  left: 0px;
+}
+
+.nav-link-hover {
+  transition: 0.5s ease;
+}
+
+.nav-link-hover:hover {
+  transform: scale(1.15);
+  /* Aumenta um pouco o tamanho ao passar o mouse */
+}
+
+.titulo-principal {
+  color: #3b2e2e;
+  width: 100%;
+  font-family: "TAN Aegean";
+}
+
+.marginTopParagrafo2 {
+  margin: 15% 10%;
+
+}
+
+.footer {
+  background-color: #b1afff;
+  /* Roxo claro da imagem */
   color: white;
 }
 
