@@ -29,6 +29,12 @@ public class PacienteService {
     private TelefoneRepository telefoneRepository;
 
     public ResponseEntity<PacienteSaidaDTO> salvarPaciente(PacienteEntradaDTO pacienteEntradaDTO) {
+        boolean cpfExiste = pacienteRepository.existsByCpf(pacienteEntradaDTO.getCpf());
+
+        if(cpfExiste){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        }
+
         Paciente paciente = toEntity(pacienteEntradaDTO);
         pacienteRepository.save(paciente);
         return new ResponseEntity<>(toPacienteDTO(paciente), HttpStatus.CREATED);

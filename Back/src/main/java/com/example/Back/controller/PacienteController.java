@@ -49,7 +49,7 @@ public class PacienteController {
     }
 
     @PostMapping("/post")
-    public ResponseEntity<Map<String, Object>> createPaciente(@RequestParam("foto") MultipartFile foto, @RequestPart("pacienteEntradaDTO") PacienteEntradaDTO pacienteDTO) {
+    public ResponseEntity<Map<String, Object>> createPaciente(@RequestPart("foto") MultipartFile foto, @RequestPart("pacienteEntradaDTO") PacienteEntradaDTO pacienteDTO) {
         String fotoPath = saveFoto(foto);
         pacienteDTO.setFoto(fotoPath);
         ResponseEntity<PacienteSaidaDTO> responseEntity = pacienteService.salvarPaciente(pacienteDTO);
@@ -74,10 +74,10 @@ public class PacienteController {
         return uploadDir + fileName;
     }
 
-    @GetMapping("/foto/{nome}")
-    public ResponseEntity<byte[]> getFoto(@PathVariable String nome) {
+    @GetMapping("/foto/{cpf}")
+    public ResponseEntity<byte[]> getFoto(@PathVariable String cpf) {
         try {
-            Optional<Paciente> paciente = pacienteRepository.findByNome(nome);
+            Optional<Paciente> paciente = pacienteRepository.findByCpf(cpf);
 
             if (paciente.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

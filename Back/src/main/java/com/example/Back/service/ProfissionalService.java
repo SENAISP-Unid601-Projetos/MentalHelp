@@ -21,9 +21,17 @@ public class ProfissionalService {
     private ProfissionalRepository profissionalRepository;
 
     public ResponseEntity<ProfissionalSaidaDTO> salvarProfissional(ProfissionalEntradaDTO profissionalEntradaDTO) {
+        boolean crmExiste = profissionalRepository.existsByCrm(profissionalEntradaDTO.getCrm());
+
+        if (crmExiste) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(null); //
+        }
+
         Profissional profissional = toEntity(profissionalEntradaDTO);
         profissionalRepository.save(profissional);
-        return new ResponseEntity<>(toProfissionalDTO(profissional), HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(toProfissionalDTO(profissional));
     }
 
     public ResponseEntity<List<ProfissionalSaidaDTO>> listarProfissional() {
