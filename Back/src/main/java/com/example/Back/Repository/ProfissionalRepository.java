@@ -1,12 +1,16 @@
 package com.example.Back.Repository;
+
 import com.example.Back.entity.Profissional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface ProfissionalRepository  extends JpaRepository<Profissional, Long> {
 
-   //<Profissional> findByIdConsulta(Long idProfissional);
+   Optional <Profissional> findByIdProfissional(Long idProfissional);
+   Optional<Profissional> findByEmail(String email);
 
+   Optional<Profissional> findByCrm(String crm);
+
+   boolean existsByCrm(String crm);
 }
