@@ -77,10 +77,7 @@ window.onload = function () {
     requestAnimationFrame(scrollStep);
     }
   }
-<<<<<<< Updated upstream
-
-
-
+  
   const translations = {
     pt: {
       header1: "Você<br />Não Está<br />Sozinho",
@@ -128,7 +125,4 @@ window.onload = function () {
     langSelect.value = savedLang;
     updateTexts(savedLang);
   }
-  
-=======
 }
->>>>>>> Stashed changes
