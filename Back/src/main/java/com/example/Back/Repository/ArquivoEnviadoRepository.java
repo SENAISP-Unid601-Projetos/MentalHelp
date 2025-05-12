@@ -7,7 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ArquivoEnviadoRepository extends JpaRepository<ArquivoEnviado, Long> {
-    List<ArquivoEnviado> findByProfissional_IdProfissional(Long idProfissional);
+    List<ArquivoEnviado> findByProfissionalIdProfissional(Long idProfissional);
 }
+
 
 

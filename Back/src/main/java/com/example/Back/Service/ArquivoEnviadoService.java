@@ -1,34 +1,49 @@
 package com.example.Back.Service;
 
 
+import com.example.Back.Repository.ArquivoEnviadoRepository;
+import com.example.Back.Repository.PacienteRepository;
+import com.example.Back.Repository.ProfissionalRepository;
+import com.example.Back.entity.ArquivoEnviado;
+import com.example.Back.entity.Paciente;
+import com.example.Back.entity.Profissional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+
+import java.io.IOException;
+
+import java.time.LocalDateTime;
 
 @Service
 public class ArquivoEnviadoService {
 
-    private static final String UPLOAD_DIR = "uploads"; // pasta no projeto
+    @Autowired
+    private ArquivoEnviadoRepository arquivoEnviadoRepository;
 
-    public void salvarArquivo(Long profissionalId, Long pacienteId, MultipartFile arquivo) throws Exception {
-        if (arquivo.isEmpty()) {
-            throw new Exception("Arquivo está vazio.");
-        }
+    @Autowired
+    private ProfissionalRepository profissionalRepository;
 
-        // Cria a pasta se não existir
-        Files.createDirectories(Paths.get(UPLOAD_DIR));
+    @Autowired
+    private PacienteRepository pacienteRepository;
 
-        // Define o nome do arquivo: ex. profissional1_paciente2_nome.pdf
-        String nomeArquivo = "prof" + profissionalId + "_pac" + pacienteId + "_" + arquivo.getOriginalFilename();
-        File destino = new File(UPLOAD_DIR + File.separator + nomeArquivo);
+    public void salvarArquivo(MultipartFile file, Long idProfissional, Long idPaciente) throws IOException {
+        ArquivoEnviado novo = new ArquivoEnviado();
+        novo.setNomeArquivo(file.getOriginalFilename());
+        novo.setDataEnvio(LocalDateTime.now());
+        novo.setConteudo(file.getBytes()); // Armazena binário
 
-        // Salva o arquivo
-        try (FileOutputStream fos = new FileOutputStream(destino)) {
-            fos.write(arquivo.getBytes());
-        }
+        // Busca e associa as entidades relacionadas
+        Profissional profissional = profissionalRepository.findById(idProfissional)
+                .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
+
+        Paciente paciente = pacienteRepository.findById(idPaciente)
+                .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
+
+        novo.setProfissional(profissional);
+        novo.setPaciente(paciente);
+
+        arquivoEnviadoRepository.save(novo);
     }
 }
