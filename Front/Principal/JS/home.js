@@ -94,6 +94,7 @@ window.onload = function () {
       footerText: "All Rights Reserved to MentalHelp 2025."
     },
     es: {
+      headerMenu: '<a id="professionals" class="text-decoration-none textHeader nav-link-hover">Professionales</a>',
       header1: "Tú<br />No Estás<br />Solo",
       paragraph1: "Cuidar de la mente es un acto de valentía.",
       paragraph2: "Aquí encontrarás acogida, escucha y apoyo profesional para afrontar los desafíos emocionales del día a día. Da el primer paso para transformar tu vida — Estamos contigo.",
@@ -104,6 +105,7 @@ window.onload = function () {
   
   function updateTexts(lang) {
     const t = translations[lang];
+    document.getElementById("professionals").innerHTML = t.headerMenu
     document.querySelector(".titulo-principal").innerHTML = t.header1;
     document.querySelector(".text-color").textContent = t.paragraph1;
     document.querySelector(".text-colorParagrafo").textContent = t.paragraph2;
