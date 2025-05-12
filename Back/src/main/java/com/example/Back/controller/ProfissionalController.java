@@ -48,7 +48,7 @@ public class ProfissionalController {
     }
 
     @PostMapping("/post")
-    public ResponseEntity<Map<String, Object>> createProfissional(@RequestParam("foto") MultipartFile foto, @RequestPart("profissionalEntradaDTO")ProfissionalEntradaDTO profissionalDTO) {
+    public ResponseEntity<Map<String, Object>> createProfissional(@RequestPart("foto") MultipartFile foto, @RequestPart("profissionalEntradaDTO")ProfissionalEntradaDTO profissionalDTO) {
         String fotoPath = saveFoto(foto);
         profissionalDTO.setFoto(fotoPath);
         ResponseEntity<ProfissionalSaidaDTO> responseEntity = proService.salvarProfissional(profissionalDTO);
@@ -104,10 +104,10 @@ public class ProfissionalController {
         return uploadDir + fileName;
     }
 
-    @GetMapping("/foto/{nome}")
-    public ResponseEntity<byte[]> getFoto(@PathVariable String nome) {
+    @GetMapping("/foto/{crm}")
+    public ResponseEntity<byte[]> getFoto(@PathVariable String crm) {
         try {
-            Optional<Profissional> profissional = profissionalRepository.findByNome(nome);
+            Optional<Profissional> profissional = profissionalRepository.findByCrm(crm);
 
             if (profissional.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
