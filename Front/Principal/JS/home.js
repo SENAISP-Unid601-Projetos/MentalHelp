@@ -53,21 +53,24 @@ function easeInOutQuad(t, b, c, d) {
       paragraph1: "Cuidar da mente é um ato de coragem.",
       paragraph2: "Aqui, você encontra acolhimento, escuta e apoio profissional para enfrentar os desafios emocionais do dia a dia. Dê o primeiro passo para transformar sua vida — Estamos com você.",
       button: "Agende uma Consulta!",
-      footerText: "Direitos Reservados a MentalHelp 2025. Todos os direitos reservados."
+      footerText: "Direitos Reservados a MentalHelp 2025. Todos os direitos reservados.",
+      drMikael: "Dr. Mykael Balbino – Psicólogo Especialista em Neurodivergência"
     },
     en: {
       header1: "You<br />Are Not<br />Alone",
       paragraph1: "Taking care of your mind is an act of courage.",
       paragraph2: "Here, you will find welcome, listening, and professional support to face emotional challenges. Take the first step to transform your life — We are with you.",
       button: "Book an Appointment!",
-      footerText: "All Rights Reserved to MentalHelp 2025."
+      footerText: "All Rights Reserved to MentalHelp 2025.",
+      drMikael: "Dr. Mykael Balbino – Psychologist Specialist in Neurodiversity"
     },
     es: {
       header1: "Tú<br />No Estás<br />Solo",
       paragraph1: "Cuidar de la mente es un acto de valentía.",
       paragraph2: "Aquí encontrarás acogida, escucha y apoyo profesional para afrontar los desafíos emocionales del día a día. Da el primer paso para transformar tu vida — Estamos contigo.",
       button: "¡Agenda una Cita!",
-      footerText: "Todos los derechos reservados a MentalHelp 2025."
+      footerText: "Todos los derechos reservados a MentalHelp 2025.",
+      drMikael: "Dr. Mykael Balbino – Psicólogo Especialista en Neurodivergencia"
     }
   };
   
@@ -78,6 +81,7 @@ function easeInOutQuad(t, b, c, d) {
     document.querySelector(".text-colorParagrafo").textContent = t.paragraph2;
     document.querySelector(".custom-hover-btn").textContent = t.button;
     document.querySelector(".footer p").textContent = t.footerText;
+    document.querySelector(".fw-bold").textContent = t.drMikael;
   }
   
   // Seletor de idioma
