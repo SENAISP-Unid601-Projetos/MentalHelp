@@ -13,6 +13,9 @@ body {
   font: 1em sans-serif;
   }
   
+  .mt-10 {
+    margin-top: 6rem;
+  }
 
   .titulo-principal {
     color: #3b2e2e;
@@ -25,6 +28,18 @@ body {
     font-family: "Signika";
     font-size: 2rem;
       
+  }
+
+  .text-colorFooter {
+    color: white;
+    font-family: "Signika";
+    font-size: 1.2rem;
+  }
+
+  .footerTitle{
+    color: white;
+    font-family: "Signika";
+    font-size:2rem;
   }
 
   .text-colorParagrafo {
