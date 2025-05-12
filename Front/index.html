@@ -13,30 +13,66 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
     <link rel="stylesheet" href="Principal/CSS/principal.css" />
+    <script src="Principal/JS/home.js" defer></script>
   </head>
   <body>
-    <div class="container-fluid min-vh-100 d-flex p-0">
+    <!-- Navbar -->
+    <div class="position-sticky top-0 z-3 bg-white">
+      <div class="container-fluid">
+        <div class="row">
+          <div
+            class="col-md-8 d-flex justify-content-between align-items-center py-2 px-5"
+          >
+            <div id="logoSection" class="d-flex align-items-center gap-2" style="cursor: pointer;">
+              <img src="../Recursos/img/logoImg.png" alt="Logo" class="w-25" />
+              <span class="text-colorLogo">MentalHelp</span>
+            </div>
+            <nav class="d-none d-md-flex gap-5">
+              <a href="#" class="text-decoration-none textHeader nav-link-hover"
+                >Profissionais</a
+              >
+              <a
+                href="#"
+                class="text-decoration-none textHeader nav-link nav-link-hover"
+                >Contato</a
+              >
+              <a
+                href="#"
+                class="text-decoration-none textHeader nav-link nav-link-hover"
+                >Apoio</a
+              >
+              <a
+                href="Login/HTML/cadastro.html"
+                class="text-decoration-none textHeader nav-link nav-link-hover"
+                >Entrar</a
+              >
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Imagem Psi -->
+    <div class="d-none d-md-block">
+      <img
+        src="Recursos/img/q2.jpeg"
+        alt="Atendimento"
+        class="position-absolute top-0 end-0 h-100 object-fit-cover z-3"
+        style="width: 33.33vw"
+      />
+    </div>
+
+    <!-- Conteúdo principal -->
+    <div
+      class="container-fluid d-flex p-0 position-relative"
+      style="z-index: 2"
+    >
       <!-- Esquerda: Conteúdo de texto -->
       <div
-        class="col-md-8 bg-white d-flex flex-column justify-content-between p-5"
+        class="col-md-8 bg-white d-flex flex-column justify-content-between p-5 pt-0 min-vh-100"
       >
-        <!-- Navbar -->
-        <div class="d-flex align-items-center justify-content-between">
-          <div class="d-flex align-items-center gap-2">
-            <img src="../Recursos/img/logoImg.png" alt="Logo" class="w-25">
-            <span class="text-colorLogo">MentalHelp</span>
-          </div>
-          <nav class="d-none d-md-flex gap-5 ">
-            <a href="#" class="text-decoration-none textHeader nav-link-hover"
-              >Profissionais</a
-            >
-            <a href="#" class="text-decoration-none textHeader nav-link nav-link-hover">Contato</a>
-            <a href="#" class="text-decoration-none textHeader nav-link nav-link-hover">Apoio</a>
-            <a href="Login/HTML/cadastro.html" class="text-decoration-none textHeader nav-link nav-link-hover">Entrar</a>
-          </nav>
-        </div>
-
-        <div class="d-flex flex-column align-items-center mt-5 text-start ">
+        <!-- Conteúdo textual -->
+        <div class="d-flex flex-column align-items-center mt-5 text-start">
           <h1 class="fw-semibold titulo-principal lh-base">
             Você<br />Não Está<br />Sozinho
           </h1>
@@ -49,60 +85,95 @@
             para transformar sua vida — Estamos com você.
           </p>
           <div class="w-100 d-flex justify-content-end">
-            <a href="#vemAqui" class="text-decoration-none text-colorLogo text-center custom-hover-btn"
-              >Agende uma Consulta!</a
+            <a
+              href="#vemAqui"
+              class="text-decoration-none text-colorLogo text-center custom-hover-btn"
             >
+              Agende uma Consulta!
+            </a>
           </div>
         </div>
       </div>
-
-      <div class="col-md-4 position-relative d-none d-md-block p-0 imagem-container">
-        <img src="Recursos/img/q2.jpeg" alt="Atendimento" class="img-fluid w-100 h-100 object-fit-cover" />
-      </div> 
     </div>
 
     <section id="vemAqui" class="marginTopParagrafo2">
-      <div class="row align-items-center mb-5" >
+      <div class="row align-items-center mb-5">
         <div class="col-md-2 text-center">
-          <img src="Recursos/img/Mykael.png" alt="Dr. Mykael Balbino" class="img-fluid" />
+          <img
+            src="Recursos/img/Mykael.png"
+            alt="Dr. Mykael Balbino"
+            class="img-fluid"
+          />
         </div>
         <div class="col-md-10">
-          <h5 class="fw-bold text-color">Dr. Mykael Balbino – Psicólogo Especialista em Neurodivergência</h5>
+          <h5 class="fw-bold text-color">
+            Dr. Mykael Balbino – Psicólogo Especialista em Neurodivergência
+          </h5>
           <p class="text-colorParagrafo lh-base">
-            Especialista no desenvolvimento emocional e comportamental de crianças, o Dr. Rafael trabalha com empatia e escuta ativa
-            para ajudar pequenos pacientes a enfrentarem desafios como ansiedade, dificuldades escolares e problemas de socialização.
+            Especialista no desenvolvimento emocional e comportamental de
+            crianças, o Dr. Rafael trabalha com empatia e escuta ativa para
+            ajudar pequenos pacientes a enfrentarem desafios como ansiedade,
+            dificuldades escolares e problemas de socialização.
           </p>
-          <a href="Agendamento/HTML/agendamentoEspecial.html" class="btn fw-bold" style="background-color: #a7afff; color: white;">Agende aqui !</a>
+          <a
+            href="Agendamento/HTML/agendamentoEspecial.html"
+            class="btn fw-bold"
+            style="background-color: #a7afff; color: white"
+            >Agende aqui !</a
+          >
         </div>
       </div>
-    
+
       <div class="row align-items-center mb-5 flex-md-row-reverse text-end">
         <div class="col-md-2 text-center">
-          <img src="Recursos/img/Gabrielly.png" alt="Dra. Gabrielly Milhor" class="img-fluid" />
+          <img
+            src="Recursos/img/Gabrielly.png"
+            alt="Dra. Gabrielly Milhor"
+            class="img-fluid"
+          />
         </div>
         <div class="col-md-10">
-          <h5 class="fw-bold text-color" ">Dra. Gabrielly Milhor – Psicóloga Infantil</h5>
+          <h5 class="fw-bold text-color">
+            Dra. Gabrielly Milhor – Psicóloga Infantil
+          </h5>
           <p class="text-colorParagrafo lh-base">
-            Com ampla experiência no atendimento de crianças e adolescentes, Dra. Camila utiliza abordagens lúdicas e terapias baseadas
-            em evidências para promover o bem-estar psicológico desde os  primeiros anos de vida.
+            Com ampla experiência no atendimento de crianças e adolescentes,
+            Dra. Camila utiliza abordagens lúdicas e terapias baseadas em
+            evidências para promover o bem-estar psicológico desde os primeiros
+            anos de vida.
           </p>
-          <a href="Agendamento/agendamentoInfantil.html" class="btn fw-bold" style="background-color: #a7afff; color: white;">Agende aqui !</a>
+          <a
+            href="Agendamento/agendamentoInfantil.html"
+            class="btn fw-bold"
+            style="background-color: #a7afff; color: white"
+            >Agende aqui !</a
+          >
         </div>
       </div>
 
       <div class="row align-items-center">
         <div class="col-md-2 text-center">
-          <img src="Recursos/img/Vagner.png" alt="Dr. Vagner Nunes" class="img-fluid" />
+          <img
+            src="Recursos/img/Vagner.png"
+            alt="Dr. Vagner Nunes"
+            class="img-fluid"
+          />
         </div>
         <div class="col-md-10">
-          <h5 class="fw-bold text-color" >Dr. Vagner Nunes – Psicólogo Geral</h5>
-          <p class="text-colorParagrafo lh-base ">
-            Focado em crianças com transtornos do neurodesenvolvimento, como TDAH e TEA, o Dr. Eduardo oferece um olhar técnico e
-            acolhedor, atuando em parceria com escolas e famílias para um cuidado integral.
+          <h5 class="fw-bold text-color">Dr. Vagner Nunes – Psicólogo Geral</h5>
+          <p class="text-colorParagrafo lh-base">
+            Focado em crianças com transtornos do neurodesenvolvimento, como
+            TDAH e TEA, o Dr. Eduardo oferece um olhar técnico e acolhedor,
+            atuando em parceria com escolas e famílias para um cuidado integral.
           </p>
-          <a href="Agendamento/HTML/agendamentoAdulto.html" class="btn fw-bold" style="background-color: #a7afff; color: white;">Agende aqui !</a>
+          <a
+            href="Agendamento/HTML/agendamentoAdulto.html"
+            class="btn fw-bold"
+            style="background-color: #a7afff; color: white"
+            >Agende aqui !</a
+          >
         </div>
       </div>
     </section>
-    
+  </body>
 </html>
