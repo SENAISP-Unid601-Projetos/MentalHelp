@@ -1,5 +1,6 @@
 package com.example.Back.DTO;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,4 +13,7 @@ public class PacienteEntradaDTO {
     private String cpf;
     private String email;
     private String senha;
+    @JsonIgnore
+    private String foto;
+
 }

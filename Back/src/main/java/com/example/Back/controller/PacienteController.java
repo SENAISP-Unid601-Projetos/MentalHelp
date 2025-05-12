@@ -1,19 +1,23 @@
 package com.example.Back.controller;
 
-import com.example.Back.DTO.PacienteEntradaDTO;
-import com.example.Back.DTO.PacienteLoginDTO;
-import com.example.Back.DTO.PacienteSaidaDTO;
+import com.example.Back.DTO.*;
+import com.example.Back.Repository.PacienteRepository;
 import com.example.Back.Service.PacienteService;
+import com.example.Back.entity.Paciente;
+import com.example.Back.entity.Profissional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 @RestController
 @RequestMapping("/paciente")
@@ -21,6 +25,8 @@ public class PacienteController {
 
     @Autowired
     private PacienteService pacienteService;
+    @Autowired
+    private PacienteRepository pacienteRepository;
 
     @Autowired
     private MessageSource messageSource;
@@ -40,18 +46,67 @@ public class PacienteController {
     }
 
     @PostMapping("/post")
-    public ResponseEntity<Map<String, Object>> createPaciente(@RequestBody PacienteEntradaDTO pacienteDTO) {
+    public ResponseEntity<Map<String, Object>> createPaciente(@RequestParam("foto") MultipartFile foto,@RequestPart("pacienteEntradaDTO") PacienteEntradaDTO pacienteDTO) {
+        String fotoPath = saveFoto(foto);
+        pacienteDTO.setFoto(fotoPath);
         ResponseEntity<PacienteSaidaDTO> responseEntity = pacienteService.salvarPaciente(pacienteDTO);
         Map<String, Object> response = new HashMap<>();
         response.put("message", messageSource.getMessage("create.success", null, Locale.getDefault()));
-        response.put("paciente", responseEntity.getBody());
+        response.put("profissional", responseEntity.getBody());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+
+    private String saveFoto(MultipartFile foto) {
+        // Gera um nome único para o arquivo
+        String fileName = UUID.randomUUID().toString() + "_" + foto.getOriginalFilename();
+        String uploadDir = "src/main/resources/pacientePictures/";  // Diretório onde as fotos serão armazenadas
+
+        try {
+            Files.copy(foto.getInputStream(), Paths.get(uploadDir + fileName));
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Falha ao salvar a foto.");
+        }
+        return uploadDir + fileName;
     }
 
     @GetMapping("/get")
     public ResponseEntity<List<PacienteSaidaDTO>> getPacientes() {
         return pacienteService.listarPaciente();
     }
+
+    @GetMapping("/foto/{nome}")
+    public ResponseEntity<byte[]> getFoto(@PathVariable String nome) {
+        try {
+            Optional<Paciente> paciente = pacienteRepository.findByNome(nome);
+
+            if (paciente.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            String fotoPath = paciente.get().getFoto();
+            Path filePath = Paths.get(fotoPath); // Caminho da foto no servidor
+
+            if (!Files.exists(filePath)) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            byte[] fotoBytes = Files.readAllBytes(filePath);
+
+            String contentType = Files.probeContentType(filePath);
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .body(fotoBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, Object>> updatePaciente(@PathVariable Long id, @RequestBody PacienteEntradaDTO pacienteDTO) {
