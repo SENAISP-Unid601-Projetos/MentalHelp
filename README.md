@@ -52,21 +52,21 @@ Para configurar e rodar o ambiente de homologação:
 ### 📋 Ferramentas de Gestão
 
 ### 🔧 Jenkins – Build Automático  
-🔗 [http://10.110.12.4:8080/](http://10.110.12.4:8080/)  
+🔗 [http://10.110.12.50:8080/](http://10.110.12.4:8080/)  
 👤 **Usuário:** `senaisc`  
 🔑 **Senha:** `Senai123`
 
 
 
 ### 📦 Portainer – Gestão de Containers  
-🔗 [http://10.110.12.4:9000/](http://10.110.12.4:9000/)  
+🔗 [http://10.110.12.50:9000/](http://10.110.12.4:9000/)  
 👤 **Usuário:** `admin`  
 🔑 **Senha:** `123456789101112`
 
 
 
 ### 🛢️ PGAdmin – Gestão do Banco de Dados  
-🔗 [http://10.110.12.4:5000/](http://10.110.12.4:5000/)  
+🔗 [http://10.110.12.50:5000/](http://10.110.12.4:5000/)  
 👤 **Usuário:** `senaisc@senai.com`  
 🔑 **Senha:** `123456`
 
