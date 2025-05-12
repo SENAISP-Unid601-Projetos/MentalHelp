@@ -15,6 +15,7 @@ public class PacienteSaidaDTO {
     private String cpf;
     private String email;
     private String senha;
+    private String foto;
 
     private List<Long> id_consultas;
     private List<String> id_telefones;

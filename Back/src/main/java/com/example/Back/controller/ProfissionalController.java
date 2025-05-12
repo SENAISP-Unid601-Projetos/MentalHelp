@@ -48,7 +48,7 @@ public class ProfissionalController {
     }
 
     @PostMapping("/post")
-    public ResponseEntity<Map<String, Object>> createProfissional(@RequestParam("foto") MultipartFile foto,@RequestPart("profissionalEntradaDTO")ProfissionalEntradaDTO profissionalDTO) {
+    public ResponseEntity<Map<String, Object>> createProfissional(@RequestParam("foto") MultipartFile foto, @RequestPart("profissionalEntradaDTO")ProfissionalEntradaDTO profissionalDTO) {
         String fotoPath = saveFoto(foto);
         profissionalDTO.setFoto(fotoPath);
         ResponseEntity<ProfissionalSaidaDTO> responseEntity = proService.salvarProfissional(profissionalDTO);

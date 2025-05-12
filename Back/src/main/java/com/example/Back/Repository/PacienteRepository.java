@@ -6,6 +6,6 @@ import java.nio.channels.FileChannel;
 import java.util.Optional;
 
 public interface PacienteRepository extends JpaRepository <Paciente, Long> {
-
+    Optional<Paciente> findByNome(String nome);
     Optional<Paciente> findByEmail(String email);
 }
