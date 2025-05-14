@@ -59,9 +59,7 @@ body {
 .object-fit-cover {
     object-fit: cover;
 }
-=======
-  background-color: #f3e7f8;
-}
+
 
 .text-purple {
   color: #4b006e;
@@ -129,4 +127,4 @@ body {
   .dropdown-toggle::after {
     display: none;
   }
->>>>>>> c86a952296796c4018619e0af4f0ee43e05c4847
+

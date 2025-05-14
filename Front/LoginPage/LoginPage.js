@@ -33,15 +33,15 @@ loginForm.addEventListener('submit', function(event) {
 
     // Exibe o spinner e desabilita o botão de login
     loginBtn.disabled = true;
-    loadingSpinner.classList.remove('d-none');
+    //loadingSpinner.classList.remove('d-none');
 
     // Requisição para o servidor para validar o login
     const loginData = {
         email: emailInput.value,
         senha: senhaInput.value
     };
-
-    fetch('http://10.110.12.4:8080/', { // URL do seu backend
+console.log(loginData)
+    fetch('http://10.110.12.50:9500/profissional/login', { // URL do seu backend
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -51,10 +51,10 @@ loginForm.addEventListener('submit', function(event) {
     .then(response => response.json())
     .then(data => {
         // Esconde o spinner e reabilita o botão de login
-        loadingSpinner.classList.add('d-none');
+        //loadingSpinner.classList.add('d-none');
         loginBtn.disabled = false;
-
-        if (data.success) {
+console.log(data)
+        if (data.message == 'Login successful!') {
             // Se o login for bem-sucedido, redireciona ou realiza outra ação
             alert('Login realizado com sucesso!');
             window.location.href = 'dashboard.html'; // Redireciona para a página do dashboard
@@ -66,7 +66,7 @@ loginForm.addEventListener('submit', function(event) {
     .catch(error => {
     // Erro de rede ou outra falha
     console.error('Erro:', error);
-    loadingSpinner.classList.add('d-none');
+    //loadingSpinner.classList.add('d-none');
     loginBtn.disabled = false;
     alert('Ocorreu um erro ao tentar fazer login. Tente novamente mais tarde.');
     });
