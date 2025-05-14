@@ -1,6 +1,5 @@
 package com.example.Back.entity;
 
-import com.example.Back.enums.TipoPaciente;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,9 +21,6 @@ public class Paciente {
     private String email;
     private String senha;
     private String foto;
-
-    @Enumerated(EnumType.STRING)
-    private TipoPaciente tipoPaciente;
 
 
     @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true)

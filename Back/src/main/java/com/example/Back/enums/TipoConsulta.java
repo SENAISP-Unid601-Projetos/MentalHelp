@@ -1,11 +1,7 @@
 package com.example.Back.enums;
 
-import jakarta.persistence.Entity;
-
-
-public enum TipoPaciente {
+public enum TipoConsulta {
     INFANTIL,
     ESPECIAL,
     ADULTO
-
 }

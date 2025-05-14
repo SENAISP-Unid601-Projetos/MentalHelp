@@ -39,6 +39,8 @@ public class ConsultaService {
         dto.setValorConsulta(consulta.getValorConsulta());
         dto.setIdPaciente(consulta.getPaciente().getIdPaciente());
         dto.setIdProfissional(consulta.getProfissional().getIdProfissional());
+        dto.setTipoConsulta(consulta.getTipoConsulta());
+
         return dto;
     }
 
@@ -47,6 +49,7 @@ public class ConsultaService {
         consulta.setIdConsulta(dto.getIdConsulta());
         consulta.setData(dto.getData());
         consulta.setValorConsulta(dto.getValorConsulta());
+        consulta.setTipoConsulta(dto.getTipoConsulta());
         consulta.setPaciente(pacienteRepository.findById(dto.getIdPaciente()).get());
         consulta.setProfissional(profissionalRepository.findById(dto.getIdProfissional()).get());
         return consulta;
@@ -133,6 +136,7 @@ public class ConsultaService {
 
         consulta.setData(consultaDTO.getData());
         consulta.setValorConsulta(consultaDTO.getValorConsulta());
+        consulta.setTipoConsulta(consultaDTO.getTipoConsulta());
         consulta.setPaciente(novoPaciente);
         consulta.setProfissional(novoProfissional);
 
