@@ -1,5 +1,6 @@
 package com.example.Back.entity;
 
+import com.example.Back.enums.TipoConsulta;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +19,9 @@ public class Consulta {
     private LocalDateTime data;
     private Double valorConsulta;
 
+    @Enumerated(EnumType.STRING)
+    private TipoConsulta tipoConsulta;
+
     @ManyToOne
     @JoinColumn(name="paciente_id")
     private Paciente paciente;
@@ -25,6 +29,4 @@ public class Consulta {
     @ManyToOne
     @JoinColumn(name="profissional_id")
     private Profissional profissional;
-
-
 }
