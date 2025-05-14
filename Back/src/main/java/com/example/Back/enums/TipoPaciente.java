@@ -1,4 +1,4 @@
-package com.example.Back.entity;
+package com.example.Back.enums;
 
 import jakarta.persistence.Entity;
 

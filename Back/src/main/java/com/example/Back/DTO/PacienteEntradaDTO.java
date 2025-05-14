@@ -1,6 +1,6 @@
 package com.example.Back.DTO;
 
-import com.example.Back.entity.TipoPaciente;
+import com.example.Back.enums.TipoPaciente;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;

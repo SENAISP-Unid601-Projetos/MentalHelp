@@ -4,23 +4,21 @@ import com.example.Back.Repository.PacienteRepository;
 import com.example.Back.Repository.TelefoneRepository;
 import com.example.Back.entity.Consulta;
 import com.example.Back.entity.Paciente;
-import com.example.Back.entity.Profissional;
 import com.example.Back.entity.Telefone;
 
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class PacienteService {
+
 
     @Autowired
     private PacienteRepository pacienteRepository;
@@ -31,7 +29,7 @@ public class PacienteService {
     public ResponseEntity<PacienteSaidaDTO> salvarPaciente(PacienteEntradaDTO pacienteEntradaDTO) {
         boolean cpfExiste = pacienteRepository.existsByCpf(pacienteEntradaDTO.getCpf());
 
-        if(cpfExiste){
+        if (cpfExiste) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
 
@@ -43,7 +41,7 @@ public class PacienteService {
     public ResponseEntity<List<PacienteSaidaDTO>> listarPaciente() {
         List<PacienteSaidaDTO> pacientes = pacienteRepository.findAll()
                 .stream()
-                .map(paciente -> toPacienteDTO(paciente))
+                .map(this::toPacienteDTO)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(pacientes, HttpStatus.OK);
     }
@@ -59,6 +57,8 @@ public class PacienteService {
         paciente.setCpf(pacienteEntradaDTO.getCpf());
         paciente.setEmail(pacienteEntradaDTO.getEmail());
         paciente.setSenha(pacienteEntradaDTO.getSenha());
+        paciente.setFoto(pacienteEntradaDTO.getFoto());
+        paciente.setTipoPaciente(pacienteEntradaDTO.getTipoPaciente());
 
         pacienteRepository.save(paciente);
         return new ResponseEntity<>(toPacienteDTO(paciente), HttpStatus.OK);
@@ -75,75 +75,29 @@ public class PacienteService {
 
     private PacienteSaidaDTO toPacienteDTO(Paciente paciente) {
         List<Consulta> consultas = paciente.getConsultas();
-
         List<Telefone> telefones = paciente.getTelefones();
 
-        if(consultas == null && telefones != null){
-            List<String> telefonesNum = telefones.stream()
-                    .map(Telefone::getTelefone)
-                    .collect(Collectors.toList());
+        List<Long> consultaIds = consultas != null
+                ? consultas.stream().map(Consulta::getIdConsulta).collect(Collectors.toList())
+                : null;
 
-            return new PacienteSaidaDTO(
-                    paciente.getIdPaciente(),
-                    paciente.getNome(),
-                    paciente.getCpf(),
-                    paciente.getEmail(),
-                    paciente.getSenha(),
-                    paciente.getFoto(),
-                    paciente.getTipoPaciente(),
-                    null,
-                    telefonesNum
-            );
-        } else if (consultas != null && telefones == null){
-            List<Long> consultaIds = consultas.stream()
-                    .map(Consulta::getIdConsulta)
-                    .collect(Collectors.toList());
+        List<String> telefonesNum = telefones != null
+                ? telefones.stream().map(Telefone::getTelefone).collect(Collectors.toList())
+                : null;
 
-            return new PacienteSaidaDTO(
-                    paciente.getIdPaciente(),
-                    paciente.getNome(),
-                    paciente.getCpf(),
-                    paciente.getEmail(),
-                    paciente.getSenha(),
-                    paciente.getFoto(),
-                    paciente.getTipoPaciente(),
-                    consultaIds,
-                    null
-            );
-        } else if(consultas == null && telefones == null){
-            return new PacienteSaidaDTO(
-                    paciente.getIdPaciente(),
-                    paciente.getNome(),
-                    paciente.getCpf(),
-                    paciente.getEmail(),
-                    paciente.getSenha(),
-                    paciente.getFoto(),
-                    paciente.getTipoPaciente(),
-                    null,
-                    null
-            );
-        } else{
-            List<String> telefonesNum = telefones.stream()
-                    .map(Telefone::getTelefone)
-                    .collect(Collectors.toList());
-
-            List<Long> consultaIds = consultas.stream()
-                    .map(Consulta::getIdConsulta)
-                    .collect(Collectors.toList());
-
-            return new PacienteSaidaDTO(
-                    paciente.getIdPaciente(),
-                    paciente.getNome(),
-                    paciente.getCpf(),
-                    paciente.getEmail(),
-                    paciente.getSenha(),
-                    paciente.getFoto(),
-                    paciente.getTipoPaciente(),
-                    consultaIds,
-                    telefonesNum
-            );
-        }
+        return new PacienteSaidaDTO(
+                paciente.getIdPaciente(),
+                paciente.getNome(),
+                paciente.getCpf(),
+                paciente.getEmail(),
+                paciente.getSenha(),
+                paciente.getFoto(),
+                paciente.getTipoPaciente(),
+                consultaIds,
+                telefonesNum
+        );
     }
+
     private Paciente toEntity(PacienteEntradaDTO dto) {
         Paciente paciente = new Paciente();
         paciente.setNome(dto.getNome());

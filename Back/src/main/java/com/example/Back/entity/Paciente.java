@@ -1,5 +1,6 @@
 package com.example.Back.entity;
 
+import com.example.Back.enums.TipoPaciente;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
