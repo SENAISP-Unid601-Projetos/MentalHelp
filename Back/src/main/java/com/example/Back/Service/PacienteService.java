@@ -29,6 +29,18 @@ public class PacienteService {
     private TelefoneRepository telefoneRepository;
 
     public ResponseEntity<PacienteSaidaDTO> salvarPaciente(PacienteEntradaDTO pacienteEntradaDTO) {
+        if(pacienteEntradaDTO.getCpf().length() != 11){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        if (pacienteEntradaDTO.getSenha().length() < 6) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        if (!pacienteEntradaDTO.getEmail().matches("\\S+@\\S+\\.\\S+")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
         boolean cpfExiste = pacienteRepository.existsByCpf(pacienteEntradaDTO.getCpf());
 
         if(cpfExiste){
