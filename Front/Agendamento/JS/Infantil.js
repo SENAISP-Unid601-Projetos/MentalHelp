@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 document.addEventListener('DOMContentLoaded', function() {
     // Variáveis de estado
     let mesAtual = new Date().getMonth();
@@ -180,3 +182,100 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   });
+
+  
+  // FETCH
+
+document.addEventListener("DOMContentLoaded", function () {
+  const btnAgendar = document.getElementById("btnAgendar");
+  const mensagemErro = document.getElementById("mensagemErro");
+  const resumoAgendamento = document.getElementById("resumo-agendamento");
+  const dataSelecionada = document.getElementById("data-selecionada");
+  const horarioSelecionado = document.getElementById("horario-selecionado");
+  const detalhesAgendamento = document.getElementById("detalhes-agendamento");
+
+  let dataConsulta = null;
+  let horarioConsulta = null;
+
+  // Obter os dados do paciente e do profissional do armazenamento ou API
+  const idPaciente = localStorage.getItem("idPaciente");  // Supondo que está armazenado no localStorage
+  const idProfissional = localStorage.getItem("idProfissional");  // Supondo que está armazenado no localStorage
+
+  // Se os dados não estiverem no localStorage, você pode pegar da sessão ou fazer uma requisição.
+  if (!idPaciente || !idProfissional) {
+    console.error("Paciente ou Profissional não encontrados. Por favor, faça login novamente.");
+    return;
+  }
+
+  // Função para formatar a data em ISO 8601
+  function formatarData(data) {
+    return new Date(data).toISOString();
+  }
+
+  // Função para habilitar o botão de agendar se a data e horário estiverem selecionados
+  function verificarSelecao() {
+    if (dataConsulta && horarioConsulta) {
+      btnAgendar.disabled = false;
+      mensagemErro.classList.add("d-none");
+      resumoAgendamento.classList.remove("d-none");
+      dataSelecionada.textContent = `Data selecionada: ${dataConsulta.toLocaleDateString()}`;
+      horarioSelecionado.textContent = `Horário selecionado: ${horarioConsulta}`;
+    } else {
+      btnAgendar.disabled = true;
+      resumoAgendamento.classList.add("d-none");
+      mensagemErro.classList.remove("d-none");
+    }
+  }
+
+  // Seleção da data
+  document.getElementById("dias").addEventListener("click", function (e) {
+    if (e.target && e.target.tagName === "SPAN") {
+      // Captura a data clicada no calendário
+      const dia = e.target.textContent;
+      const mes = document.getElementById("mes").textContent;
+      const ano = new Date().getFullYear();  // Supondo que estamos no ano atual
+
+      const data = `${ano}-${mes}-${dia}`; // Formato simples (ex: 2025-05-14)
+      dataConsulta = new Date(data);
+      verificarSelecao();
+    }
+  });
+
+  // Seleção do horário
+  document.querySelectorAll(".horario-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      horarioConsulta = btn.textContent;
+      verificarSelecao();
+    });
+  });
+
+  // Função para agendar a consulta
+  async function agendarConsulta() {
+    if (!dataConsulta || !horarioConsulta) return;
+
+    const dadosConsulta = {
+      data: formatarData(dataConsulta) + "T" + horarioConsulta + ":00Z",  // Hora do agendamento
+      valorConsulta: 0,  // Valor da consulta (pode ser alterado de acordo com a lógica de preços)
+      tipoConsulta: "INFANTIL",
+      idPaciente: idPaciente,  // ID do paciente logado
+      idProfissional: idProfissional  // ID do profissional selecionado
+    };
+
+    try {
+      const response = await axios.post('http://localhost:8080/api/consultas', dadosConsulta, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      // Exibe o modal de confirmação
+      detalhesAgendamento.textContent = `Consulta agendada para ${dataConsulta.toLocaleDateString()} às ${horarioConsulta}`;
+      const modal = new bootstrap.Modal(document.getElementById("modalConfirmacao"));
+      modal.show();
+
+    } catch (error) {
+      console.error('Erro ao agendar consulta:', error);
+    }
+  }
+
+  // Evento para o botão de agendar consulta
+  btnAgendar.addEventListener("click", agendarConsulta);
+});
