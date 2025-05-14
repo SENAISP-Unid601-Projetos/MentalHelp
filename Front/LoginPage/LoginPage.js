@@ -41,7 +41,7 @@ loginForm.addEventListener('submit', function(event) {
         senha: senhaInput.value
     };
 
-    fetch('https://seu-backend.com/api/login', { // URL do seu backend
+    fetch('http://10.110.12.4:8080/', { // URL do seu backend
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
