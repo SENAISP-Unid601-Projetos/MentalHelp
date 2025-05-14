@@ -8,15 +8,24 @@
 </head>
 <body>
 
+  <!-- Seletor de idioma -->
+  <div class="d-flex justify-content-end p-3">
+    <select id="languageSelect" class="form-select w-auto">
+      <option value="pt">Português</option>
+      <option value="en">English</option>
+      <option value="es">Español</option>
+    </select>
+  </div>
+
   <div class="container-fluid d-flex flex-column flex-md-row vh-100 p-0">
-    <!-- Painel Esquerdo - Calendário -->
+    <!-- Painel Esquerdo -->
     <div class="left-panel d-flex flex-column align-items-center col-md-6 p-4">
-      <h1 class="tipo-atendimento text-center">Atendimento selecionado: Adulto</h1>
+      <h1 class="tipo-atendimento text-center" id="atendimentoSelecionado">Atendimento selecionado: Adulto</h1>
 
       <div class="perfil text-center mt-3">
         <img src="../IMG/Vagner.png" alt="Foto de Vagner" class="avatar" />
-        <h3 class="reunião">Agende uma reunião com Vagner</h3>
-        <h3 class="especialidade mt-2">Especialista em: Desenvolvimento Pessoal</h3>
+        <h3 class="reunião" id="agendarCom">Agende uma reunião com Vagner</h3>
+        <h3 class="especialidade mt-2" id="especialista">Especialista em: Desenvolvimento Pessoal</h3>
       </div>
 
       <div class="calendario w-100 mt-4">
@@ -34,15 +43,14 @@
       <div class="ilustracoes d-flex justify-content-center align-items-end gap-3 mt-auto pb-3">
         <img class="imgautismo" src="../IMG/imagem familia.png" alt="Ilustração 1" />
         <img src="../IMG/imagem de fundo.png" alt="Ilustração 2" />
-        
       </div>
     </div>
 
-    <!-- Painel Direito - Horários -->
+    <!-- Painel Direito -->
     <div class="right-panel col-md-6 p-4 d-flex flex-column">
       <div>
-        <h2 class="text-purple">Qual o horário é melhor?</h2>
-        <p class="subtexto">UTC -3 (Horário de Brasília)</p>
+        <h2 class="text-purple" id="horarioMelhor">Qual o horário é melhor?</h2>
+        <p class="subtexto" id="subtextoHorario">UTC -3 (Horário de Brasília)</p>
 
         <div class="horarios d-flex flex-column gap-3">
           <button class="btn horario-btn">10:00</button>
@@ -54,16 +62,16 @@
         </div>
       </div>
 
-      <!-- Área de Confirmação -->
+      <!-- Confirmação -->
       <div class="mt-auto pt-4">
         <div id="resumo-agendamento" class="mb-3 d-none">
-          <h4>Resumo do Agendamento:</h4>
+          <h4 id="resumoTitulo">Resumo do Agendamento:</h4>
           <p id="data-selecionada" class="mb-1"></p>
           <p id="horario-selecionado"></p>
         </div>
         
         <button id="btnAgendar" class="btn-agendar w-100" disabled>
-          <span class="btn-text">Confirmar Agendamento</span>
+          <span class="btn-text" id="confirmarBtn">Confirmar Agendamento</span>
           <span class="btn-icon">✓</span>
         </button>
         <div id="mensagemErro" class="mt-2 text-danger small text-center d-none">
@@ -73,31 +81,31 @@
     </div>
   </div>
 
-  <!-- Modal de Confirmação -->
+  <!-- Modal -->
   <div class="modal fade" id="modalConfirmacao" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Agendamento Confirmado!</h5>
+          <h5 class="modal-title" id="modalTitulo">Agendamento Confirmado!</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body text-center">
           <div class="mb-3">
             <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
           </div>
-          <h4>Consulta agendada com sucesso!</h4>
+          <h4 id="sucessoTitulo">Consulta agendada com sucesso!</h4>
           <p id="detalhes-agendamento" class="lead mt-3"></p>
         </div>
         <div class="modal-footer justify-content-center">
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fechar</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="btnFechar">Fechar</button>
         </div>
       </div>
     </div>
   </div>
 
   <script src="../JS/Adulto.js"></script>
+  <script src="../JS/TranslationsAgenda.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 </body>
 </html>
-
