@@ -4,17 +4,14 @@ import com.example.Back.Repository.PacienteRepository;
 import com.example.Back.Repository.TelefoneRepository;
 import com.example.Back.entity.Consulta;
 import com.example.Back.entity.Paciente;
-import com.example.Back.entity.Profissional;
 import com.example.Back.entity.Telefone;
 
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

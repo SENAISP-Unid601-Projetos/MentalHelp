@@ -17,6 +17,7 @@ public class PacienteSaidaDTO {
     private String senha;
     private String foto;
 
+
     private List<Long> id_consultas;
     private List<String> id_telefones;
 }
