@@ -1,3 +1,4 @@
+import loginService from "./src/service/loginService"
 
 document.addEventListener('DOMContentLoaded', function() {
 const senhaInput = document.getElementById('senha');
@@ -23,6 +24,7 @@ toggleSenha.addEventListener('click', function() {
 
 // Validação do formulário de login
 loginForm.addEventListener('submit', function(event) {
+    
     event.preventDefault(); // Impede o envio do formulário para testar as validações
 
     // Verificação básica de campos obrigatórios
@@ -41,34 +43,40 @@ loginForm.addEventListener('submit', function(event) {
         senha: senhaInput.value
     };
 
-    fetch('https://seu-backend.com/api/login', { // URL do seu backend
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(loginData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Esconde o spinner e reabilita o botão de login
-        loadingSpinner.classList.add('d-none');
-        loginBtn.disabled = false;
+    //Token de sessão
+    const token = loginService.checkUserAuth(loginData.email, loginData.senha);
 
-        if (data.success) {
-            // Se o login for bem-sucedido, redireciona ou realiza outra ação
-            alert('Login realizado com sucesso!');
-            window.location.href = 'dashboard.html'; // Redireciona para a página do dashboard
-        } else {
-            // Se o login falhar, exibe uma mensagem de erro
-            alert('Credenciais inválidas. Tente novamente.');
-        }
-    })
-    .catch(error => {
-    // Erro de rede ou outra falha
-    console.error('Erro:', error);
-    loadingSpinner.classList.add('d-none');
-    loginBtn.disabled = false;
-    alert('Ocorreu um erro ao tentar fazer login. Tente novamente mais tarde.');
-    });
+    console.log(token);
+    console.log(loginData.email, loginData.senha);
+
+    // fetch('https://seu-backend.com/api/login', { // URL do seu backend
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify(loginData)
+    // })
+    // .then(response => response.json())
+    // .then(data => {
+    //     // Esconde o spinner e reabilita o botão de login
+    //     loadingSpinner.classList.add('d-none');
+    //     loginBtn.disabled = false;
+
+    //     if (data.success) {
+    //         // Se o login for bem-sucedido, redireciona ou realiza outra ação
+    //         alert('Login realizado com sucesso!');
+    //         window.location.href = 'dashboard.html'; // Redireciona para a página do dashboard
+    //     } else {
+    //         // Se o login falhar, exibe uma mensagem de erro
+    //         alert('Credenciais inválidas. Tente novamente.');
+    //     }
+    // })
+    // .catch(error => {
+    // // Erro de rede ou outra falha
+    // console.error('Erro:', error);
+    // loadingSpinner.classList.add('d-none');
+    // loginBtn.disabled = false;
+    // alert('Ocorreu um erro ao tentar fazer login. Tente novamente mais tarde.');
+    // });
 });
 });
