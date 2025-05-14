@@ -24,14 +24,14 @@
                 <h2 class="text-center text-purple mb-4">Log in</h2>
     
                 <!-- Formulário -->
-                <form>
+                <form id="loginForm">
                     <div class="mb-3 position-relative">
                         <i class="bi bi-person input-icon"></i>
-                        <input type="email" class="form-control custom-input ps-5" placeholder="Usuário">
+                        <input id="email" type="email" class="form-control custom-input ps-5" placeholder="Usuário">
                     </div>
                     <div class="mb-3 position-relative">
                         <i class="bi bi-lock input-icon"></i>
-                        <input type="password" class="form-control custom-input ps-5 pe-5" id="senha" placeholder="Senha">
+                        <input id="senha" type="password" class="form-control custom-input ps-5 pe-5" id="senha" placeholder="Senha">
                         <i class="bi bi-eye-slash toggle-password" id="toggleSenha"></i>
                     </div>
                     <div class="mb-3 d-flex justify-content-between align-items-center">
@@ -41,7 +41,7 @@
                         </div>
                         <a href="#" class="text-muted fst-italic small">Esqueci a Senha</a>
                     </div>
-                    <button type="submit" class="btn btn-purple w-100 mb-3">Log in</button>
+                    <button id="loginBtn" type="submit" class="btn btn-purple w-100 mb-3">Log in</button>
                     <div class="text-center small">
                         Ainda não tem uma conta?
                         <div class="dropdown d-inline-block position-relative">
