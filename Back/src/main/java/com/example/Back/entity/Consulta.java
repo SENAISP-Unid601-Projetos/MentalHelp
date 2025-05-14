@@ -25,4 +25,6 @@ public class Consulta {
     @ManyToOne
     @JoinColumn(name="profissional_id")
     private Profissional profissional;
+
+
 }
