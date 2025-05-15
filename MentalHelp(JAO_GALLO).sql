@@ -140,3 +140,66 @@ FROM Consulta c
 JOIN Profisional pr ON c.profissional_id = pr.id_profisional
 WHERE pr.nome = 'Nome do Médico' 
 GROUP BY pr.id_profisional, pr.nome;
+
+-- media de idade geral dos pacientes
+SELECT AVG(TIMESTAMPDIFF(YEAR, p.data_nascimento, CURDATE())) AS media_idade_geral
+FROM paciente p;
+
+-- media de idade por tipo de consulta
+SELECT AVG(TIMESTAMPDIFF(YEAR, p.data_nascimento, CURDATE())) AS media_idade_especial
+FROM paciente p
+JOIN consulta c ON c.paciente_id = p.id_paciente
+WHERE c.tipo_consulta = 'Especial';
+
+SELECT AVG(TIMESTAMPDIFF(YEAR, p.data_nascimento, CURDATE())) AS media_idade_infantil
+FROM paciente p
+JOIN consulta c ON c.paciente_id = p.id_paciente
+WHERE c.tipo_consulta = 'Infantil';
+
+SELECT AVG(TIMESTAMPDIFF(YEAR, p.data_nascimento, CURDATE())) AS media_idade_adulto
+FROM paciente p
+JOIN consulta c ON c.paciente_id = p.id_paciente
+WHERE c.tipo_consulta = 'Adulto';
+
+-- número de consultas por médico no último mês
+SELECT pr.nome AS medico,
+       COUNT(c.id_consulta) AS total_consultas
+FROM consulta c
+JOIN profissional pr ON c.profissional_id = pr.id_profissional
+WHERE c.data >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+GROUP BY pr.id_profissional, pr.nome
+ORDER BY total_consultas DESC;
+
+-- médico que realizou MENOS consultas em UM DIA
+SELECT pr.nome AS medico,
+       COUNT(c.id_consulta) AS total_consultas
+FROM consulta c
+JOIN profissional pr ON c.profissional_id = pr.id_profissional
+WHERE c.data >= CURDATE() - INTERVAL 1 DAY
+GROUP BY pr.id_profissional, pr.nome
+ORDER BY total_consultas ASC
+LIMIT 1;
+
+-- número de consultas por tipo de atendimento
+SELECT tipo_consulta,
+       COUNT(*) AS total_consultas
+FROM consulta
+GROUP BY tipo_consulta;
+
+--  número de consultas por especialidade do profissional
+SELECT pr.especialidade,
+       COUNT(c.id_consulta) AS total_consultas
+FROM consulta c
+JOIN profissional pr ON c.profissional_id = pr.id_profissional
+GROUP BY pr.especialidade
+ORDER BY total_consultas DESC;
+
+-- consulta com o maior valor
+SELECT * FROM consulta
+ORDER BY valor_consulta DESC
+LIMIT 1;
+
+-- consulta com o menor valor
+SELECT * FROM consulta
+ORDER BY valor_consulta ASC
+LIMIT 1;
