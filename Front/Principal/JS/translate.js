@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById("professionals").textContent = t.professionals;
       document.getElementById("contact").textContent = t.contact;
       document.getElementById("apoioLink").textContent = t.apoioLink;
-      document.querySelector("a[href*='LoginPage']").textContent = t.entrar;
+      document.querySelector("a[href*='Login']").textContent = t.entrar;
       document.getElementById("btnAgende").textContent = t.agendeConsulta;
       document.querySelector(".titulo-principal").innerHTML = t.tituloPrincipal;
       document.querySelector(".text-color").textContent = t.paragrafoPrincipal1;
