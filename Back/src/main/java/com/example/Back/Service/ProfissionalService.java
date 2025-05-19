@@ -64,9 +64,8 @@ public class ProfissionalService {
         return new ResponseEntity<>(toProfissionalDTO(profissionalOpt.get()), HttpStatus.OK);
     }
 
-    // Buscar profissionais por Especialidade
     public ResponseEntity<List<ProfissionalSaidaDTO>> buscarProfissionaisPorEspecialidade(String especialidade) {
-        Optional<Profissional> profissionais = profissionalRepository.findByEspecialidade(especialidade);
+        List<Profissional> profissionais = profissionalRepository.findByEspecialidade(especialidade);
         if (profissionais.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

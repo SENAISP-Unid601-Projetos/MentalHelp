@@ -3,6 +3,7 @@ package com.example.Back.Repository;
 import com.example.Back.entity.Profissional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ProfissionalRepository  extends JpaRepository<Profissional, Long> {
@@ -14,5 +15,5 @@ public interface ProfissionalRepository  extends JpaRepository<Profissional, Lon
 
    boolean existsByCrm(String crm);
 
-    Optional<Profissional> findByEspecialidade(String especialidade);
+    List<Profissional> findByEspecialidade(String especialidade);
 }
