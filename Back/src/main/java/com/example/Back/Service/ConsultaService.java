@@ -8,11 +8,18 @@ import com.example.Back.Repository.ConsultaRepository;
 import com.example.Back.entity.Paciente;
 import com.example.Back.entity.Profissional;
 import com.example.Back.exception.ConflitoHorarioException;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.transaction.annotation.Transactional;  // Spring Transactional
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -54,39 +61,47 @@ public class ConsultaService {
         return consulta;
     }
 
+
+
     @Transactional
     public ResponseEntity<ConsultaDTO> criarConsulta(ConsultaDTO consultaDTO) {
+        try {
+            Optional<Paciente> pacienteOpt = pacienteRepository.findById(consultaDTO.getIdPaciente());
+            if (pacienteOpt.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
 
-        Optional<Paciente> pacienteOpt = pacienteRepository.findById(consultaDTO.getIdPaciente());
-        if (pacienteOpt.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            Optional<Profissional> profissionalOpt = profissionalRepository.findById(consultaDTO.getIdProfissional());
+            if (profissionalOpt.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+            if (consultaRepository.existsByProfissionalIdAndData(consultaDTO.getIdProfissional(), consultaDTO.getData())) {
+                throw new ConflitoHorarioException("Já existe uma consulta agendada para este profissional neste horário.");
+            }
+
+            Paciente paciente = pacienteOpt.get();
+            Profissional profissional = profissionalOpt.get();
+
+            Consulta consulta = toEntity(consultaDTO);
+            Consulta novaConsulta = consultaRepository.save(consulta);
+
+            paciente.getConsultas().add(novaConsulta);
+            profissional.getConsultas().add(novaConsulta);
+
+            pacienteRepository.save(paciente);
+            profissionalRepository.save(profissional);
+
+            return new ResponseEntity<>(toDTO(novaConsulta), HttpStatus.CREATED);
+
+        } catch (ConflitoHorarioException e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            // Logar exceção real em produção com logger
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        // Validar existência de profissional
-        Optional<Profissional> profissionalOpt = profissionalRepository.findById(consultaDTO.getIdProfissional());
-        if (profissionalOpt.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        // Adicionar validação de conflito de horário
-        if (consultaRepository.existsByProfissionalIdAndData(consultaDTO.getIdProfissional(), consultaDTO.getData())) {
-            throw new ConflitoHorarioException("Já existe uma consulta agendada para este profissional neste horário.");
-        }
-
-        Paciente paciente = pacienteOpt.get();
-        Profissional profissional = profissionalOpt.get();
-
-        Consulta consulta = toEntity(consultaDTO);
-        Consulta novaConsulta = consultaRepository.save(consulta);
-
-        paciente.getConsultas().add(novaConsulta);
-        profissional.getConsultas().add(novaConsulta);
-
-        pacienteRepository.save(paciente);
-        profissionalRepository.save(profissional);
-
-        return new ResponseEntity<>(toDTO(novaConsulta), HttpStatus.CREATED);
     }
+
 
     public ResponseEntity<List<ConsultaDTO>> listarConsultas() {
         List<ConsultaDTO> consultas = consultaRepository.findAll()
