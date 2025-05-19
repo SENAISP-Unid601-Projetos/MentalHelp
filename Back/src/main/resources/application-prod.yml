@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://dpg-d0cfsia4d50c73cgpcs0-a.oregon-postgres.render.com/mentalhelp
+    username: senaisc
+    password: 2xBM2IjxdpXZdsbfZ7SwvpnrOCoZonMr
+    driver-class-name: org.postgresql.Driver
+    initialization-mode: always
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true

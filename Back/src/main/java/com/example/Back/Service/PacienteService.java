@@ -5,13 +5,15 @@ import com.example.Back.Repository.TelefoneRepository;
 import com.example.Back.entity.Consulta;
 import com.example.Back.entity.Paciente;
 import com.example.Back.entity.Telefone;
-
-
+import com.example.Back.entity.Profissional;
+import com.example.Back.entity.Telefone;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,6 +28,18 @@ public class PacienteService {
     private TelefoneRepository telefoneRepository;
 
     public ResponseEntity<PacienteSaidaDTO> salvarPaciente(PacienteEntradaDTO pacienteEntradaDTO) {
+        if(pacienteEntradaDTO.getCpf().length() != 11){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        if (pacienteEntradaDTO.getSenha().length() < 6) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        if (!pacienteEntradaDTO.getEmail().matches("\\S+@\\S+\\.\\S+")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
         boolean cpfExiste = pacienteRepository.existsByCpf(pacienteEntradaDTO.getCpf());
 
         if(cpfExiste){

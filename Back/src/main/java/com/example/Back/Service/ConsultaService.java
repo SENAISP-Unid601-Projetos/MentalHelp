@@ -7,14 +7,12 @@ import com.example.Back.entity.Consulta;
 import com.example.Back.Repository.ConsultaRepository;
 import com.example.Back.entity.Paciente;
 import com.example.Back.entity.Profissional;
-import com.example.Back.entity.Telefone;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -183,6 +181,20 @@ public class ConsultaService {
         List<ConsultaDTO> consultas = consultaRepository.findByData(data)
                 .stream()
                 .map(consulta -> toDTO((Consulta) consulta))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(consultas, HttpStatus.OK);
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<ConsultaDTO>> buscarConsultasPorPacienteEData(Long idPaciente, LocalDateTime data) {
+        Optional<Paciente> pacienteOpt = pacienteRepository.findById(idPaciente);
+        if (pacienteOpt.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        List<ConsultaDTO> consultas = consultaRepository.findByPacienteAndData(pacienteOpt.get(), data)
+                .stream()
+                .map(this::toDTO)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(consultas, HttpStatus.OK);
     }

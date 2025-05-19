@@ -24,7 +24,6 @@ public class Paciente {
     private String foto;
     private LocalDateTime dataDeNascimento;
 
-
     @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Consulta> consultas;
 

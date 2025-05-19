@@ -1,10 +1,202 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
+<html lang="pt-br">
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <h1>teste</h1>
-  <body></body>
+    <title>MentalHelp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/be2221d752.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="Principal/CSS/principal.css" />
+    <script src="Principal/JS/home.js" defer></script>
+    <script src="Principal/JS/translate.js" defer></script>
+</head>
+
+<body>  
+    <div class="position-sticky top-0 z-3 bg-white">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-8 d-flex justify-content-between align-items-center py-2 px-5">
+                    <div id="logoSection" class="d-flex align-items-center gap-2" style="cursor: pointer;">
+                        <img src="Recursos/img/Logo.png" alt="Logo" class="w-25" />
+                        <span class="text-colorLogo">MentalHelp</span>
+                    </div>
+                    <nav class="d-none d-md-flex gap-5">
+                        <a id="professionals" class="text-decoration-none textHeader nav-link-hover">Profissionais</a>
+                        <a id="contact" class="text-decoration-none textHeader nav-link nav-link-hover">Contato</a>
+                        <a id="apoioLink" class="text-decoration-none textHeader nav-link nav-link-hover">Apoio</a>
+                        <a href="Login/Login.html"
+                            class="text-decoration-none textHeader nav-link nav-link-hover">Entrar</a>
+                        <select id="languageSelect" class=" form-select-sm" style="width: 120px;">
+                            <option value="pt">Português</option>
+                            <option value="en">English</option>
+                            <option value="es">Español</option>
+                        </select>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-none d-md-block">
+        <img src="Recursos/img/q2.jpeg" alt="Atendimento" class="position-absolute top-0 end-0 h-100 object-fit-cover z-3"
+            style="width: 33.33vw" />
+    </div>
+
+    <div class="container-fluid d-flex p-0 position-relative border-bottom  p-5" style="z-index: 2">
+        <div class="col-md-8 bg-white d-flex flex-column justify-content-between p-5 pt-0">
+
+
+            <div class="d-flex flex-column align-items-start mt-10 text-start ">
+                <h1 class="fw-semibold titulo-principal lh-base" id="tituloPrincipal">
+                    Você<br />Não Está<br />Sozinho
+                </h1>
+                <p class="fw-semibold mt-4 text-color" id="paragrafoPrincipal1">
+                    Cuidar da mente é um ato de coragem.
+                </p>
+                <p class="text-colorParagrafo lh-base mw-50" id="paragrafoPrincipal2">
+                    Aqui, você encontra acolhimento, escuta e apoio profissional para
+                    enfrentar os desafios emocionais do dia a dia. Dê o primeiro passo
+                    para transformar sua vida — Estamos com você.
+                </p>
+                <div class="w-100 d-flex justify-content-end">
+                    <a id="btnAgende" class="text-decoration-none text-colorLogo text-center custom-hover-btn">
+                        Agende uma Consulta!
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="vemAqui" class="p-5 ">
+        <div class="row align-items-center mb-5">
+            <div class="col-md-2 text-center">
+                <img src="Recursos/img/Mykael.png" alt="Dr. Mykael Balbino" class="img-fluid" />
+            </div>
+            <div class="col-md-10">
+                <h5 class="fw-bold text-color">
+                    Dr. Mykael Balbino – Psicólogo Especialista em Neurodivergência
+                </h5>
+                <p class="text-colorParagrafo lh-base">
+                    Especialista no desenvolvimento emocional e comportamental de
+                    crianças, o Dr. Rafael trabalha com empatia e escuta ativa para
+                    ajudar pequenos pacientes a enfrentarem desafios como ansiedade,
+                    dificuldades escolares e problemas de socialização.
+                </p>
+                <a href="Agendamento/HTML/agendamentoEspecial.html" class="btn fw-bold"
+                    style="background-color: #a7afff; color: white">Agende aqui !</a>
+            </div>
+        </div>
+
+        <div class="row align-items-center mb-5 flex-md-row-reverse text-end">
+            <div class="col-md-2 text-center">
+                <img src="Recursos/img/Gabrielly.png" alt="Dra. Gabrielly Milhor" class="img-fluid" />
+            </div>
+            <div class="col-md-10">
+                <h5 class="fw-bold text-color">
+                    Dra. Gabrielly Milhor – Psicóloga Infantil
+                </h5>
+                <p class="text-colorParagrafo lh-base">
+                    Com ampla experiência no atendimento de crianças e adolescentes,
+                    Dra. Camila utiliza abordagens lúdicas e terapias baseadas em
+                    evidências para promover o bem-estar psicológico desde os primeiros
+                    anos de vida.
+                </p>
+                <a href="Agendamento/HTML/agendamentoInfantil.html" class="btn fw-bold"
+                    style="background-color: #a7afff; color: white">Agende aqui !</a>
+            </div>
+        </div>
+
+        <div class="row align-items-center">
+            <div class="col-md-2 text-center">
+                <img src="Recursos/img/Vagner.png" alt="Dr. Vagner Nunes" class="img-fluid" />
+            </div>
+            <div class="col-md-10">
+                <h5 class="fw-bold text-color">Dr. Vagner Nunes – Psicólogo Geral</h5>
+                <p class="text-colorParagrafo lh-base">
+                    Focado em crianças com transtornos do neurodesenvolvimento, como
+                    TDAH e TEA, o Dr. Eduardo oferece um olhar técnico e acolhedor,
+                    atuando em parceria com escolas e famílias para um cuidado integral.
+                </p>
+                <a href="Agendamento/HTML/agendamentoAdulto.html" class="btn fw-bold"
+                    style="background-color: #a7afff; color: white">Agende aqui !</a>
+            </div>
+        </div>
+    </section>
+    <section id="apoio" class="container my-5 border-top p-5">
+        <h2 class="fw-bold text-color mb-4" id="apoioTitulo">TRANSTORNOS MAIS COMUNS</h2>
+
+        <div class="mb-5 border-2 pt-3">
+            <h5 class="fw-semibold text-color" id="tagTitulo">Transtorno de Ansiedade Generalizada (TAG)</h5>
+            <p class="text-colorParagrafo lh-base" id="tagDescricao">
+                O TAG é um transtorno caracterizado por uma preocupação excessiva e persistente, mesmo quando não há motivo
+                claro para tanta apreensão.
+                Pessoas com TAG costumam se sentir constantemente tensas, nervosas e têm dificuldade para controlar os
+                pensamentos ansiosos.
+                Os sintomas incluem inquietação, fadiga, dificuldade de concentração, irritabilidade e alterações no sono.
+                O TAG pode afetar adultos e crianças, interferindo nas atividades diárias, no rendimento escolar e nas relações
+                sociais.
+                Com acompanhamento psicológico e, em alguns casos, apoio médico, é possível controlar a ansiedade e melhorar
+                significativamente a qualidade de vida.
+            </p>
+            <div class="ratio ratio-16x9">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/KZTKzXWBcNk?si=C1yS9CULqPwGSa_z"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <div class="mb-5 border-2 border-primary pt-3">
+            <h5 class="fw-semibold text-color" id="depressaoTitulo">Depressão Maior (Transtorno Depressivo Maior)</h5>
+            <p class="text-colorParagrafo lh-base" id="depressaoDescricao">
+                A Depressão Maior é um transtorno mental sério que vai muito além da tristeza passageira.
+                Ela se caracteriza por um estado persistente de desânimo, perda de interesse em atividades antes prazerosas,
+                cansaço constante,
+                alterações no sono e no apetite, dificuldades de concentração e, em casos mais graves, pensamentos de
+                inutilidade ou suicídio.
+                Em crianças e adolescentes, pode se manifestar como irritabilidade, isolamento, baixo rendimento escolar e
+                mudanças bruscas de comportamento.
+                O diagnóstico deve ser feito por um profissional, e o tratamento pode envolver psicoterapia, apoio familiar e,
+                em alguns casos, medicação.
+                Reconhecer os sinais precocemente é essencial para garantir uma intervenção eficaz e o bem-estar da pessoa
+                afetada.
+            </p>
+            <div class="ratio ratio-16x9">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/l16BskCD0cM?si=CdGuBt9gWeCgH7OG"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+        </div>
+    </section>
+    <footer id="contatoFooter" class="footer text-white text-center py-4">
+        <div class="container text-colorFooter ">
+            <div class="row align-items-center mb-3">
+                <div class="col-md-4 mb-3 mb-md-0 d-flex align-items-center justify-content-center">
+                    <img src="Recursos/img/Logo.png" alt="Logo" class="w-25">
+                    <strong>MentalHelp</strong>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="fw-bold footerTitle" id="contatoTitulo">Contato Emergencial</h5>
+                </div>
+            </div>
+
+            <div class="row text-center justify-content-center mb-3">
+                <div class="col-md-2 mb-2">
+                    <i class="fab fa-instagram fa-lg me-1"></i> @mentalhelp
+                </div>
+                <div class="col-md-3 mb-2">
+                    <i class="fas fa-envelope fa-lg me-1"></i> MentalHelp@gmail.com
+                </div>
+                <div class="col-md-2 mb-2">
+                    <i class="fas fa-phone fa-lg me-1"></i> 188
+                </div>
+            </div>
+
+            <p class="mb-0 small">© <span id="direitos">Direitos Reservados a MentalHelp 2025. All Rights Reserved.</span></p>
+        </div>
+    </footer>
+</body>
+
 </html>
