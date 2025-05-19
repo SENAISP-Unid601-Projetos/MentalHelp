@@ -1,8 +1,6 @@
 package com.example.Back.controller;
 
 import com.example.Back.DTO.ConsultaDTO;
-import com.example.Back.DTO.ProfissionalEntradaDTO;
-import com.example.Back.DTO.ProfissionalSaidaDTO;
 import com.example.Back.Service.ConsultaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -44,16 +42,16 @@ public class ConsultaController {
     }
 
     @GetMapping("/filter")
-    public ResponseEntity<List<ConsultaDTO>> getConsultasByPacienteAndData(
-            @RequestParam(required = false) Long idPaciente,
+    public ResponseEntity<List<ConsultaDTO>> getConsultasByProfissionalAndData(
+            @RequestParam(required = false) Long idProfissional,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime data) {
 
-        if (idPaciente != null && data != null) {
+        if (idProfissional != null && data != null) {
             // Busca por ambos os parâmetros
-            return consultaService.buscarConsultasPorPacienteEData(idPaciente, data);
-        } else if (idPaciente != null) {
+            return consultaService.buscarConsultasPorProfissionalEData(idProfissional, data);
+        } else if (idProfissional != null) {
             // Busca apenas por paciente
-            return consultaService.buscarConsultasPorPaciente(idPaciente);
+            return consultaService.buscarConsultasPorProfissional(idProfissional);
         } else if (data != null) {
             // Busca apenas por data
             return consultaService.buscarConsultasPorData(data);
@@ -63,6 +61,14 @@ public class ConsultaController {
         }
     }
 
+    @GetMapping("/{id}/paciente")
+    public ResponseEntity<List<ConsultaDTO>> getByIdPaciente(@PathVariable Long id) {
+        return consultaService.buscarConsultasPorPaciente(id);
+    }
+    @GetMapping("/{id}/profissional")
+    public ResponseEntity<List<ConsultaDTO>> getByIdMedico(@PathVariable Long id) {
+        return consultaService.buscarConsultasPorProfissional(id);
+    }
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, Object>> updateConsulta(@PathVariable Long id, @RequestBody ConsultaDTO consultaDTO) {
         ResponseEntity<ConsultaDTO> responseEntity = consultaService.atualizarConsulta(id, consultaDTO);
