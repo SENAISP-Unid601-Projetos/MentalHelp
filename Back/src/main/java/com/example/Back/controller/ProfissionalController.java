@@ -63,7 +63,7 @@ public class ProfissionalController {
     public ResponseEntity<List<ProfissionalSaidaDTO>> getProfissionais() {
         return proService.listarProfissional();
     }
-    @GetMapping("/especialidade/{especialidade}")
+    @GetMapping("/{especialidade}")
     public ResponseEntity<Map<String, Object>> getProfissionaisPorEspecialidade(@PathVariable String especialidade) {
         ResponseEntity<List<ProfissionalSaidaDTO>> responseEntity = proService.listarProfissionalPorEspecialidade(especialidade);
         Map<String, Object> response = new HashMap<>();

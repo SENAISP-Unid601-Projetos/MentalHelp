@@ -58,7 +58,7 @@ public class ProfissionalService {
 
         return new ResponseEntity<>(profissionais, HttpStatus.OK);
     }
-    
+
 
     public ResponseEntity<ProfissionalSaidaDTO> buscarProfissionalPorId(Long idProfissional) {
         if (idProfissional == null || idProfissional <= 0) {
