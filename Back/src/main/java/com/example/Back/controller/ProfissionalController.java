@@ -19,7 +19,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/profissional")
@@ -63,55 +62,48 @@ public class ProfissionalController {
     public ResponseEntity<List<ProfissionalSaidaDTO>> getProfissionais() {
         return proService.listarProfissional();
     }
-    @GetMapping("/{especialidade}")
-    public ResponseEntity<Map<String, Object>> getProfissionaisPorEspecialidade(@PathVariable String especialidade) {
-        ResponseEntity<List<ProfissionalSaidaDTO>> responseEntity = proService.listarProfissionalPorEspecialidade(especialidade);
-        Map<String, Object> response = new HashMap<>();
 
+    // GET por ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> getProfissionalById(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+        ResponseEntity<ProfissionalSaidaDTO> responseEntity = proService.buscarProfissionalPorId(id);
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            response.put("message", messageSource.getMessage("get.success", null, Locale.getDefault()));
+            response.put("message", messageSource.getMessage("fetch.success", null, Locale.getDefault()));
+            response.put("profissional", responseEntity.getBody());
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("message", messageSource.getMessage("fetch.notfound", null, Locale.getDefault()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+
+    // GET por CRM
+    @GetMapping("/crm/{crm}")
+    public ResponseEntity<Map<String, Object>> getProfissionalByCrm(@PathVariable String crm) {
+        Map<String, Object> response = new HashMap<>();
+        ResponseEntity<ProfissionalSaidaDTO> responseEntity = proService.buscarProfissionalPorCrm(crm);
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            response.put("message", messageSource.getMessage("fetch.success", null, Locale.getDefault()));
+            response.put("profissional", responseEntity.getBody());
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("message", messageSource.getMessage("fetch.notfound", null, Locale.getDefault()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+
+    // GET por Especialidade
+    @GetMapping("/especialidade/{especialidade}")
+    public ResponseEntity<Map<String, Object>> getProfissionaisByEspecialidade(@PathVariable String especialidade) {
+        Map<String, Object> response = new HashMap<>();
+        ResponseEntity<List<ProfissionalSaidaDTO>> responseEntity = proService.buscarProfissionaisPorEspecialidade(especialidade);
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            response.put("message", messageSource.getMessage("fetch.success", null, Locale.getDefault()));
             response.put("profissionais", responseEntity.getBody());
             return ResponseEntity.ok(response);
-        } else if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
-            response.put("message", messageSource.getMessage("get.invalid", null, Locale.getDefault()));
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         } else {
-            response.put("message", messageSource.getMessage("get.notfound", null, Locale.getDefault()));
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
-    }
-
-
-
-    @GetMapping("/id/{id}")
-    public ResponseEntity<Map<String, Object>> getProfissionalPorId(@PathVariable Long id) {
-        ResponseEntity<ProfissionalSaidaDTO> responseEntity = proService.buscarProfissionalPorId(id);
-        Map<String, Object> response = new HashMap<>();
-
-        if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            response.put("message", messageSource.getMessage("get.success", null, Locale.getDefault()));
-            response.put("profissional", responseEntity.getBody());
-            return ResponseEntity.ok(response);
-        } else if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
-            response.put("message", messageSource.getMessage("get.invalid", null, Locale.getDefault()));
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        } else {
-            response.put("message", messageSource.getMessage("get.notfound", null, Locale.getDefault()));
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
-    }
-
-    @GetMapping("/crm/{crm}")
-    public ResponseEntity<Map<String, Object>> getProfissionalPorCrm(@PathVariable String crm) {
-        ResponseEntity<ProfissionalSaidaDTO> responseEntity = proService.buscarProfissionalPorCrm(crm);
-        Map<String, Object> response = new HashMap<>();
-
-        if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            response.put("message", messageSource.getMessage("get.success", null, Locale.getDefault()));
-            response.put("profissional", responseEntity.getBody());
-            return ResponseEntity.ok(response);
-        } else {
-            response.put("message", messageSource.getMessage("get.notfound", null, Locale.getDefault()));
+            response.put("message", messageSource.getMessage("fetch.notfound", null, Locale.getDefault()));
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
