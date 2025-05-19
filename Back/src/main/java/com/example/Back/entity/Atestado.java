@@ -3,6 +3,7 @@ package com.example.Back.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -12,7 +13,7 @@ public class Atestado {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idAtestado;
 
-    private LocalDateTime data;
+    private LocalDate data;
     private String cid;
     private String descricao;
 
