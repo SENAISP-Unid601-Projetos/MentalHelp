@@ -162,10 +162,4 @@ public class PacienteService {
         return paciente;
     }
 
-    public boolean authenticateUser(PacienteLoginDTO pacienteLoginDTO) {
-        return pacienteRepository.findByEmail(pacienteLoginDTO.getEmail())
-                .map(paciente -> paciente.getSenha().equals(pacienteLoginDTO.getSenha()))
-                .orElse(false);
-    }
-
 }
