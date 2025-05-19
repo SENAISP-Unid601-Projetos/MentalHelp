@@ -16,12 +16,12 @@ public class LoginController {
     private LoginService loginService;
 
     public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest){
-        boolean loginVerificacao = loginService.Autenticar(loginRequest.getEmailOuCpf(), loginRequest.getSenha());
+        String nome = loginService.autenticar(loginRequest.getCrmOuCpf(), loginRequest.getSenha());
 
-        if(loginVerificacao){
-            return ResponseEntity.ok("Login bem-sucedido");
+        if (nome != null) {
+            return ResponseEntity.ok(nome);
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas.");
         }
     }
 }

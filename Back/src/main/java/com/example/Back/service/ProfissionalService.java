@@ -1,7 +1,6 @@
 package com.example.Back.Service;
 
 import com.example.Back.DTO.ProfissionalEntradaDTO;
-import com.example.Back.DTO.ProfissionalLoginDTO;
 import com.example.Back.DTO.ProfissionalSaidaDTO;
 import com.example.Back.Repository.ProfissionalRepository;
 import com.example.Back.entity.Consulta;

@@ -19,22 +19,17 @@ public class LoginService {
     private ProfissionalRepository profissionalRepository;
 
     //sem user details, password encoder, etc.
-    public boolean Autenticar(String identificador, String senha){
+    public String autenticar(String identificador, String senha){
         Optional<Paciente> paciente = pacienteRepository.findByCpf(identificador);
         if(paciente.isPresent() && paciente.get().getSenha().matches(senha)){
-            return true;
+            return paciente.get().getNome();
         }
 
-        Optional<Profissional> profissional = profissionalRepository.findByEmail(identificador);
+        Optional<Profissional> profissional = profissionalRepository.findByCrm(identificador);
         if(profissional.isPresent() && profissional.get().getSenha().matches(senha)){
-            return true;
+            return profissional.get().getNome();
         }
 
-        Optional<Paciente> pacientePeloEmail = pacienteRepository.findByEmail(identificador);
-        if(paciente.isPresent() && paciente.get().getSenha().matches(senha)){
-            return true;
-        }
-
-        return false;
+        return null;
     }
 }
