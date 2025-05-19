@@ -1,4 +1,4 @@
-import loginService from "./src/service/loginService"
+import loginService from "./src/service/loginService.js"
 
 document.addEventListener('DOMContentLoaded', function() {
 const senhaInput = document.getElementById('senha');
@@ -43,11 +43,11 @@ loginForm.addEventListener('submit', function(event) {
         senha: senhaInput.value
     };
 
-    //Token de sessão
-    const token = loginService.checkUserAuth(loginData.email, loginData.senha);
+    // //Token de sessão
+    // const token = loginService.checkUserAuth(loginData.email, loginData.senha);
 
-    console.log(token);
-    console.log(loginData.email, loginData.senha);
+    // console.log(token);
+    // console.log(loginData.email, loginData.senha);
 
     // fetch('https://seu-backend.com/api/login', { // URL do seu backend
     //     method: 'POST',
