@@ -58,20 +58,31 @@ public class ProfissionalService {
 
         return new ResponseEntity<>(profissionais, HttpStatus.OK);
     }
+    
 
     public ResponseEntity<ProfissionalSaidaDTO> buscarProfissionalPorId(Long idProfissional) {
+        if (idProfissional == null || idProfissional <= 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         Optional<Profissional> profissionalOpt = profissionalRepository.findById(idProfissional);
         if (profissionalOpt.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
         return new ResponseEntity<>(toProfissionalDTO(profissionalOpt.get()), HttpStatus.OK);
     }
 
     public ResponseEntity<ProfissionalSaidaDTO> buscarProfissionalPorCrm(String crm) {
+        if (crm == null || crm.trim().isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         Optional<Profissional> profissionalOpt = profissionalRepository.findByCrm(crm);
         if (profissionalOpt.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
         return new ResponseEntity<>(toProfissionalDTO(profissionalOpt.get()), HttpStatus.OK);
     }
 

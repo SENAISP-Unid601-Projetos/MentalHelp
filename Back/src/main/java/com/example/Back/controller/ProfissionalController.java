@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/profissional")
@@ -62,7 +63,6 @@ public class ProfissionalController {
     public ResponseEntity<List<ProfissionalSaidaDTO>> getProfissionais() {
         return proService.listarProfissional();
     }
-
     @GetMapping("/especialidade/{especialidade}")
     public ResponseEntity<Map<String, Object>> getProfissionaisPorEspecialidade(@PathVariable String especialidade) {
         ResponseEntity<List<ProfissionalSaidaDTO>> responseEntity = proService.listarProfissionalPorEspecialidade(especialidade);
@@ -72,11 +72,16 @@ public class ProfissionalController {
             response.put("message", messageSource.getMessage("get.success", null, Locale.getDefault()));
             response.put("profissionais", responseEntity.getBody());
             return ResponseEntity.ok(response);
+        } else if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
+            response.put("message", messageSource.getMessage("get.invalid", null, Locale.getDefault()));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         } else {
             response.put("message", messageSource.getMessage("get.notfound", null, Locale.getDefault()));
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
+
+
 
     @GetMapping("/id/{id}")
     public ResponseEntity<Map<String, Object>> getProfissionalPorId(@PathVariable Long id) {
@@ -87,6 +92,9 @@ public class ProfissionalController {
             response.put("message", messageSource.getMessage("get.success", null, Locale.getDefault()));
             response.put("profissional", responseEntity.getBody());
             return ResponseEntity.ok(response);
+        } else if (responseEntity.getStatusCode() == HttpStatus.BAD_REQUEST) {
+            response.put("message", messageSource.getMessage("get.invalid", null, Locale.getDefault()));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         } else {
             response.put("message", messageSource.getMessage("get.notfound", null, Locale.getDefault()));
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
