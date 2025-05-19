@@ -122,10 +122,4 @@ public class ProfissionalService {
         return profissional;
     }
 
-    public boolean authenticateUser(ProfissionalLoginDTO profissionalLoginDTO) {
-        return profissionalRepository.findByEmail(profissionalLoginDTO.getEmail())
-                .map(profissional -> profissional.getSenha().equals(profissionalLoginDTO.getSenha()))
-                .orElse(false);
-    }
-
 }
