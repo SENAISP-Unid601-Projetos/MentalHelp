@@ -5,10 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const emailInput = document.getElementById('email');
     const loginBtn = document.getElementById('loginBtn');
 
-    // 🔧 Configurar a URL base do Axios
     axios.defaults.baseURL = 'http://10.110.12.50:9500/';
 
-    // Alternar visibilidade da senha
     toggleSenha.addEventListener('click', function() {
         if (senhaInput.type === 'password') {
             senhaInput.type = 'text';
@@ -19,7 +17,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Envio do formulário de login
     loginForm.addEventListener('submit', function(event) {
         event.preventDefault();
 
@@ -38,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
             senha: senha
         };
 
-        axios.post('/profissional/login', loginData)  // ✅ A URL está relativa à base
+        axios.post('/profissional/login', loginData)
             .then(response => {
                 const data = response.data;
                 console.log(data);
@@ -59,3 +56,72 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     });
 });
+
+const traducoes = {
+    pt: {
+      "Titulo": "Entrar",
+      "Mental": "MentalHelp",
+      "Entrar": "Entrar",
+      "placeholder": "Usuário",
+      "placeholder1": "Senha",
+      "Lembrar": "Lembrar-me",
+      "Esquecer": "Esqueci a Senha",
+      "SemConta": "Ainda não tem uma conta?",
+      "Cadastrar": "Cadastre-se",
+      "Paciente": "Paciente",
+      "Medico": "Médico",
+      "EntrarBtn": "Entrar"
+    },
+    es: {
+      "Titulo": "Entrar",
+      "Mental": "MentalHelp",
+      "Entrar": "Entrar",  
+      "placeholder": "Usuario",
+      "placeholder1": "Contraseña",
+      "Lembrar": "Recuérdame",
+      "Esquecer": "Olvidé la contraseña",
+      "SemConta": "¿Aún no tienes cuenta?",
+      "Cadastrar": "Regístrate",
+      "Paciente": "Paciente",
+      "Medico": "Médico",
+      "EntrarBtn": "Entrar"
+    },
+    en: {
+      "Titulo": "Log in",
+      "Mental": "MentalHelp",
+      "Entrar": "Login",
+      "placeholder": "Username",
+      "placeholder1": "Password",
+      "Lembrar": "Remember me",
+      "Esquecer": "Forgot Password",
+      "SemConta": "Don't have an account yet?",
+      "Cadastrar": "Sign up",
+      "Paciente": "Patient",
+      "Medico": "Doctor",
+      "EntrarBtn": "Login"
+    }
+  };
+  
+  function trocarIdioma() {
+    const idiomaSelecionado = document.getElementById('language').value;
+    const elementos = document.querySelectorAll('[data-i18n]');
+  
+
+    elementos.forEach(elemento => {
+      const chave = elemento.getAttribute('data-i18n');
+      if (traducoes[idiomaSelecionado] && traducoes[idiomaSelecionado][chave]) {
+        elemento.textContent = traducoes[idiomaSelecionado][chave];
+      }
+    });
+  
+    const placeholders = document.querySelectorAll('[data-i18n="placeholder"], [data-i18n="placeholder1"]');
+    placeholders.forEach(input => {
+      const chave = input.getAttribute('data-i18n');
+      if (traducoes[idiomaSelecionado] && traducoes[idiomaSelecionado][chave]) {
+        input.placeholder = traducoes[idiomaSelecionado][chave];
+      }
+    });
+  }
+  
+  window.onload = trocarIdioma;
+  
