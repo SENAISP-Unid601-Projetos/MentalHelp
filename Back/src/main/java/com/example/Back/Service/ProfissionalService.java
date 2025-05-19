@@ -19,8 +19,19 @@ public class ProfissionalService {
 
     @Autowired
     private ProfissionalRepository profissionalRepository;
-
     public ResponseEntity<ProfissionalSaidaDTO> salvarProfissional(ProfissionalEntradaDTO profissionalEntradaDTO) {
+        if (profissionalEntradaDTO.getCrm().length() < 4){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        if (profissionalEntradaDTO.getSenha().length() < 6) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        if (!profissionalEntradaDTO.getEmail().matches("\\S+@\\S+\\.\\S+")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
         boolean crmExiste = profissionalRepository.existsByCrm(profissionalEntradaDTO.getCrm());
 
         if (crmExiste) {

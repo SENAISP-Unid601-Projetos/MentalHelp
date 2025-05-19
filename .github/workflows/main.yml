@@ -1,0 +1,18 @@
+name: Deploy para Render
+
+on:
+  push:
+    branches:
+      - main # Altere se quiser outro branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v3
+
+      - name: Disparar webhook do Render com token
+        run: |
+          curl -X POST "https://api.render.com/deploy/srv-d0cfu1uuk2gs7397dn30?key=${{ secrets.RENDER_API_TOKEN }}"
