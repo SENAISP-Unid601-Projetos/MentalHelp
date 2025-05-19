@@ -1,7 +1,6 @@
 package com.example.Back.controller;
 
 import com.example.Back.DTO.ProfissionalEntradaDTO;
-import com.example.Back.DTO.ProfissionalLoginDTO;
 import com.example.Back.DTO.ProfissionalSaidaDTO;
 import com.example.Back.Repository.ProfissionalRepository;
 import com.example.Back.Service.ProfissionalService;
@@ -32,20 +31,6 @@ public class ProfissionalController {
 
     @Autowired
     private MessageSource messageSource;
-
-    @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> authenticateUser(@RequestBody ProfissionalLoginDTO loginDTO) {
-        Map<String, Object> response = new HashMap<>();
-        boolean isAuthenticated = proService.authenticateUser(loginDTO);
-
-        if (isAuthenticated) {
-            response.put("message", messageSource.getMessage("login.success", null, Locale.getDefault()));
-            return ResponseEntity.ok(response);
-        } else {
-            response.put("message", messageSource.getMessage("login.error", null, Locale.getDefault()));
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-        }
-    }
 
     @PostMapping("/post")
     public ResponseEntity<Map<String, Object>> createProfissional(@RequestPart("foto") MultipartFile foto, @RequestPart("profissionalEntradaDTO")ProfissionalEntradaDTO profissionalDTO) {
