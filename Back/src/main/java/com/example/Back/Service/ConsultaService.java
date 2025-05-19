@@ -186,13 +186,14 @@ public class ConsultaService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<List<ConsultaDTO>> buscarConsultasPorPacienteEData(Long idPaciente, LocalDateTime data) {
-        Optional<Paciente> pacienteOpt = pacienteRepository.findById(idPaciente);
-        if (pacienteOpt.isEmpty()) {
+    public ResponseEntity<List<ConsultaDTO>> buscarConsultasPorProfissionalEData(Long idProfissional, LocalDateTime data) {
+        Optional<Profissional> profissionalOpt = profissionalRepository.findById(idProfissional);
+        if (profissionalOpt.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        List<ConsultaDTO> consultas = consultaRepository.findByPacienteAndData(pacienteOpt.get(), data)
+        // Utiliza o método correto do repositório
+        List<ConsultaDTO> consultas = consultaRepository.findByProfissionalAndData(profissionalOpt.get(), data)
                 .stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
