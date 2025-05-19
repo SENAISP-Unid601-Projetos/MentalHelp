@@ -1,5 +1,3 @@
-// JS/Infantil.js
-
 const translationsInfantil = {
     pt: {
         tituloPagina: "Agendamento",
@@ -21,11 +19,32 @@ const translationsInfantil = {
         dataSelecionada: "Data Selecionada:",
         horarioSelecionado: "Horário Selecionado:",
         confirmarAgendamento: "Confirmar Agendamento",
-        selecioneDiaHorario: "Por favor, selecione um dia e um horário para agendar",
+        meusAgendamentos: "Meus Agendamentos",
+        mensagemErro: "Por favor, selecione um dia e um horário para agendar",
         agendamentoConfirmado: "Agendamento Confirmado!",
         consultaAgendadaSucesso: "Consulta agendada com sucesso!",
         detalhesAgendamento: "Detalhes do agendamento:",
         fecharModal: "Fechar",
+        // Traduções para os meses
+        janeiro: "Janeiro",
+        fevereiro: "Fevereiro",
+        marco: "Março",
+        abril: "Abril",
+        maio: "Maio",
+        junho: "Junho",
+        julho: "Julho",
+        agosto: "Agosto",
+        setembro: "Setembro",
+        outubro: "Outubro",
+        novembro: "Novembro",
+        dezembro: "Dezembro",
+        // Traduções para a página Meus Agendamentos
+        tituloMeusAgendamentos: "Meus Agendamentos",
+        semAgendamentos: "Nenhum agendamento encontrado.",
+        dataAgendamento: "Data:",
+        horarioAgendamento: "Horário:",
+        profissionalAgendamento: "Profissional:",
+        cancelarAgendamento: "Cancelar Agendamento"
     },
     en: {
         tituloPagina: "Scheduling",
@@ -47,11 +66,32 @@ const translationsInfantil = {
         dataSelecionada: "Selected Date:",
         horarioSelecionado: "Selected Time:",
         confirmarAgendamento: "Confirm Appointment",
-        selecioneDiaHorario: "Please select a day and time to schedule",
+        meusAgendamentos: "My Appointments",
+        mensagemErro: "Please select a day and time to schedule",
         agendamentoConfirmado: "Appointment Confirmed!",
         consultaAgendadaSucesso: "Appointment scheduled successfully!",
         detalhesAgendamento: "Appointment details:",
         fecharModal: "Close",
+        // Traduções para os meses
+        janeiro: "January",
+        fevereiro: "February",
+        marco: "March",
+        abril: "April",
+        maio: "May",
+        junho: "June",
+        julho: "July",
+        agosto: "August",
+        setembro: "September",
+        outubro: "October",
+        novembro: "November",
+        dezembro: "December",
+        // Traduções para a página Meus Agendamentos
+        tituloMeusAgendamentos: "My Appointments",
+        semAgendamentos: "No appointments found.",
+        dataAgendamento: "Date:",
+        horarioAgendamento: "Time:",
+        profissionalAgendamento: "Professional:",
+        cancelarAgendamento: "Cancel Appointment"
     },
     es: {
         tituloPagina: "Programación",
@@ -73,12 +113,33 @@ const translationsInfantil = {
         dataSelecionada: "Fecha Seleccionada:",
         horarioSelecionado: "Hora Seleccionada:",
         confirmarAgendamento: "Confirmar Cita",
-        selecioneDiaHorario: "Por favor, seleccione un día y una hora para programar",
+        meusAgendamentos: "Mis Citas",
+        mensagemErro: "Por favor, seleccione un día y una hora para programar",
         agendamentoConfirmado: "¡Cita Confirmada!",
         consultaAgendadaSucesso: "¡Cita programada con éxito!",
         detalhesAgendamento: "Detalles de la cita:",
         fecharModal: "Cerrar",
-    },
+        // Traduções para os meses
+        janeiro: "Enero",
+        fevereiro: "Febrero",
+        marco: "Marzo",
+        abril: "Abril",
+        maio: "Mayo",
+        junho: "Junio",
+        julho: "Julio",
+        agosto: "Agosto",
+        setembro: "Septiembre",
+        outubro: "Octubre",
+        novembro: "Noviembre",
+        dezembro: "Diciembre",
+        // Traduções para a página Meus Agendamentos
+        tituloMeusAgendamentos: "Mis Citas",
+        semAgendamentos: "No se encontraron citas.",
+        dataAgendamento: "Fecha:",
+        horarioAgendamento: "Hora:",
+        profissionalAgendamento: "Profesional:",
+        cancelarAgendamento: "Cancelar Cita"
+    }
 };
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -103,6 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateContentInfantil(lang) {
         const t = translationsInfantil[lang];
 
+        // Atualizar título da página
         document.title = t.tituloPagina;
         document.querySelector(".tipo-atendimento").textContent = t.tipoAtendimento;
         document.querySelector(".reunião").textContent = t.profissionalEncontrada;
@@ -110,6 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById("anterior").textContent = '‹'; // Mantém o ícone
         document.getElementById("proximo").textContent = '›'; // Mantém o ícone
 
+        // Atualizar dias da semana
         const diasSemana = document.querySelectorAll(".dias-semana span");
         diasSemana[0].textContent = t.domingo;
         diasSemana[1].textContent = t.segunda;
@@ -118,6 +181,17 @@ document.addEventListener('DOMContentLoaded', function() {
         diasSemana[4].textContent = t.quinta;
         diasSemana[5].textContent = t.sexta;
         diasSemana[6].textContent = t.sabado;
+
+        // Atualizar nome do mês (assumindo que o elemento #mes exibe o mês atual)
+        const mesElement = document.getElementById("mes");
+        if (mesElement) {
+            const currentDate = new Date();
+            const monthNames = [
+                t.janeiro, t.fevereiro, t.marco, t.abril, t.maio, t.junho,
+                t.julho, t.agosto, t.setembro, t.outubro, t.novembro, t.dezembro
+            ];
+            mesElement.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+        }
 
         document.querySelector(".text-purple").textContent = t.qualHorarioMelhor;
         document.querySelector(".subtexto").textContent = t.fusoHorario;
@@ -138,8 +212,14 @@ document.addEventListener('DOMContentLoaded', function() {
             if (spanText) spanText.textContent = t.confirmarAgendamento;
         }
 
+        const btnVerAgendamentos = document.getElementById("btnVerAgendamentos");
+        if (btnVerAgendamentos) {
+            const spanText = btnVerAgendamentos.querySelector(".btn-text");
+            if (spanText) spanText.textContent = t.meusAgendamentos;
+        }
+
         const mensagemErro = document.getElementById("mensagemErro");
-        if (mensagemErro) mensagemErro.textContent = t.selecioneDiaHorario;
+        if (mensagemErro) mensagemErro.textContent = t.mensagemErro;
 
         const modalTitle = document.querySelector("#modalConfirmacao .modal-title");
         if (modalTitle) modalTitle.textContent = t.agendamentoConfirmado;
