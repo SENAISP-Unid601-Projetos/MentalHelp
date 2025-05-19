@@ -55,11 +55,9 @@ function updateContent(lang) {
     document.getElementById("loginLink").textContent = t.loginLink;
 }
 
-// Detectar idioma salvo ou usar "pt" como padrão
 const savedLang = localStorage.getItem("lang") || "pt";
 updateContent(savedLang);
 
-// Caso queira deixar um <select id="languageSelect"> na página:
 const langSelect = document.getElementById("languageSelect");
 if (langSelect) {
     langSelect.value = savedLang;
