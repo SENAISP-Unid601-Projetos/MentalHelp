@@ -45,7 +45,7 @@ Para configurar e rodar o ambiente de homologação:
 
 ### 🌐 Acesso à Aplicação
 
-🔗 Acesse em: [http://10.110.12.31:3000/](http://10.110.12.31:3000/)
+🔗 Acesse em: [http://10.110.12.52:3000/](http://10.110.12.52:3000/)
 
 
 
@@ -53,7 +53,7 @@ Para configurar e rodar o ambiente de homologação:
 
 ### 🔧 Jenkins – Build Automático  
 
-🔗 [http://10.110.12.31:8080/](http://10.110.12.31:8080/)  
+🔗 [http://10.110.12.52:8080/](http://10.110.12.52:8080/)  
 
 👤 **Usuário:** `senaisc`  
 🔑 **Senha:** `Senai123`
@@ -62,7 +62,7 @@ Para configurar e rodar o ambiente de homologação:
 
 ### 📦 Portainer – Gestão de Containers  
 
-🔗 [http://10.110.12.31:9000/](http://10.110.12.31:9000/)  
+🔗 [http://10.110.12.52:9000/](http://10.110.12.52:9000/)  
 
 👤 **Usuário:** `admin`  
 🔑 **Senha:** `123456789101112`
@@ -71,7 +71,7 @@ Para configurar e rodar o ambiente de homologação:
 
 ### 🛢️ PGAdmin – Gestão do Banco de Dados  
 
-🔗 [http://10.110.12.31:5000/](http://10.110.12.31:5000/)  
+🔗 [http://10.110.12.52:5000/](http://10.110.12.52:5000/)  
 
 👤 **Usuário:** `senaisc@senai.com`  
 🔑 **Senha:** `123456`
@@ -84,7 +84,7 @@ Para configurar e rodar o ambiente de homologação:
 
 
 ### 📚 Swagger – Documentação da API  
-🔗 [http://10.110.12.31:9500/swagger-ui/index.html](http://10.110.12.31:9500/swagger-ui/index.html)
+🔗 [http://10.110.12.52:9500/swagger-ui/index.html](http://10.110.12.52:9500/swagger-ui/index.html)
 
 
 
