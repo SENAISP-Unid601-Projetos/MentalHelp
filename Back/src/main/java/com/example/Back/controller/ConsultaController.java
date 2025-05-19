@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -29,6 +30,7 @@ public class ConsultaController {
 
     @PostMapping("/post")
     public ResponseEntity<Map<String, Object>> createConsulta(@RequestBody ConsultaDTO consultaDTO) {
+        consultaDTO.setData(consultaDTO.getData().truncatedTo(ChronoUnit.MINUTES));
         ResponseEntity<ConsultaDTO> responseEntity = consultaService.criarConsulta(consultaDTO);
         Map<String, Object> response = new HashMap<>();
         response.put("message", messageSource.getMessage("create.success", null, Locale.getDefault()));
