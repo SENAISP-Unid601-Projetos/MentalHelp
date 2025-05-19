@@ -59,3 +59,24 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     });
 });
+
+
+  
+
+function validarFormulario(event) {
+    event.preventDefault();
+
+    const email = document.getElementById('email').value.trim();
+    const senha = document.getElementById('senha').value.trim();
+
+    if (email === '' || senha === '') {
+      // Mostrar modal de erro
+      const erroModal = new bootstrap.Modal(document.getElementById('erroModal'));
+      erroModal.show();
+    } else {
+      // Mostrar modal de sucesso
+      const sucessoModal = new bootstrap.Modal(document.getElementById('sucessoModal'));
+      sucessoModal.show();
+    }
+  }
+
