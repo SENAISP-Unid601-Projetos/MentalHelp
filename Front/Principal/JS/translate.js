@@ -122,55 +122,79 @@ const translations = {
 };
 
 document.addEventListener('DOMContentLoaded', function() {
-  const languageSelect = document.getElementById("languageSelect");
-  const savedLang = localStorage.getItem("lang");
-
-  if (savedLang) {
-      languageSelect.value = savedLang;
-      updateContent(savedLang);
-  } else {
-      // Define um idioma padrão na primeira visita (opcional)
-      const defaultLang = 'pt';
-      languageSelect.value = defaultLang;
-      updateContent(defaultLang);
-  }
-
-  languageSelect.addEventListener("change", function () {
-      const lang = this.value;
-      localStorage.setItem("lang", lang);
-      updateContent(lang);
-  });
-
-  function updateContent(lang) {
+    const languageSelects = document.querySelectorAll(".js-language-select");
+    const savedLang = localStorage.getItem("lang");
+  
+    // Função para atualizar o conteúdo traduzido
+    function updateContent(lang) {
       const t = translations[lang];
-
-      document.getElementById("professionals").textContent = t.professionals;
-      document.getElementById("contact").textContent = t.contact;
-      document.getElementById("apoioLink").textContent = t.apoioLink;
-      document.querySelector("a[href*='Login']").textContent = t.entrar;
-      document.getElementById("btnAgende").textContent = t.agendeConsulta;
-      document.querySelector(".titulo-principal").innerHTML = t.tituloPrincipal;
-      document.querySelector(".text-color").textContent = t.paragrafoPrincipal1;
-      document.querySelector(".text-colorParagrafo").textContent = t.paragrafoPrincipal2;
-
+  
+      // Atualiza textos dos links com classes específicas
+      document.querySelectorAll('.js-translate.professionals').forEach(el => el.textContent = t.professionals);
+      document.querySelectorAll('.js-translate.contact').forEach(el => el.textContent = t.contact);
+      document.querySelectorAll('.js-translate.apoioLink').forEach(el => el.textContent = t.apoioLink);
+      document.querySelectorAll('.js-translate.entrar').forEach(el => el.textContent = t.entrar);
+  
+      // Outros elementos fixos
+      const btnAgende = document.getElementById("btnAgende");
+      if(btnAgende) btnAgende.textContent = t.agendeConsulta;
+  
+      const tituloPrincipal = document.querySelector(".titulo-principal");
+      if(tituloPrincipal) tituloPrincipal.innerHTML = t.tituloPrincipal;
+  
+      const textColor = document.querySelector(".text-color");
+      if(textColor) textColor.textContent = t.paragrafoPrincipal1;
+  
+      const textColorParagrafo = document.querySelector(".text-colorParagrafo");
+      if(textColorParagrafo) textColorParagrafo.textContent = t.paragrafoPrincipal2;
+  
       // Profissionais
       const nomes = document.querySelectorAll("#vemAqui h5");
       const descricoes = document.querySelectorAll("#vemAqui p");
       const botoes = document.querySelectorAll("#vemAqui a");
-
+  
       t.profissionais.forEach((p, i) => {
-          nomes[i].textContent = p.nome;
-          descricoes[i].textContent = p.descricao;
-          botoes[i].textContent = p.botao;
+        if (nomes[i]) nomes[i].textContent = p.nome;
+        if (descricoes[i]) descricoes[i].textContent = p.descricao;
+        if (botoes[i]) botoes[i].textContent = p.botao;
       });
-
-      document.querySelector("#apoio h2").textContent = t.apoioTitulo;
-      document.querySelectorAll("#apoio h5")[0].textContent = t.tagTitulo;
-      document.querySelectorAll("#apoio p")[0].textContent = t.tagDescricao;
-      document.querySelectorAll("#apoio h5")[1].textContent = t.depressaoTitulo;
-      document.querySelectorAll("#apoio p")[1].textContent = t.depressaoDescricao;
-
-      document.querySelector(".footerTitle").textContent = t.contatoTitulo;
-      document.querySelector("footer p").textContent = `© ${t.direitos}`;
-  }
-});
+  
+      const apoioH2 = document.querySelector("#apoio h2");
+      if(apoioH2) apoioH2.textContent = t.apoioTitulo;
+  
+      const apoioH5 = document.querySelectorAll("#apoio h5");
+      const apoioP = document.querySelectorAll("#apoio p");
+      if(apoioH5[0]) apoioH5[0].textContent = t.tagTitulo;
+      if(apoioP[0]) apoioP[0].textContent = t.tagDescricao;
+      if(apoioH5[1]) apoioH5[1].textContent = t.depressaoTitulo;
+      if(apoioP[1]) apoioP[1].textContent = t.depressaoDescricao;
+  
+      const footerTitle = document.querySelector(".footerTitle");
+      if(footerTitle) footerTitle.textContent = t.contatoTitulo;
+  
+      const footerP = document.querySelector("footer p");
+      if(footerP) footerP.textContent = `© ${t.direitos}`;
+    }
+  
+    // Define valor inicial do select e atualiza conteúdo
+    if (savedLang) {
+      languageSelects.forEach(select => select.value = savedLang);
+      updateContent(savedLang);
+    } else {
+      const defaultLang = 'pt';
+      languageSelects.forEach(select => select.value = defaultLang);
+      updateContent(defaultLang);
+    }
+  
+    // Escuta mudanças em qualquer select de idioma
+    languageSelects.forEach(select => {
+      select.addEventListener("change", function () {
+        const lang = this.value;
+        localStorage.setItem("lang", lang);
+        // Atualiza o valor dos outros selects também (sincroniza os selects)
+        languageSelects.forEach(s => s.value = lang);
+        updateContent(lang);
+      });
+    });
+  });
+  
