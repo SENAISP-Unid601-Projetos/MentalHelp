@@ -1,31 +1,61 @@
 @font-face {
   font-family: 'TAN Aegean';
-  src: url('../../Recursos/TAN_Aegean/TAN - AEGEAN Regular.ttf') format('truetype')
+  src: url('../Recursos/TAN_Aegean/TAN-AEGEAN-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
   font-family: 'Signika';
-  src: url('../../Recursos/Signika/Signika-VariableFont_wght.ttf') format('truetype');
+  src: url('../Recursos/Signika/Signika-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
 }
 
+/* RESET & BASE */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Signika', sans-serif;
 }
 
+body {
+  overflow-x: hidden;
+  font-family: 'Signika', sans-serif;
+}
 
+/* LAYOUT PRINCIPAL */
+.container-fluid {
+  min-height: 100vh;
+}
 
 .left-panel {
   background-color: #e9d5ff;
   color: #4b0082;
+  position: relative;
 }
 
-.tipo-atendimento {
-  font-weight: bold;
-  font-size: 32px;
-  font-family: "Signika";
+.right-panel {
+  background-color: white;
+  position: relative;
+}
 
+/* CABEÇALHO */
+.tipo-atendimento {
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: 'Signika', sans-serif;
+}
+
+/* PERFIL */
+.perfil {
+  position: relative;
+  padding-top: 30px; /* Espaço para a mão */
+  margin-bottom: 40px;
 }
 
 .avatar {
@@ -33,190 +63,169 @@
   height: 140px;
   border-radius: 50%;
   object-fit: cover;
+  border: 3px solid #a855f7;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 
+.imgmao {
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  top: 10px;    /* Posiciona acima do avatar */
+  left: 110%;     /* Centraliza horizontalmente */
+  transform: translateX(-50%) rotate(-15deg); /* Ajuste fino de posição */
+  z-index: 10;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+  pointer-events: none; /* Permite clicar no avatar */
 }
 
 .especialidade {
-  font-size: 20px;
+  font-size: 1.25rem;
+  color: #6b21a8;
+  margin-top: 0.5rem;
   font-family: 'Signika';
 }
 
+/* CALENDÁRIO */
 .calendario {
   max-width: 360px;
+  width: 100%;
 }
 
 .mes-navegacao {
   background-color: #c084fc;
   color: white;
-  padding: 8px 16px;
-  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mes-navegacao h3 {
+  font-weight: 600;
+  font-size: 1.25rem;
+  font-family: 'Signika';
 }
 
 .mes-navegacao button {
   background: none;
   border: none;
-  font-size: 22px;
+  font-size: 1.75rem;
   color: white;
   cursor: pointer;
-  font-family: "Signika";
+  transition: transform 0.2s;
+  line-height: 1;
+}
+
+.mes-navegacao button:hover {
+  transform: scale(1.1);
 }
 
 .dias-semana {
-  font-weight: bold;
-  font-size: 12px;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
   text-align: center;
-  font-family: "Signika";
+  color: #6b21a8;
 }
 
 .dias {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
+  gap: 0.5rem;
+  font-family: 'Signika';
 }
 
 .dias button {
+  aspect-ratio: 1;
   background-color: #ede9fe;
   color: #4b0082;
-  padding: 8px 0;
-  border-radius: 6px;
-  font-weight: bold;
   border: none;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
-  width: 100%;
-  font-family: 'Signika';
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.dias button:hover:not(:disabled) {
+  background-color: #d8b4fe;
 }
 
 .dias button.ativo {
   background-color: #a855f7;
   color: white;
-  font-family: "Signika";
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(168, 85, 247, 0.4);
 }
 
 .dias button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-.ilustracoes img {
-  max-height: 200px;
-  width: auto;
-}
-
-.right-panel {
-  background-color: white;
-}
-
-.subtexto {
-  font-size: 14px;
-  color: gray;
-  margin-bottom: 20px;
-}
-
-.horarios button {
-  padding: 12px;
-  border: 2px solid #e9d5ff;
-  background-color: white;
-  color: #a855f7;
-  font-size: 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-family: "Signika";
-}
-
-.horarios button:hover {
   background-color: #f3e8ff;
-  font-family: "Signika";
-}
-.ilustracoes img {
-  opacity: 70%;
-  transform: rotate(0deg);
-}
-.ilustracoes .familia {
-  transform: rotate(0deg);
-}
-.ilustracoes .imgfundo {
-  transform: rotate(0deg);
-}
-.ilustracoes .imgautismo {
-  transform: rotate(0deg);
-}
-.ilustracoes .imgtdah {
-  transform: rotate(25deg);
-}
-.ilustracoes .imgabelha{
-  transform: rotate(50);
-  padding-left: 0%;
-}
-.imgmao {
-  position: absolute;
-  width: 130px;
-  height: 130px;
-  bottom: 78%;   /* ajuste conforme necessário */
-  left: 34%;   /* ajuste conforme necessário */
-  z-index: 10;
 }
 
-.right-panel {
-  background-color: white;
-}
-
-.subtexto {
-  font-size: 14px;
-  color: gray;
-  margin-bottom: 20px;
-}
-
+/* HORÁRIOS */
 .horarios {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1.5rem;
 }
 
-.horarios button {
-  padding: 12px;
-  border: 2px solid #e9d5ff;
+.horario-btn {
+  padding: 0.75rem;
+  border: 2px solid #e9d5ff !important;
   background-color: white;
   color: #a855f7;
-  font-size: 16px;
   border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  font-weight: 600;
+  transition: all 0.2s;
+  text-align: center;
 }
 
-.horarios button.ativo {
-  background-color: #a855f7;
-  color: white;
-  border-color: #a855f7;
+.horario-btn:hover {
+  background-color: #f3e8ff !important;
 }
 
-.horarios button:hover:not(.ativo) {
-  background-color: #f3e8ff;
+.horario-btn.ativo {
+  background-color: #a855f7 !important;
+  color: white !important;
+  border-color: #a855f7 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
 }
 
-/* Botão Agendar */
+/* BOTÕES */
 .btn-agendar {
   background-color: #a855f7;
   color: white;
   border: none;
-  padding: 12px 24px;
+  padding: 0.75rem;
   border-radius: 8px;
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 1.125rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  width: 100%;
+  font-family: 'Signika';
 }
 
 .btn-agendar:hover:not(:disabled) {
   background-color: #9333ea;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(147, 51, 234, 0.3);
 }
 
 .btn-agendar:disabled {
@@ -225,36 +234,134 @@
   opacity: 0.7;
 }
 
-.btn-icon {
-  font-size: 20px;
+#btnVerAgendamentos {
+  background-color: #7e22ce;
+  margin-top: 0.75rem;
 }
 
+#btnVerAgendamentos:hover {
+  background-color: #6b21a8;
+}
+
+/* BOTÃO VOLTAR */
+.btn-voltar {
+  background-color: #a855f7;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: 'Signika';
+}
+
+.btn-voltar:hover {
+  background-color: #9333ea;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(147, 51, 234, 0.3);
+}
+
+/* RESUMO */
 #resumo-agendamento {
   background-color: #f5f3ff;
-  padding: 15px;
+  padding: 1rem;
   border-radius: 8px;
   border-left: 4px solid #a855f7;
+  margin-bottom: 1rem;
+  transition: all 0.3s;
 }
 
+#resumo-agendamento h4 {
+  color: #6b21a8;
+  margin-bottom: 0.5rem;
+}
+
+/* ILUSTRAÇÕES */
+.ilustracoes {
+  margin-top: auto;
+  
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.ilustracoes img {
+  height: 120px;
+  opacity: 0.7;
+  transition: all 0.3s;
+}
+
+.ilustracoes img:hover {
+  opacity: 1;
+  transform: translateY(-5px);
+}
+
+/* MODAL */
+.agendamentos-lista {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.agendamento-item {
+  background-color: #f8f9fa;
+  border: 1px solid #e9d5ff !important;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  transition: all 0.3s;
+}
+
+.agendamento-item:hover {
+  background-color: #f3e8ff;
+  border-color: #a855f7 !important;
+  transform: translateX(4px);
+}
+
+.reuniao {
+  font-family: 'Signika';
+}
+
+/* RESPONSIVO */
 @media (max-width: 768px) {
   .container-fluid {
     flex-direction: column;
-    height: auto;
-  }
-  
-  .horarios {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
   }
 
-  .horarios button {
-    width: 45%;
-  }
-  
-  .left-panel, .right-panel {
+  .left-panel, 
+  .right-panel {
     width: 100%;
+    padding: 1.5rem;
+  }
+
+  .imgmao {
+    bottom: 85%;
+    left: 50%;
+    transform: translateX(-50%) rotate(-15deg);
+  }
+
+  .horarios {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
+@media (max-width: 576px) {
+  .tipo-atendimento {
+    font-size: 1.5rem;
+  }
 
+  .horarios {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* GARANTIR FONTE SIGNIKA PARA TODOS OS TEXTOS */
+h1, h2, h3, h4, h5, h6, p, span, button, a, .btn, .modal-title, .modal-body, .agendamento-item, .btn-agendar, .btn-voltar, .horario-btn, .dias-semana, .mes-navegacao h3, #resumo-agendamento, #mensagemErro {
+  font-family: 'Signika', sans-serif !important;
+}
