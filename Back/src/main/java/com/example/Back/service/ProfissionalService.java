@@ -1,7 +1,6 @@
 package com.example.Back.Service;
 
 import com.example.Back.DTO.ProfissionalEntradaDTO;
-import com.example.Back.DTO.ProfissionalLoginDTO;
 import com.example.Back.DTO.ProfissionalSaidaDTO;
 import com.example.Back.Repository.ProfissionalRepository;
 import com.example.Back.entity.Consulta;
@@ -120,12 +119,6 @@ public class ProfissionalService {
         profissional.setEspecialidade(dto.getEspecialidade());
         profissional.setFoto(dto.getFoto());
         return profissional;
-    }
-
-    public boolean authenticateUser(ProfissionalLoginDTO profissionalLoginDTO) {
-        return profissionalRepository.findByEmail(profissionalLoginDTO.getEmail())
-                .map(profissional -> profissional.getSenha().equals(profissionalLoginDTO.getSenha()))
-                .orElse(false);
     }
 
 }

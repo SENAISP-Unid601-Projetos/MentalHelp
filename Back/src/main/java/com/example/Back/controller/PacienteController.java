@@ -1,10 +1,8 @@
 package com.example.Back.controller;
 
 import com.example.Back.DTO.PacienteEntradaDTO;
-import com.example.Back.DTO.PacienteLoginDTO;
 import com.example.Back.DTO.PacienteSaidaDTO;
 import com.example.Back.Repository.PacienteRepository;
-import com.example.Back.Repository.ProfissionalRepository;
 import com.example.Back.Service.PacienteService;
 import com.example.Back.entity.Paciente;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,20 +31,6 @@ public class PacienteController {
 
     @Autowired
     private MessageSource messageSource;
-
-    @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> authenticateUser(@RequestBody PacienteLoginDTO loginDTO) {
-        Map<String, Object> response = new HashMap<>();
-        boolean isAuthenticated = pacienteService.authenticateUser(loginDTO);
-
-        if (isAuthenticated) {
-            response.put("message", messageSource.getMessage("login.success", null, Locale.getDefault()));
-            return ResponseEntity.ok(response);
-        } else {
-            response.put("message", messageSource.getMessage("login.error", null, Locale.getDefault()));
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-        }
-    }
 
     @PostMapping("/post")
     public ResponseEntity<Map<String, Object>> createPaciente(@RequestPart("foto") MultipartFile foto, @RequestPart("pacienteEntradaDTO") PacienteEntradaDTO pacienteDTO) {
