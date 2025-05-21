@@ -12,6 +12,7 @@ body {
   border-radius: 999px;
   padding: 10px 0;
   font-weight: bold;
+  transition: background-color 0.3s ease;
 }
 
 .btn-purple:hover {
@@ -27,27 +28,15 @@ body {
 
 .input-icon {
   position: absolute;
-  top: 50%;
+  top: 10%;
   left: 16px;
-  transform: translateY(-50%);
   color: #666;
   font-size: 1.1rem;
-}
-
-.toggle-password {
-  position: absolute;
-  top: 50%;
-  right: 16px;
-  transform: translateY(-50%);
-  color: #999;
-  cursor: pointer;
 }
 
 .custom-input {
   border-radius: 999px;
   background-color: #f2f2f2;
-  border: none;
-  padding: 10px 16px;
   font-size: 0.95rem;
   color: #333;
 }
@@ -56,15 +45,28 @@ body {
   color: #888;
 }
 
-.object-fit-cover {
-  object-fit: cover;
+.modal-content {
+  border-radius: 24px !important;
 }
 
-.dropdown:hover .dropdown-menu {
-  display: block;
-  margin-top: 0.25rem;
+.modal-body {
+  font-size: 1rem;
+  padding: 1.5rem;
+  font-weight: 500;
 }
 
-.dropdown-toggle::after {
-  display: none;
+.modal-footer {
+  border-top: none;
+  justify-content: center;
+}
+
+.toggle-password { 
+    position: absolute;
+    top: 50%; 
+    transform: translateY(-50%); 
+    right: 16px; 
+    color: #666;
+    font-size: 1.1rem;
+    cursor: pointer; 
+    z-index: 2; 
 }
