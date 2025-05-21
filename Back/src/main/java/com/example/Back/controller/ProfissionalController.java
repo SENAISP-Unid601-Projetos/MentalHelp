@@ -1,12 +1,12 @@
 package com.example.Back.controller;
 
 import com.example.Back.DTO.ProfissionalEntradaDTO;
-import com.example.Back.DTO.ProfissionalLoginDTO;
 import com.example.Back.DTO.ProfissionalSaidaDTO;
 import com.example.Back.Repository.ProfissionalRepository;
 import com.example.Back.Service.ProfissionalService;
 import com.example.Back.entity.Profissional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,20 +32,6 @@ public class ProfissionalController {
 
     @Autowired
     private MessageSource messageSource;
-
-    @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> authenticateUser(@RequestBody ProfissionalLoginDTO loginDTO) {
-        Map<String, Object> response = new HashMap<>();
-        boolean isAuthenticated = proService.authenticateUser(loginDTO);
-
-        if (isAuthenticated) {
-            response.put("message", messageSource.getMessage("login.success", null, Locale.getDefault()));
-            return ResponseEntity.ok(response);
-        } else {
-            response.put("message", messageSource.getMessage("login.error", null, Locale.getDefault()));
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-        }
-    }
 
     @PostMapping("/post")
     public ResponseEntity<Map<String, Object>> createProfissional(@RequestPart("foto") MultipartFile foto, @RequestPart("profissionalEntradaDTO")ProfissionalEntradaDTO profissionalDTO) {
@@ -90,18 +76,30 @@ public class ProfissionalController {
         }
     }
 
-    private String saveFoto(MultipartFile foto) {
-        // Gera um nome único para o arquivo
-        String fileName = UUID.randomUUID().toString() + "_" + foto.getOriginalFilename();
-        String uploadDir = "src/main/resources/profissionalPictures/";  // Diretório onde as fotos serão armazenadas
+    @Value("${app.fotos.diretoriosProfissional}")
+    private String diretoriosProfissional;
 
-        try {
-            Files.copy(foto.getInputStream(), Paths.get(uploadDir + fileName));
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Falha ao salvar a foto.");
+    private String saveFoto(MultipartFile foto) {
+        String fileName = UUID.randomUUID().toString() + "_" + foto.getOriginalFilename();
+
+        for (String dir : diretoriosProfissional.split(",")) {
+            try {
+                Path uploadPath = Paths.get(dir.trim());
+
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                Path filePath = uploadPath.resolve(fileName);
+                Files.copy(foto.getInputStream(), filePath);
+
+                return filePath.toString();
+            } catch (IOException e) {
+                System.err.println("Erro ao salvar em " + dir + ": " + e.getMessage());
+            }
         }
-        return uploadDir + fileName;
+
+        throw new RuntimeException("Falha ao salvar a foto nos diretórios configurados.");
     }
 
     @GetMapping("/foto/{crm}")
