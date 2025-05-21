@@ -14,3 +14,10 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
+
+app:
+  fotos:
+    diretoriosProfissional:
+      - src/main/resources/profissionalPictures
+    diretoriosPaciente:
+      - src/main/resources/pacientePictures
