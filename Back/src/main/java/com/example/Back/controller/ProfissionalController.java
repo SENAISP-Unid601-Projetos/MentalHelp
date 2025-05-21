@@ -55,7 +55,7 @@ public class ProfissionalController {
     }
 
     // GET por ID
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<Map<String, Object>> getProfissionalById(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
         ResponseEntity<ProfissionalSaidaDTO> responseEntity = proService.buscarProfissionalPorId(id);
@@ -70,7 +70,7 @@ public class ProfissionalController {
     }
 
     // GET por CRM
-    @GetMapping("/crm/{crm}")
+    @GetMapping("/get/{crm}")
     public ResponseEntity<Map<String, Object>> getProfissionalByCrm(@PathVariable String crm) {
         Map<String, Object> response = new HashMap<>();
         ResponseEntity<ProfissionalSaidaDTO> responseEntity = proService.buscarProfissionalPorCrm(crm);
@@ -85,7 +85,7 @@ public class ProfissionalController {
     }
 
     // GET por Especialidade
-    @GetMapping("/especialidade/{especialidade}")
+    @GetMapping("/get/{especialidade}")
     public ResponseEntity<Map<String, Object>> getProfissionaisByEspecialidade(@PathVariable String especialidade) {
         Map<String, Object> response = new HashMap<>();
         ResponseEntity<List<ProfissionalSaidaDTO>> responseEntity = proService.buscarProfissionaisPorEspecialidade(especialidade);
@@ -99,7 +99,7 @@ public class ProfissionalController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<Map<String, Object>> updateProfissional(@PathVariable Long id, @RequestBody ProfissionalEntradaDTO profissionalDTO) {
         ResponseEntity<ProfissionalSaidaDTO> responseEntity = proService.atualizarProfissional(id, profissionalDTO);
         Map<String, Object> response = new HashMap<>();
