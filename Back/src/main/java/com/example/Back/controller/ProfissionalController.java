@@ -4,6 +4,7 @@ import com.example.Back.DTO.ProfissionalEntradaDTO;
 import com.example.Back.DTO.ProfissionalSaidaDTO;
 import com.example.Back.Repository.ProfissionalRepository;
 import com.example.Back.Service.ProfissionalService;
+import com.example.Back.config.FotoStorageProperties;
 import com.example.Back.entity.Profissional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 @RestController
@@ -33,8 +35,11 @@ public class ProfissionalController {
     @Autowired
     private MessageSource messageSource;
 
+    @Autowired
+    private FotoStorageProperties fotoStorageProperties;
+
     @PostMapping("/post")
-    public ResponseEntity<Map<String, Object>> createProfissional(@RequestPart("foto") MultipartFile foto, @RequestPart("profissionalEntradaDTO")ProfissionalEntradaDTO profissionalDTO) {
+    public ResponseEntity<Map<String, Object>> createProfissional(@RequestPart("foto") MultipartFile foto, @RequestPart("profissionalEntradaDTO") ProfissionalEntradaDTO profissionalDTO) {
         String fotoPath = saveFoto(foto);
         profissionalDTO.setFoto(fotoPath);
         ResponseEntity<ProfissionalSaidaDTO> responseEntity = proService.salvarProfissional(profissionalDTO);
@@ -76,13 +81,11 @@ public class ProfissionalController {
         }
     }
 
-    @Value("${app.fotos.diretoriosProfissional}")
-    private String diretoriosProfissional;
-
-    private String saveFoto(MultipartFile foto) {
+    public String saveFoto(MultipartFile foto) {
         String fileName = UUID.randomUUID().toString() + "_" + foto.getOriginalFilename();
+        List<String> diretorios = fotoStorageProperties.getDiretoriosProfissional();
 
-        for (String dir : diretoriosProfissional.split(",")) {
+        for (String dir : diretorios) {
             try {
                 Path uploadPath = Paths.get(dir.trim());
 
@@ -91,7 +94,7 @@ public class ProfissionalController {
                 }
 
                 Path filePath = uploadPath.resolve(fileName);
-                Files.copy(foto.getInputStream(), filePath);
+                Files.copy(foto.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
                 return filePath.toString();
             } catch (IOException e) {
