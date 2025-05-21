@@ -1,13 +1,13 @@
 package com.example.Back.controller;
 
 import com.example.Back.DTO.PacienteEntradaDTO;
-import com.example.Back.DTO.PacienteLoginDTO;
 import com.example.Back.DTO.PacienteSaidaDTO;
 import com.example.Back.Repository.PacienteRepository;
-import com.example.Back.Repository.ProfissionalRepository;
 import com.example.Back.Service.PacienteService;
+import com.example.Back.config.FotoStorageProperties;
 import com.example.Back.entity.Paciente;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 @RestController
@@ -34,44 +35,42 @@ public class PacienteController {
     @Autowired
     private MessageSource messageSource;
 
-    @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> authenticateUser(@RequestBody PacienteLoginDTO loginDTO) {
-        Map<String, Object> response = new HashMap<>();
-        boolean isAuthenticated = pacienteService.authenticateUser(loginDTO);
-
-        if (isAuthenticated) {
-            response.put("message", messageSource.getMessage("login.success", null, Locale.getDefault()));
-            return ResponseEntity.ok(response);
-        } else {
-            response.put("message", messageSource.getMessage("login.error", null, Locale.getDefault()));
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-        }
-    }
+    @Autowired
+    private FotoStorageProperties fotoStorageProperties;
 
     @PostMapping("/post")
     public ResponseEntity<Map<String, Object>> createPaciente(@RequestPart("foto") MultipartFile foto, @RequestPart("pacienteEntradaDTO") PacienteEntradaDTO pacienteDTO) {
         String fotoPath = saveFoto(foto);
         pacienteDTO.setFoto(fotoPath);
-        ResponseEntity<PacienteSaidaDTO> responseEntity = pacienteService.salvarPaciente(pacienteDTO);
+        ResponseEntity<?> responseEntity = pacienteService.salvarPaciente(pacienteDTO);
         Map<String, Object> response = new HashMap<>();
         response.put("message", messageSource.getMessage("create.success", null, Locale.getDefault()));
         response.put("profissional", responseEntity.getBody());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-
-    private String saveFoto(MultipartFile foto) {
-        // Gera um nome único para o arquivo
+    public String saveFoto(MultipartFile foto) {
         String fileName = UUID.randomUUID().toString() + "_" + foto.getOriginalFilename();
-        String uploadDir = "src/main/resources/pacientePictures/";  // Diretório onde as fotos serão armazenadas
+        List<String> diretorios = fotoStorageProperties.getDiretoriosPaciente();
 
-        try {
-            Files.copy(foto.getInputStream(), Paths.get(uploadDir + fileName));
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Falha ao salvar a foto.");
+        for (String dir : diretorios) {
+            try {
+                Path uploadPath = Paths.get(dir.trim());
+
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                Path filePath = uploadPath.resolve(fileName);
+                Files.copy(foto.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+                return filePath.toString();
+            } catch (IOException e) {
+                System.err.println("Erro ao salvar em " + dir + ": " + e.getMessage());
+            }
         }
-        return uploadDir + fileName;
+
+        throw new RuntimeException("Falha ao salvar a foto nos diretórios configurados.");
     }
 
     @GetMapping("/foto/{cpf}")
@@ -107,6 +106,41 @@ public class PacienteController {
     public ResponseEntity<List<PacienteSaidaDTO>> getPacientes() {
         return pacienteService.listarPaciente();
     }
+    @GetMapping("/id/{id}")
+    public ResponseEntity<?> buscarPacientePorId(@PathVariable Long id) {
+        Optional<PacienteSaidaDTO> pacienteDTO = pacienteService.buscarPorId(id);
+
+        if (pacienteDTO.isPresent()) {
+            return ResponseEntity.ok(pacienteDTO.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Paciente não encontrado com o ID fornecido.");
+        }
+    }
+    @GetMapping("/cpf/{cpf}")
+    public ResponseEntity<?> buscarPacientePorCpf(@PathVariable String cpf) {
+        Optional<PacienteSaidaDTO> pacienteDTO = pacienteService.buscarPorCpf(cpf);
+
+        if (pacienteDTO.isPresent()) {
+            return ResponseEntity.ok(pacienteDTO.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Paciente não encontrado com o CPF fornecido.");
+        }
+    }
+    @GetMapping("/nome/{nome}")
+    public ResponseEntity<?> buscarPacientePorNome(@PathVariable String nome) {
+        List<PacienteSaidaDTO> pacientes = pacienteService.buscarPorNome(nome);
+
+        if (pacientes.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Nenhum paciente encontrado com o nome fornecido.");
+        } else {
+            return ResponseEntity.ok(pacientes);
+        }
+    }
+
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, Object>> updatePaciente(@PathVariable Long id, @RequestBody PacienteEntradaDTO pacienteDTO) {

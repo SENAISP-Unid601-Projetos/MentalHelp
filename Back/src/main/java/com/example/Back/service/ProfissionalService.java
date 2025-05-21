@@ -1,7 +1,6 @@
 package com.example.Back.Service;
 
 import com.example.Back.DTO.ProfissionalEntradaDTO;
-import com.example.Back.DTO.ProfissionalLoginDTO;
 import com.example.Back.DTO.ProfissionalSaidaDTO;
 import com.example.Back.Repository.ProfissionalRepository;
 import com.example.Back.entity.Consulta;
@@ -20,17 +19,17 @@ public class ProfissionalService {
 
     @Autowired
     private ProfissionalRepository profissionalRepository;
-    public ResponseEntity<ProfissionalSaidaDTO> salvarProfissional(ProfissionalEntradaDTO profissionalEntradaDTO) {
+    public ResponseEntity<?> salvarProfissional(ProfissionalEntradaDTO profissionalEntradaDTO) {
         if (profissionalEntradaDTO.getCrm().length() < 4){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Crm deve ter pelo menos 4 caracteres");
         }
 
         if (profissionalEntradaDTO.getSenha().length() < 6) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Senha deve ter pelo menos 6 caracteres");
         }
 
         if (!profissionalEntradaDTO.getEmail().matches("\\S+@\\S+\\.\\S+")) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email inválido");
         }
 
         boolean crmExiste = profissionalRepository.existsByCrm(profissionalEntradaDTO.getCrm());
@@ -38,7 +37,7 @@ public class ProfissionalService {
         if (crmExiste) {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
-                    .body(null); //
+                    .body("CRM já cadastrado."); //
         }
 
         Profissional profissional = toEntity(profissionalEntradaDTO);
@@ -151,12 +150,6 @@ public class ProfissionalService {
         profissional.setEspecialidade(dto.getEspecialidade());
         profissional.setFoto(dto.getFoto());
         return profissional;
-    }
-
-    public boolean authenticateUser(ProfissionalLoginDTO profissionalLoginDTO) {
-        return profissionalRepository.findByEmail(profissionalLoginDTO.getEmail())
-                .map(profissional -> profissional.getSenha().equals(profissionalLoginDTO.getSenha()))
-                .orElse(false);
     }
 
 }
