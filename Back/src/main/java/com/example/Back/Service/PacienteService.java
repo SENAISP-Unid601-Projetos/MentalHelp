@@ -27,23 +27,26 @@ public class PacienteService {
     @Autowired
     private TelefoneRepository telefoneRepository;
 
-    public ResponseEntity<PacienteSaidaDTO> salvarPaciente(PacienteEntradaDTO pacienteEntradaDTO) {
+    public ResponseEntity<?> salvarPaciente(PacienteEntradaDTO pacienteEntradaDTO) {
         if(pacienteEntradaDTO.getCpf().length() != 11){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("CPF deve conter exatamente 11 dígitos");
         }
 
         if (pacienteEntradaDTO.getSenha().length() < 6) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Senha deve ter pelo menos 6 caracteres");
         }
 
         if (!pacienteEntradaDTO.getEmail().matches("\\S+@\\S+\\.\\S+")) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Email inválido");
         }
 
         boolean cpfExiste = pacienteRepository.existsByCpf(pacienteEntradaDTO.getCpf());
-
         if(cpfExiste){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("CPF já cadastrado no sistema");
         }
 
         Paciente paciente = toEntity(pacienteEntradaDTO);

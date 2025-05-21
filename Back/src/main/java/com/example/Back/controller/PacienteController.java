@@ -42,7 +42,7 @@ public class PacienteController {
     public ResponseEntity<Map<String, Object>> createPaciente(@RequestPart("foto") MultipartFile foto, @RequestPart("pacienteEntradaDTO") PacienteEntradaDTO pacienteDTO) {
         String fotoPath = saveFoto(foto);
         pacienteDTO.setFoto(fotoPath);
-        ResponseEntity<PacienteSaidaDTO> responseEntity = pacienteService.salvarPaciente(pacienteDTO);
+        ResponseEntity<?> responseEntity = pacienteService.salvarPaciente(pacienteDTO);
         Map<String, Object> response = new HashMap<>();
         response.put("message", messageSource.getMessage("create.success", null, Locale.getDefault()));
         response.put("profissional", responseEntity.getBody());
