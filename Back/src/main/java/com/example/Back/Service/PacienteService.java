@@ -167,5 +167,21 @@ public class PacienteService {
                 .map(paciente -> paciente.getSenha().equals(pacienteLoginDTO.getSenha()))
                 .orElse(false);
     }
+    public Optional<PacienteSaidaDTO> buscarPorId(Long id) {
+        return pacienteRepository.findById(id)
+                .map(this::toPacienteDTO);
+    }
+
+    public Optional<PacienteSaidaDTO> buscarPorCpf(String cpf) {
+        return pacienteRepository.findByCpf(cpf)
+                .map(this::toPacienteDTO);
+    }
+
+    public List<PacienteSaidaDTO> buscarPorNome(String nome) {
+        return pacienteRepository.findByNomeContainingIgnoreCase(nome)
+                .stream()
+                .map(this::toPacienteDTO)
+                .collect(Collectors.toList());
+    }
 
 }
