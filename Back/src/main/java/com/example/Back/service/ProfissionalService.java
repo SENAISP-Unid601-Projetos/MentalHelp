@@ -18,17 +18,17 @@ public class ProfissionalService {
 
     @Autowired
     private ProfissionalRepository profissionalRepository;
-    public ResponseEntity<ProfissionalSaidaDTO> salvarProfissional(ProfissionalEntradaDTO profissionalEntradaDTO) {
+    public ResponseEntity<?> salvarProfissional(ProfissionalEntradaDTO profissionalEntradaDTO) {
         if (profissionalEntradaDTO.getCrm().length() < 4){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Crm deve ter pelo menos 4 caracteres");
         }
 
         if (profissionalEntradaDTO.getSenha().length() < 6) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Senha deve ter pelo menos 6 caracteres");
         }
 
         if (!profissionalEntradaDTO.getEmail().matches("\\S+@\\S+\\.\\S+")) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email inválido");
         }
 
         boolean crmExiste = profissionalRepository.existsByCrm(profissionalEntradaDTO.getCrm());
@@ -36,7 +36,7 @@ public class ProfissionalService {
         if (crmExiste) {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
-                    .body(null); //
+                    .body("CRM já cadastrado."); //
         }
 
         Profissional profissional = toEntity(profissionalEntradaDTO);
@@ -119,22 +119,6 @@ public class ProfissionalService {
         profissional.setEspecialidade(dto.getEspecialidade());
         profissional.setFoto(dto.getFoto());
         return profissional;
-    }
-
-    public static class ErrorResponse {
-        private String message;
-
-        public ErrorResponse(String message) {
-            this.message = message;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public void setMessage(String message) {
-            this.message = message;
-        }
     }
 
 }

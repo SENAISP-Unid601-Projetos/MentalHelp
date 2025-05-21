@@ -42,7 +42,7 @@ public class ProfissionalController {
     public ResponseEntity<Map<String, Object>> createProfissional(@RequestPart("foto") MultipartFile foto, @RequestPart("profissionalEntradaDTO") ProfissionalEntradaDTO profissionalDTO) {
         String fotoPath = saveFoto(foto);
         profissionalDTO.setFoto(fotoPath);
-        ResponseEntity<ProfissionalSaidaDTO> responseEntity = proService.salvarProfissional(profissionalDTO);
+        ResponseEntity<?> responseEntity = proService.salvarProfissional(profissionalDTO);
         Map<String, Object> response = new HashMap<>();
         response.put("message", messageSource.getMessage("create.success", null, Locale.getDefault()));
         response.put("profissional", responseEntity.getBody());
