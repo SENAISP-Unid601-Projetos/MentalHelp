@@ -8,19 +8,13 @@ import com.example.Back.Repository.ConsultaRepository;
 import com.example.Back.entity.Paciente;
 import com.example.Back.entity.Profissional;
 import com.example.Back.exception.ConflitoHorarioException;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.transaction.annotation.Transactional;  // Spring Transactional
-import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,6 +23,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ConsultaService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ConsultaService.class);
 
     @Autowired
     private ConsultaRepository consultaRepository;
@@ -47,7 +43,6 @@ public class ConsultaService {
         dto.setIdPaciente(consulta.getPaciente().getIdPaciente());
         dto.setIdProfissional(consulta.getProfissional().getIdProfissional());
         dto.setTipoConsulta(consulta.getTipoConsulta());
-
         return dto;
     }
 
@@ -57,57 +52,67 @@ public class ConsultaService {
         consulta.setData(dto.getData());
         consulta.setValorConsulta(dto.getValorConsulta());
         consulta.setTipoConsulta(dto.getTipoConsulta());
-        consulta.setPaciente(pacienteRepository.findById(dto.getIdPaciente()).get());
-        consulta.setProfissional(profissionalRepository.findById(dto.getIdProfissional()).get());
+        consulta.setPaciente(pacienteRepository.findById(dto.getIdPaciente())
+                .orElseThrow(() -> new IllegalArgumentException("Paciente não encontrado")));
+        consulta.setProfissional(profissionalRepository.findById(dto.getIdProfissional())
+                .orElseThrow(() -> new IllegalArgumentException("Profissional não encontrado")));
         return consulta;
     }
 
-
-
     @Transactional
-    public ResponseEntity<ConsultaDTO> criarConsulta(ConsultaDTO consultaDTO) {
-        try {
-            Optional<Paciente> pacienteOpt = pacienteRepository.findById(consultaDTO.getIdPaciente());
-            if (pacienteOpt.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
+    public ConsultaDTO criarConsulta(ConsultaDTO consultaDTO) {
+        logger.info("Tentando criar consulta para profissional {} na data {}",
+                consultaDTO.getIdProfissional(), consultaDTO.getData());
 
-            Optional<Profissional> profissionalOpt = profissionalRepository.findById(consultaDTO.getIdProfissional());
-            if (profissionalOpt.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-
-            if (consultaRepository.existsByProfissionalIdAndData(consultaDTO.getIdProfissional(), consultaDTO.getData())) {
-                throw new ConflitoHorarioException("Já existe uma consulta agendada para este profissional neste horário.");
-            }
-
-            Paciente paciente = pacienteOpt.get();
-            Profissional profissional = profissionalOpt.get();
-
-            Consulta consulta = toEntity(consultaDTO);
-            Consulta novaConsulta = consultaRepository.save(consulta);
-
-            paciente.getConsultas().add(novaConsulta);
-            profissional.getConsultas().add(novaConsulta);
-
-            pacienteRepository.save(paciente);
-            profissionalRepository.save(profissional);
-
-            return new ResponseEntity<>(toDTO(novaConsulta), HttpStatus.CREATED);
-
-        } catch (ConflitoHorarioException e) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        } catch (Exception e) {
-            // Logar exceção real em produção com logger
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        // Validações
+        if (consultaDTO.getIdPaciente() == null || !pacienteRepository.existsById(consultaDTO.getIdPaciente())) {
+            logger.warn("Paciente inválido: ID {}", consultaDTO.getIdPaciente());
+            throw new IllegalArgumentException("Paciente não encontrado");
         }
-    }
+        if (consultaDTO.getIdProfissional() == null || !profissionalRepository.existsById(consultaDTO.getIdProfissional())) {
+            logger.warn("Profissional inválido: ID {}", consultaDTO.getIdProfissional());
+            throw new IllegalArgumentException("Profissional não encontrado");
+        }
+        if (consultaDTO.getData() == null) {
+            logger.warn("Data da consulta não fornecida");
+            throw new IllegalArgumentException("Data da consulta é obrigatória");
+        }
+        if (consultaDTO.getValorConsulta() == null || consultaDTO.getValorConsulta() < 0) {
+            logger.warn("Valor da consulta inválido: {}", consultaDTO.getValorConsulta());
+            throw new IllegalArgumentException("Valor da consulta inválido");
+        }
+        if (consultaDTO.getTipoConsulta() == null) {
+            logger.warn("Tipo de consulta não fornecido");
+            throw new IllegalArgumentException("Tipo de consulta é obrigatório");
+        }
 
+        // Verificar conflito de horário
+        if (consultaRepository.existsByProfissionalIdAndData(consultaDTO.getIdProfissional(), consultaDTO.getData())) {
+            logger.warn("Conflito de horário: profissional {} já tem consulta na data {}",
+                    consultaDTO.getIdProfissional(), consultaDTO.getData());
+            throw new ConflitoHorarioException("Já existe uma consulta agendada para este profissional neste horário.");
+        }
+
+        Paciente paciente = pacienteRepository.findById(consultaDTO.getIdPaciente()).get();
+        Profissional profissional = profissionalRepository.findById(consultaDTO.getIdProfissional()).get();
+
+        Consulta consulta = toEntity(consultaDTO);
+        Consulta novaConsulta = consultaRepository.save(consulta);
+
+        paciente.getConsultas().add(novaConsulta);
+        profissional.getConsultas().add(novaConsulta);
+
+        pacienteRepository.save(paciente);
+        profissionalRepository.save(profissional);
+
+        logger.info("Consulta criada com sucesso: ID {}", novaConsulta.getIdConsulta());
+        return toDTO(novaConsulta);
+    }
 
     public ResponseEntity<List<ConsultaDTO>> listarConsultas() {
         List<ConsultaDTO> consultas = consultaRepository.findAll()
                 .stream()
-                .map(consulta -> toDTO(consulta))
+                .map(this::toDTO)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(consultas, HttpStatus.OK);
     }
@@ -128,22 +133,20 @@ public class ConsultaService {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        Optional<Paciente> pacienteOpt = pacienteRepository.findById(consultaDTO.getIdPaciente());
-        if (pacienteOpt.isEmpty()) {
+        if (!pacienteRepository.existsById(consultaDTO.getIdPaciente())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Optional<Profissional> profissionalOpt = profissionalRepository.findById(consultaDTO.getIdProfissional());
-        if (profissionalOpt.isEmpty()) {
+        if (!profissionalRepository.existsById(consultaDTO.getIdProfissional())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         Consulta consulta = consultaExistente.get();
 
-        Paciente novoPaciente = pacienteOpt.get();
+        Paciente novoPaciente = pacienteRepository.findById(consultaDTO.getIdPaciente()).get();
         Paciente pacienteAntigo = consulta.getPaciente();
 
-        Profissional novoProfissional = profissionalOpt.get();
+        Profissional novoProfissional = profissionalRepository.findById(consultaDTO.getIdProfissional()).get();
         Profissional profissionalAntigo = consulta.getProfissional();
 
         if (pacienteAntigo != null && !pacienteAntigo.equals(novoPaciente)) {
@@ -186,17 +189,25 @@ public class ConsultaService {
     }
 
     public ResponseEntity<List<ConsultaDTO>> buscarConsultasPorPaciente(Long idPaciente) {
-        List<ConsultaDTO> consultas = consultaRepository.findByPaciente(pacienteRepository.findById(idPaciente).get())
+        Optional<Paciente> pacienteOpt = pacienteRepository.findById(idPaciente);
+        if (pacienteOpt.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        List<ConsultaDTO> consultas = consultaRepository.findByPaciente(pacienteOpt.get())
                 .stream()
-                .map(consulta -> toDTO((Consulta) consulta))
+                .map(this::toDTO)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(consultas, HttpStatus.OK);
     }
 
     public ResponseEntity<List<ConsultaDTO>> buscarConsultasPorProfissional(Long idProfissional) {
-        List<ConsultaDTO> consultas = consultaRepository.findByProfissional(profissionalRepository.findById(idProfissional).get())
+        Optional<Profissional> profissionalOpt = profissionalRepository.findById(idProfissional);
+        if (profissionalOpt.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        List<ConsultaDTO> consultas = consultaRepository.findByProfissional(profissionalOpt.get())
                 .stream()
-                .map(consulta -> toDTO((Consulta) consulta))
+                .map(this::toDTO)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(consultas, HttpStatus.OK);
     }
@@ -204,7 +215,7 @@ public class ConsultaService {
     public ResponseEntity<List<ConsultaDTO>> buscarConsultasPorData(LocalDateTime data) {
         List<ConsultaDTO> consultas = consultaRepository.findByData(data)
                 .stream()
-                .map(consulta -> toDTO((Consulta) consulta))
+                .map(this::toDTO)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(consultas, HttpStatus.OK);
     }
