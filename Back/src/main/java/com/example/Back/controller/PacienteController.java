@@ -106,6 +106,41 @@ public class PacienteController {
     public ResponseEntity<List<PacienteSaidaDTO>> getPacientes() {
         return pacienteService.listarPaciente();
     }
+    @GetMapping("/id/{id}")
+    public ResponseEntity<?> buscarPacientePorId(@PathVariable Long id) {
+        Optional<PacienteSaidaDTO> pacienteDTO = pacienteService.buscarPorId(id);
+
+        if (pacienteDTO.isPresent()) {
+            return ResponseEntity.ok(pacienteDTO.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Paciente não encontrado com o ID fornecido.");
+        }
+    }
+    @GetMapping("/cpf/{cpf}")
+    public ResponseEntity<?> buscarPacientePorCpf(@PathVariable String cpf) {
+        Optional<PacienteSaidaDTO> pacienteDTO = pacienteService.buscarPorCpf(cpf);
+
+        if (pacienteDTO.isPresent()) {
+            return ResponseEntity.ok(pacienteDTO.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Paciente não encontrado com o CPF fornecido.");
+        }
+    }
+    @GetMapping("/nome/{nome}")
+    public ResponseEntity<?> buscarPacientePorNome(@PathVariable String nome) {
+        List<PacienteSaidaDTO> pacientes = pacienteService.buscarPorNome(nome);
+
+        if (pacientes.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Nenhum paciente encontrado com o nome fornecido.");
+        } else {
+            return ResponseEntity.ok(pacientes);
+        }
+    }
+
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, Object>> updatePaciente(@PathVariable Long id, @RequestBody PacienteEntradaDTO pacienteDTO) {
