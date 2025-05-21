@@ -8,6 +8,7 @@ import com.example.Back.Repository.ProfissionalRepository;
 import com.example.Back.Service.PacienteService;
 import com.example.Back.entity.Paciente;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -60,18 +61,30 @@ public class PacienteController {
     }
 
 
-    private String saveFoto(MultipartFile foto) {
-        // Gera um nome único para o arquivo
-        String fileName = UUID.randomUUID().toString() + "_" + foto.getOriginalFilename();
-        String uploadDir = "src/main/resources/pacientePictures/";  // Diretório onde as fotos serão armazenadas
+    @Value("${app.fotos.diretoriosPaciente}")
+    private String diretoriosPaciente;
 
-        try {
-            Files.copy(foto.getInputStream(), Paths.get(uploadDir + fileName));
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Falha ao salvar a foto.");
+    private String saveFoto(MultipartFile foto) {
+        String fileName = UUID.randomUUID().toString() + "_" + foto.getOriginalFilename();
+
+        for (String dir : diretoriosPaciente.split(",")) {
+            try {
+                Path uploadPath = Paths.get(dir.trim());
+
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                Path filePath = uploadPath.resolve(fileName);
+                Files.copy(foto.getInputStream(), filePath);
+
+                return filePath.toString();
+            } catch (IOException e) {
+                System.err.println("Erro ao salvar em " + dir + ": " + e.getMessage());
+            }
         }
-        return uploadDir + fileName;
+
+        throw new RuntimeException("Falha ao salvar a foto nos diretórios configurados.");
     }
 
     @GetMapping("/foto/{cpf}")
