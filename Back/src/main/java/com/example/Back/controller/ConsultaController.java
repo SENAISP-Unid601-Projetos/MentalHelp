@@ -1,12 +1,12 @@
 package com.example.Back.controller;
 
 import com.example.Back.DTO.ConsultaDTO;
-import com.example.Back.DTO.ProfissionalEntradaDTO;
-import com.example.Back.DTO.ProfissionalSaidaDTO;
 import com.example.Back.Service.ConsultaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+
 import org.springframework.format.annotation.DateTimeFormat;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

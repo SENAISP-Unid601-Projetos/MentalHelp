@@ -7,14 +7,12 @@ import com.example.Back.entity.Consulta;
 import com.example.Back.Repository.ConsultaRepository;
 import com.example.Back.entity.Paciente;
 import com.example.Back.entity.Profissional;
-import com.example.Back.entity.Telefone;
-import org.springframework.transaction.annotation.Transactional;  // Spring Transactional
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
