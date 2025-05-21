@@ -19,4 +19,5 @@ app:
   fotos:
     diretoriosProfissional:
       - /app/profissionalPictures
-
+    diretoriosPaciente:
+      - app/pacientePictures

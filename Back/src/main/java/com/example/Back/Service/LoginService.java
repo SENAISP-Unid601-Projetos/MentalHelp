@@ -20,12 +20,12 @@ public class LoginService {
 
     //sem user details, password encoder, etc.
     public String autenticar(String identificador, String senha){
-        Optional<Paciente> paciente = pacienteRepository.findByCpf(identificador);
+        Optional<Paciente> paciente = pacienteRepository.findByEmail(identificador);
         if(paciente.isPresent() && paciente.get().getSenha().matches(senha)){
             return paciente.get().getNome();
         }
 
-        Optional<Profissional> profissional = profissionalRepository.findByCrm(identificador);
+        Optional<Profissional> profissional = profissionalRepository.findByEmail(identificador);
         if(profissional.isPresent() && profissional.get().getSenha().matches(senha)){
             return profissional.get().getNome();
         }

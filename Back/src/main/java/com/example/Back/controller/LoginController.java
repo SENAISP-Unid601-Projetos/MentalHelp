@@ -16,7 +16,7 @@ public class LoginController {
     private LoginService loginService;
 
     public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest){
-        String nome = loginService.autenticar(loginRequest.getCrmOuCpf(), loginRequest.getSenha());
+        String nome = loginService.autenticar(loginRequest.getEmail(), loginRequest.getSenha());
 
         if (nome != null) {
             return ResponseEntity.ok(nome);

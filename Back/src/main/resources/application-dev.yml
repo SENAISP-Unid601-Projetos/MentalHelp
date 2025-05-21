@@ -19,3 +19,5 @@ app:
   fotos:
     diretoriosProfissional:
       - src/main/resources/profissionalPictures
+    diretoriosPaciente:
+      - src/main/resources/pacientePictures

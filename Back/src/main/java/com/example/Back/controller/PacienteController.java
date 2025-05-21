@@ -4,6 +4,7 @@ import com.example.Back.DTO.PacienteEntradaDTO;
 import com.example.Back.DTO.PacienteSaidaDTO;
 import com.example.Back.Repository.PacienteRepository;
 import com.example.Back.Service.PacienteService;
+import com.example.Back.config.FotoStorageProperties;
 import com.example.Back.entity.Paciente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 @RestController
@@ -33,6 +35,9 @@ public class PacienteController {
     @Autowired
     private MessageSource messageSource;
 
+    @Autowired
+    private FotoStorageProperties fotoStorageProperties;
+
     @PostMapping("/post")
     public ResponseEntity<Map<String, Object>> createPaciente(@RequestPart("foto") MultipartFile foto, @RequestPart("pacienteEntradaDTO") PacienteEntradaDTO pacienteDTO) {
         String fotoPath = saveFoto(foto);
@@ -44,14 +49,11 @@ public class PacienteController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-
-    @Value("${app.fotos.diretoriosPaciente}")
-    private String diretoriosPaciente;
-
-    private String saveFoto(MultipartFile foto) {
+    public String saveFoto(MultipartFile foto) {
         String fileName = UUID.randomUUID().toString() + "_" + foto.getOriginalFilename();
+        List<String> diretorios = fotoStorageProperties.getDiretoriosPaciente();
 
-        for (String dir : diretoriosPaciente.split(",")) {
+        for (String dir : diretorios) {
             try {
                 Path uploadPath = Paths.get(dir.trim());
 
@@ -60,7 +62,7 @@ public class PacienteController {
                 }
 
                 Path filePath = uploadPath.resolve(fileName);
-                Files.copy(foto.getInputStream(), filePath);
+                Files.copy(foto.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
                 return filePath.toString();
             } catch (IOException e) {
