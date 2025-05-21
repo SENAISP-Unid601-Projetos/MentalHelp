@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
 @Service
 public class ProfissionalService {
 
@@ -43,6 +44,36 @@ public class ProfissionalService {
         profissionalRepository.save(profissional);
         return ResponseEntity.status(HttpStatus.CREATED).body(toProfissionalDTO(profissional));
     }
+
+    // Buscar profissional por ID
+    public ResponseEntity<ProfissionalSaidaDTO> buscarProfissionalPorId(Long id) {
+        Optional<Profissional> profissionalOpt = profissionalRepository.findById(id);
+        if (profissionalOpt.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(toProfissionalDTO(profissionalOpt.get()), HttpStatus.OK);
+    }
+
+    // Buscar profissional por CRM
+    public ResponseEntity<ProfissionalSaidaDTO> buscarProfissionalPorCrm(String crm) {
+        Optional<Profissional> profissionalOpt = profissionalRepository.findByCrm(crm);
+        if (profissionalOpt.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(toProfissionalDTO(profissionalOpt.get()), HttpStatus.OK);
+    }
+
+    public ResponseEntity<List<ProfissionalSaidaDTO>> buscarProfissionaisPorEspecialidade(String especialidade) {
+        List<Profissional> profissionais = profissionalRepository.findByEspecialidade(especialidade);
+        if (profissionais.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        List<ProfissionalSaidaDTO> dtos = profissionais.stream()
+                .map(this::toProfissionalDTO)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
+    }
+
 
     public ResponseEntity<List<ProfissionalSaidaDTO>> listarProfissional() {
         List<ProfissionalSaidaDTO> profissionais = profissionalRepository.findAll()

@@ -54,6 +54,51 @@ public class ProfissionalController {
         return proService.listarProfissional();
     }
 
+    // GET por ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> getProfissionalById(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+        ResponseEntity<ProfissionalSaidaDTO> responseEntity = proService.buscarProfissionalPorId(id);
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            response.put("message", messageSource.getMessage("fetch.success", null, Locale.getDefault()));
+            response.put("profissional", responseEntity.getBody());
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("message", messageSource.getMessage("fetch.notfound", null, Locale.getDefault()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+
+    // GET por CRM
+    @GetMapping("/crm/{crm}")
+    public ResponseEntity<Map<String, Object>> getProfissionalByCrm(@PathVariable String crm) {
+        Map<String, Object> response = new HashMap<>();
+        ResponseEntity<ProfissionalSaidaDTO> responseEntity = proService.buscarProfissionalPorCrm(crm);
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            response.put("message", messageSource.getMessage("fetch.success", null, Locale.getDefault()));
+            response.put("profissional", responseEntity.getBody());
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("message", messageSource.getMessage("fetch.notfound", null, Locale.getDefault()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+
+    // GET por Especialidade
+    @GetMapping("/especialidade/{especialidade}")
+    public ResponseEntity<Map<String, Object>> getProfissionaisByEspecialidade(@PathVariable String especialidade) {
+        Map<String, Object> response = new HashMap<>();
+        ResponseEntity<List<ProfissionalSaidaDTO>> responseEntity = proService.buscarProfissionaisPorEspecialidade(especialidade);
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            response.put("message", messageSource.getMessage("fetch.success", null, Locale.getDefault()));
+            response.put("profissionais", responseEntity.getBody());
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("message", messageSource.getMessage("fetch.notfound", null, Locale.getDefault()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, Object>> updateProfissional(@PathVariable Long id, @RequestBody ProfissionalEntradaDTO profissionalDTO) {
         ResponseEntity<ProfissionalSaidaDTO> responseEntity = proService.atualizarProfissional(id, profissionalDTO);
