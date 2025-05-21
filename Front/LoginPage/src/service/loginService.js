@@ -3,20 +3,19 @@ import hashingUtility from "../utils/hashingUtility.js"
 import setupAxiosConfig from "../config/axiosConfig.js"
 
 const loginService = {
-    async checkUserAuth(login,password,flag){
+    async checkUserAuth(login,password){
         try{
             const instance = setupAxiosConfig.axiosInit();
-            const URL = flag ? "profissional/login" : "paciente/login"
-            const token = hashingUtility.generateSecureHash(login,password);
+            const token =  await hashingUtility.generateSecureHash(login,password);
 
-            const response = await instance.post(URL,{
+            const response = await instance.post("/login",{
                 "email":login,
                 "senha":password
             });
 
             if(response.status === 200){
                 localStorageService.saveUserSession(login,password,token);
-                return {token };
+                return {token, flag:response.data};
             }
         } catch(err){
             console.error('Error:',err);
