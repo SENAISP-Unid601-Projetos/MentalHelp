@@ -3,7 +3,7 @@ window.onload = function () {
   const contactLinks = document.querySelectorAll('.js-scroll-contact');
   const professionalLinks = document.querySelectorAll('.js-scroll-professionals');
   const apoioLinks = document.querySelectorAll('.js-scroll-apoio');
-  const agendeLinks = document.querySelectorAll('.js-scroll-agende');
+  const agendeLinks = document.querySelectorAll('#btnAgende'); //.js-scroll-agende
 
   // Logo scroll to top
   if (logo instanceof HTMLDivElement) {
