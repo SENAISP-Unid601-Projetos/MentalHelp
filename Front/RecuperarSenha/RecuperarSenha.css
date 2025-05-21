@@ -81,3 +81,18 @@ h1.m-0.fw-bold.text-purple {
 .text-center small a:hover {
     color: #36004e;
 }
+
+@keyframes cair {
+  0% {
+    transform: translateY(-100px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.toast.caindo {
+  animation: cair 0.6s ease-out;
+}
