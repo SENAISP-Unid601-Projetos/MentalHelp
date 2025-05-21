@@ -1,8 +1,10 @@
 package com.example.Back.controller;
 
+import com.example.Back.DTO.AtestadoEntradaDTO;
 import com.example.Back.Repository.ArquivoEnviadoRepository;
 import com.example.Back.Repository.PacienteRepository;
 import com.example.Back.Repository.ProfissionalRepository;
+import com.example.Back.Service.AtestadoService;
 import com.example.Back.entity.ArquivoEnviado;
 import com.example.Back.entity.Paciente;
 import com.example.Back.entity.Profissional;
@@ -28,8 +30,27 @@ public class ArquivoController {
     @Autowired
     private ProfissionalRepository profissionalRepository;
 
+
     @Autowired
     private PacienteRepository pacienteRepository;
+
+
+    @GetMapping("/por-profissional/{idProfissional}")
+    public ResponseEntity<List<Map<String, Object>>> listarArquivosPorProfissional(@PathVariable Long idProfissional) {
+        List<ArquivoEnviado> arquivos = arquivoEnviadoRepository.findByProfissionalIdProfissional(idProfissional);
+
+        List<Map<String, Object>> resultado = arquivos.stream().map(arquivo -> {
+            Map<String, Object> info = new HashMap<>();
+            info.put("idArquivo", arquivo.getId());
+            info.put("nomeArquivo", arquivo.getNomeArquivo());
+            info.put("idProfissional", arquivo.getProfissional().getIdProfissional());
+            info.put("dataEnvio", arquivo.getDataEnvio());
+            return info;
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(resultado);
+    }
+
 
     @PostMapping(value = "/enviar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> enviarArquivo(
@@ -57,22 +78,6 @@ public class ArquivoController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao enviar o arquivo.");
         }
-    }
-
-    @GetMapping("/por-profissional/{idProfissional}")
-    public ResponseEntity<List<Map<String, Object>>> listarArquivosPorProfissional(@PathVariable Long idProfissional) {
-        List<ArquivoEnviado> arquivos = arquivoEnviadoRepository.findByProfissionalIdProfissional(idProfissional);
-
-        List<Map<String, Object>> resultado = arquivos.stream().map(arquivo -> {
-            Map<String, Object> info = new HashMap<>();
-            info.put("idArquivo", arquivo.getId());
-            info.put("nomeArquivo", arquivo.getNomeArquivo());
-            info.put("idProfissional", arquivo.getProfissional().getIdProfissional());
-            info.put("dataEnvio", arquivo.getDataEnvio());
-            return info;
-        }).collect(Collectors.toList());
-
-        return ResponseEntity.ok(resultado);
     }
 }
 

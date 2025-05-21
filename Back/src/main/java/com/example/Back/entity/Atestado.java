@@ -1,27 +1,35 @@
 package com.example.Back.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class Atestado {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idAtestado;
+    private Long id;
 
     private LocalDate data;
+
+    private String crmMedico;
+
+    private String nomePaciente;
+
     private String cid;
+
     private String descricao;
 
-    @ManyToOne
-    @JoinColumn(name = "id_profissional")
-    private Profissional profissional;
+    private String assinatura;
 
-    @ManyToOne
-    @JoinColumn(name = "id_paciente")
-    private Paciente paciente;
+    @OneToOne
+    @JoinColumn(name = "consulta_id")
+    @JsonIgnore // <- ESSENCIAL para evitar erro 500 no GET
+    private Consulta consulta;
 }

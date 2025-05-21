@@ -1,6 +1,7 @@
 package com.example.Back.entity;
 
 import com.example.Back.enums.TipoConsulta;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,4 +30,9 @@ public class Consulta {
     @ManyToOne
     @JoinColumn(name="profissional_id")
     private Profissional profissional;
+
+    @OneToOne(mappedBy = "consulta")
+    @JsonManagedReference
+    private Atestado atestado;
+
 }
