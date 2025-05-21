@@ -5,19 +5,17 @@ import com.example.Back.entity.Paciente;
 import com.example.Back.entity.Profissional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public interface ConsultaRepository extends JpaRepository<Consulta, Long> {
     Optional<Consulta> findByIdConsulta(Long idConsulta);
+    Optional<Consulta> findByData(LocalDateTime data); // Retorna uma consulta específica para uma data
 
-    Optional<Object> findByData(LocalDateTime data);
+    Optional<Consulta> findByProfissional(Profissional profissional); // Retorna uma consulta de um profissional específico
 
-    Optional<Object> findByProfissional(Profissional Profissional);
+    Optional<Consulta> findByPaciente(Paciente paciente); // Retorna uma consulta para um paciente específico
 
-    Optional<Object> findByPaciente(Paciente paciente);
-
-    List<Consulta> findByPacienteAndData(Paciente paciente, LocalDateTime data);
+    List<Consulta> findByProfissionalAndData(Profissional profissional, LocalDateTime data); // Retorna a lista de consultas para um profissional e data
 }
