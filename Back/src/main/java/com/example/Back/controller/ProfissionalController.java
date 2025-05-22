@@ -1,13 +1,12 @@
 package com.example.Back.controller;
 
-import com.example.Back.DTO.ProfissionalEntradaDTO;
-import com.example.Back.DTO.ProfissionalSaidaDTO;
-import com.example.Back.Repository.ProfissionalRepository;
-import com.example.Back.Service.ProfissionalService;
+import com.example.Back.dto.ProfissionalEntradaDTO;
+import com.example.Back.dto.ProfissionalSaidaDTO;
+import com.example.Back.repository.ProfissionalRepository;
+import com.example.Back.service.ProfissionalService;
 import com.example.Back.config.FotoStorageProperties;
 import com.example.Back.entity.Profissional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

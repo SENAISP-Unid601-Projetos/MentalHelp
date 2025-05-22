@@ -1,6 +1,6 @@
-package com.example.Back.Service;
+package com.example.Back.service;
 
-import com.example.Back.Repository.ConsultaRepository;
+import com.example.Back.repository.ConsultaRepository;
 import com.example.Back.entity.Consulta;
 import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.kernel.colors.ColorConstants;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 
 
 @Service

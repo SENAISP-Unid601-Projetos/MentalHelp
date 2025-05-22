@@ -1,8 +1,8 @@
-package com.example.Back.Service;
+package com.example.Back.service;
 
-import com.example.Back.DTO.ProfissionalEntradaDTO;
-import com.example.Back.DTO.ProfissionalSaidaDTO;
-import com.example.Back.Repository.ProfissionalRepository;
+import com.example.Back.dto.ProfissionalEntradaDTO;
+import com.example.Back.dto.ProfissionalSaidaDTO;
+import com.example.Back.repository.ProfissionalRepository;
 import com.example.Back.entity.Consulta;
 import com.example.Back.entity.Profissional;
 import org.springframework.beans.factory.annotation.Autowired;

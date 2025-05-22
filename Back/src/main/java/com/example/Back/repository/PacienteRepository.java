@@ -1,11 +1,12 @@
-package com.example.Back.Repository;
+package com.example.Back.repository;
 import com.example.Back.entity.Paciente;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.nio.channels.FileChannel;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface PacienteRepository extends JpaRepository <Paciente, Long> {
     Optional<Paciente> findByEmail(String email);
 

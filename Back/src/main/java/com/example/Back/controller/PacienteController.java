@@ -1,13 +1,12 @@
 package com.example.Back.controller;
 
-import com.example.Back.DTO.PacienteEntradaDTO;
-import com.example.Back.DTO.PacienteSaidaDTO;
-import com.example.Back.Repository.PacienteRepository;
-import com.example.Back.Service.PacienteService;
+import com.example.Back.dto.PacienteEntradaDTO;
+import com.example.Back.dto.PacienteSaidaDTO;
+import com.example.Back.repository.PacienteRepository;
+import com.example.Back.service.PacienteService;
 import com.example.Back.config.FotoStorageProperties;
 import com.example.Back.entity.Paciente;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

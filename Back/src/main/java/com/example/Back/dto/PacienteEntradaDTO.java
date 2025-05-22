@@ -1,4 +1,4 @@
-package com.example.Back.DTO;
+package com.example.Back.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;

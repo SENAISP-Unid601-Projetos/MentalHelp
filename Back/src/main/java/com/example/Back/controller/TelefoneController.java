@@ -1,7 +1,7 @@
 package com.example.Back.controller;
 
-import com.example.Back.DTO.TelefoneDTO;
-import com.example.Back.Service.TelefoneService;
+import com.example.Back.dto.TelefoneDTO;
+import com.example.Back.service.TelefoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;

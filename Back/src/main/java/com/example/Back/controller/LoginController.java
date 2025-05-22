@@ -1,7 +1,7 @@
 package com.example.Back.controller;
 
-import com.example.Back.DTO.LoginRequest;
-import com.example.Back.Service.LoginService;
+import com.example.Back.dto.LoginRequest;
+import com.example.Back.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

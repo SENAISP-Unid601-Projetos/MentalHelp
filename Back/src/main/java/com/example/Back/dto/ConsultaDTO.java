@@ -1,4 +1,4 @@
-package com.example.Back.DTO;
+package com.example.Back.dto;
 
 import com.example.Back.enums.TipoConsulta;
 import io.swagger.v3.oas.annotations.media.Schema;

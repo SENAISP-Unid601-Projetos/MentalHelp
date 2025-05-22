@@ -1,4 +1,4 @@
-package com.example.Back.Repository;
+package com.example.Back.repository;
 
 import com.example.Back.entity.Paciente;
 import com.example.Back.entity.Telefone;

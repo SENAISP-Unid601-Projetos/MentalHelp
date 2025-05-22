@@ -1,9 +1,7 @@
 package com.example.Back.controller;
 
-import com.example.Back.DTO.ConsultaDTO;
-import com.example.Back.Service.ConsultaService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import com.example.Back.dto.ConsultaDTO;
+import com.example.Back.service.ConsultaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.format.annotation.DateTimeFormat;

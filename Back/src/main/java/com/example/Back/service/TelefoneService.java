@@ -1,10 +1,10 @@
-package com.example.Back.Service;
+package com.example.Back.service;
 
-import com.example.Back.DTO.TelefoneDTO;
-import com.example.Back.Repository.PacienteRepository;
+import com.example.Back.dto.TelefoneDTO;
+import com.example.Back.repository.PacienteRepository;
 import com.example.Back.entity.Paciente;
 import com.example.Back.entity.Telefone;
-import com.example.Back.Repository.TelefoneRepository;
+import com.example.Back.repository.TelefoneRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

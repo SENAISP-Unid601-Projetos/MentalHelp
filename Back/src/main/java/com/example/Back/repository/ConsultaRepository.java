@@ -1,15 +1,17 @@
-package com.example.Back.Repository;
+package com.example.Back.repository;
 
 import com.example.Back.entity.Consulta;
 import com.example.Back.entity.Paciente;
 import com.example.Back.entity.Profissional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface ConsultaRepository extends JpaRepository<Consulta, Long> {
     Optional<Consulta> findByIdConsulta(Long idConsulta);
 
