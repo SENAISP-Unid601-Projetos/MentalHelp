@@ -1,4 +1,4 @@
-import loginService from "./src/service/loginService.js"
+import loginService from "../src/service/loginService.js"
 
 document.addEventListener('DOMContentLoaded', function() {
     const senhaInput = document.getElementById('senha');
