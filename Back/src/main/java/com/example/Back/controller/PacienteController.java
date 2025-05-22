@@ -106,7 +106,7 @@ public class PacienteController {
     public ResponseEntity<List<PacienteSaidaDTO>> getPacientes() {
         return pacienteService.listarPaciente();
     }
-    @GetMapping("/id/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<?> buscarPacientePorId(@PathVariable Long id) {
         Optional<PacienteSaidaDTO> pacienteDTO = pacienteService.buscarPorId(id);
 
@@ -117,7 +117,7 @@ public class PacienteController {
                     .body("Paciente não encontrado com o ID fornecido.");
         }
     }
-    @GetMapping("/cpf/{cpf}")
+    @GetMapping("/get/{cpf}")
     public ResponseEntity<?> buscarPacientePorCpf(@PathVariable String cpf) {
         Optional<PacienteSaidaDTO> pacienteDTO = pacienteService.buscarPorCpf(cpf);
 
@@ -128,7 +128,7 @@ public class PacienteController {
                     .body("Paciente não encontrado com o CPF fornecido.");
         }
     }
-    @GetMapping("/nome/{nome}")
+    @GetMapping("/get/{nome}")
     public ResponseEntity<?> buscarPacientePorNome(@PathVariable String nome) {
         List<PacienteSaidaDTO> pacientes = pacienteService.buscarPorNome(nome);
 
@@ -142,7 +142,7 @@ public class PacienteController {
 
 
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<Map<String, Object>> updatePaciente(@PathVariable Long id, @RequestBody PacienteEntradaDTO pacienteDTO) {
         ResponseEntity<PacienteSaidaDTO> responseEntity = pacienteService.atualizarPaciente(id, pacienteDTO);
         Map<String, Object> response = new HashMap<>();
