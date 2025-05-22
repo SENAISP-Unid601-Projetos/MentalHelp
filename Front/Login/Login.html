@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,6 +16,7 @@
     <link rel="stylesheet" href="../Login/CSS/Login.css">
     <title data-i18n="Titulo">Entrar MentalHelp</title>
 </head>
+
 <body>
 
     <div class="container d-flex justify-content-center align-items-center min-vh-100">
@@ -22,48 +24,55 @@
             <div class="col-md-6 p-5 bg-white">
                 <div class="d-flex align-items-center mb-4 gap-3">
                     <img src="../Recursos/img/Logo.png" alt="Logo MentalHelp" class="w-25">
-                    <h1 data-i18n="Mental" class="m-0 fw-bold text-purple">MentalHelp</h1> 
-                      <div class="lang-select">
-                         <select id="language" onchange="trocarIdioma()" class="form-select w-auto ms-auto mb-3 mt-4">
-                          <option value="pt">Português</option>
-                          <option value="es">Español</option>
-                          <option value="en">English</option>
+                    <h1 data-i18n="Mental" class="m-0 fw-bold text-purple">MentalHelp</h1>
+                    <div class="lang-select">
+                        <select id="language" onchange="trocarIdioma()" class="form-select w-auto ms-auto mb-3 mt-4">
+                            <option value="pt">Português</option>
+                            <option value="es">Español</option>
+                            <option value="en">English</option>
                         </select>
-                      </div>
-                      
+                    </div>
+
                 </div>
-                
+
                 <h2 data-i18n="Entrar" class="text-center text-purple mb-4">Entrar</h2>
 
                 <form id="loginForm">
                     <div class="mb-3 position-relative">
                         <i class="bi bi-person input-icon"></i>
-                        <input data-i18n="placeholder" id="email" type="email" class="form-control custom-input ps-5" placeholder="Usuário">
+                        <input data-i18n="placeholder" id="email" type="email" class="form-control custom-input ps-5"
+                            placeholder="Usuário">
                     </div>
                     <div class="mb-3 position-relative">
                         <i class="bi bi-lock input-icon"></i>
-                        <input data-i18n="placeholder1" id="senha" type="password" class="form-control custom-input ps-5 pe-5" id="senha" placeholder="Senha">
+                        <input data-i18n="placeholder1" id="senha" type="password"
+                            class="form-control custom-input ps-5 pe-5" id="senha" placeholder="Senha">
                         <i class="bi bi-eye-slash toggle-password" id="toggleSenha"></i>
                     </div>
                     <div class="mb-3 d-flex justify-content-between align-items-center">
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="lembrar">
-                            <label data-i18n="Lembrar" class="form-check-label text-muted" for="lembrar">Lembrar-me</label>
+                            <label data-i18n="Lembrar" class="form-check-label text-muted"
+                                for="lembrar">Lembrar-me</label>
                         </div>
-                        <a data-i18n="Esquecer" href="../RecuperarSenha/RecuperarSenha.html" class="text-muted fst-italic small">Esqueci a Senha</a>
+                        <a data-i18n="Esquecer" href="../RecuperarSenha/RecuperarSenha.html"
+                            class="text-muted fst-italic small">Esqueci a Senha</a>
                     </div>
                     <button data-i18n="Entrar" type="submit" class="btn-purple w-100 mb-3" id="loginBtn">Entrar</button>
-                    <div  data-i18n="SemConta" class="text-center small">
-                        Ainda não tem uma conta?
+                    <div class="text-center align-items-center">
+                        <p data-i18n="SemConta" class="text-center small"> Ainda não tem uma conta?</p>
+                        <a data-i18n="Cadastrar" href="../Cadastro/HTML/cadastro.html"
+                            class="text-purple fw-semibold fst-italic">Cadastre-se</a> 
                     </div>
-                    <a  data-i18n="Cadastrar" href="../Cadastro/HTML/cadastro.html" class="text-purple fw-semibold fst-italic">Cadastre-se</a> // MOVER ESSE ELEMENTO PARA A ESQUERDA.
                 </form>
             </div>
             <div class="col-md-6 d-none d-md-block p-0">
-                <img src="../Recursos/img/ftcadastro.png" alt="Imagem terapêutica" class="img-fluid h-100 w-100 object-fit-cover">
+                <img src="../Recursos/img/ftcadastro.png" alt="Imagem terapêutica"
+                    class="img-fluid h-100 w-100 object-fit-cover">
             </div>
         </div>
     </div>
-    
+
 </body>
+
 </html>
