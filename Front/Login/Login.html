@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +11,7 @@
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="JS/Login.js"></script>
+    <script src="JS/Translate.js"></script>
     <link rel="stylesheet" href="../Login/CSS/Login.css">
     <title data-i18n="Titulo">Entrar MentalHelp</title>
 </head>
@@ -52,25 +52,18 @@
                         </div>
                         <a data-i18n="Esquecer" href="#" class="text-muted fst-italic small">Esqueci a Senha</a>
                     </div>
-                    <button data-i18n="Entrar" id="loginBtn" type="submit" class="btn btn-purple w-100 mb-3">Entrar</button>
-                    <div class="text-center small">
-                        <p data-i18n="SemConta">Ainda não tem uma conta?</p>
-                        <div class="dropdown d-inline-block position-relative">
-                            <a data-i18n="Cadastrar" href="#" class="text-purple fw-semibold fst-italic dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">Cadastre-se</a>
-                            <ul class="dropdown-menu start-0">
-                                <li><a data-i18n="Paciente" class="dropdown-item" href="../Cadastro/HTML/Paciente.html">Paciente</a></li>
-                                <li><a data-i18n="Medico" class="dropdown-item" href="../Cadastro/HTML/medico.html">Médico</a></li>
-                            </ul>
-                        </div>
+                    <button data-i18n="Entrar" type="submit" class="btn-purple w-100 mb-3" id="loginBtn">Entrar</button>
+                    <div  data-i18n="SemConta" class="text-center small">
+                        Ainda não tem uma conta?
                     </div>
+                    <a  data-i18n="Cadastrar" href="#" class="text-purple fw-semibold fst-italic">Cadastre-se</a> // MOVER ESSE ELEMENTO PARA A ESQUERDA.
                 </form>
             </div>
-
-            <!-- Coluna com imagem -->
             <div class="col-md-6 d-none d-md-block p-0">
-                <img src="../Recursos/img/ftcadastro.png" alt="Imagem terapêutica"
-                    class="img-fluid h-100 w-100 object-fit-cover">
+                <img src="../Recursos/img/ftcadastro.png" alt="Imagem terapêutica" class="img-fluid h-100 w-100 object-fit-cover">
             </div>
         </div>
     </div>
+    
 </body>
+</html>

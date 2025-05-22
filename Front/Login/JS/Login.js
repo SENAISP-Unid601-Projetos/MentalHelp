@@ -1,3 +1,5 @@
+import loginService from "../src/service/loginService.js"
+
 document.addEventListener('DOMContentLoaded', function() {
     const senhaInput = document.getElementById('senha');
     const toggleSenha = document.getElementById('toggleSenha');
@@ -5,123 +7,82 @@ document.addEventListener('DOMContentLoaded', function() {
     const emailInput = document.getElementById('email');
     const loginBtn = document.getElementById('loginBtn');
 
-    axios.defaults.baseURL = 'http://10.110.12.50:9500/';
-
+    // Função para alternar a visibilidade da senha
     toggleSenha.addEventListener('click', function() {
         if (senhaInput.type === 'password') {
             senhaInput.type = 'text';
-            toggleSenha.classList.replace('bi-eye-slash', 'bi-eye');
+            toggleSenha.classList.remove('bi-eye-slash');
+            toggleSenha.classList.add('bi-eye');
         } else {
             senhaInput.type = 'password';
-            toggleSenha.classList.replace('bi-eye', 'bi-eye-slash');
-        }
-    });
+            toggleSenha.classList.remove('bi-eye');
+            toggleSenha.classList.add('bi-eye-slash');
+            }
+        }   
+    );
 
-    loginForm.addEventListener('submit', function(event) {
-        event.preventDefault();
+    // Validação do formulário de login
+    loginForm.addEventListener('submit', async function(event) {
+        
+        event.preventDefault(); // Impede o envio do formulário para testar as validações
+    
+        try{
 
-        const email = emailInput.value.trim();
-        const senha = senhaInput.value.trim();
+            // Verificação básica de campos obrigatórios
+            if (!emailInput.value || !senhaInput.value) {
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
+        
+            // Exibe o spinner e desabilita o botão de login
+            loginBtn.disabled = true;
+        
+            // Requisição para o servidor para validar o login
+            const loginData = {
+                email: emailInput.value,
+                senha: senhaInput.value
+            };
 
-        if (!email || !senha) {
-            alert('Por favor, preencha todos os campos.');
-            return;
-        }
-
-        loginBtn.disabled = true;
-
-        const loginData = {
-            email: email,
-            senha: senha
-        };
-
-        axios.post('/profissional/login', loginData)
-            .then(response => {
-                const data = response.data;
-                console.log(data);
-
-                if (data.message === 'Login successful!') {
-                    alert('Login realizado com sucesso!');
-                    window.location.href = 'dashboard.html';
-                } else {
-                    alert('Credenciais inválidas. Tente novamente.');
-                }
-            })
-            .catch(error => {
-                console.error('Erro na requisição:', error);
-                alert('Ocorreu um erro ao tentar fazer login. Tente novamente mais tarde.');
-            })
-            .finally(() => {
+            //Token de sessão
+            const {token , flag } =  await loginService.checkUserAuth(loginData.email, loginData.senha);
+            console.log(token,flag)
+            if(token && !flag){
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Login efetuado com sucesso!",
+                    showConfirmButton: false,
+                    timer: 1000
+                  });
                 loginBtn.disabled = false;
+                setTimeout(()=>{window.location.href = "../index.html?token=" + encodeURIComponent(token)},1000)
+            } else if(token && flag){
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Login efetuado com sucesso!",
+                    showConfirmButton: false,
+                    timer: 1000,
+                  });
+                loginBtn.disabled = false;
+                setTimeout(()=>{window.location.href = "../index.html?token=" + encodeURIComponent(token)},1000) //WIP trocar para profissional
+            } else {
+                loginBtn.disabled = false;
+                Swal.fire({
+                    title: "Login invalido",
+                    text: "Verifique suas credenciais",
+                    icon: "warning"
+                });
+            }
+        } catch (err){
+            loginBtn.disabled = false;
+            Swal.fire({
+                title: "Erro de rede",
+                text: "Não foi possível conectar ao servidor. Tente novamente mais tarde.",
+                icon: "error"
             });
+        }
+    
+    
     });
 });
-
-const traducoes = {
-    pt: {
-      "Titulo": "Entrar",
-      "Mental": "MentalHelp",
-      "Entrar": "Entrar",
-      "placeholder": "Usuário",
-      "placeholder1": "Senha",
-      "Lembrar": "Lembrar-me",
-      "Esquecer": "Esqueci a Senha",
-      "SemConta": "Ainda não tem uma conta?",
-      "Cadastrar": "Cadastre-se",
-      "Paciente": "Paciente",
-      "Medico": "Médico",
-      "EntrarBtn": "Entrar"
-    },
-    es: {
-      "Titulo": "Entrar",
-      "Mental": "MentalHelp",
-      "Entrar": "Entrar",  
-      "placeholder": "Usuario",
-      "placeholder1": "Contraseña",
-      "Lembrar": "Recuérdame",
-      "Esquecer": "Olvidé la contraseña",
-      "SemConta": "¿Aún no tienes cuenta?",
-      "Cadastrar": "Regístrate",
-      "Paciente": "Paciente",
-      "Medico": "Médico",
-      "EntrarBtn": "Entrar"
-    },
-    en: {
-      "Titulo": "Log in",
-      "Mental": "MentalHelp",
-      "Entrar": "Login",
-      "placeholder": "Username",
-      "placeholder1": "Password",
-      "Lembrar": "Remember me",
-      "Esquecer": "Forgot Password",
-      "SemConta": "Don't have an account yet?",
-      "Cadastrar": "Sign up",
-      "Paciente": "Patient",
-      "Medico": "Doctor",
-      "EntrarBtn": "Login"
-    }
-  };
-  
-  function trocarIdioma() {
-    const idiomaSelecionado = document.getElementById('language').value;
-    const elementos = document.querySelectorAll('[data-i18n]');
-  
-
-    elementos.forEach(elemento => {
-      const chave = elemento.getAttribute('data-i18n');
-      if (traducoes[idiomaSelecionado] && traducoes[idiomaSelecionado][chave]) {
-        elemento.textContent = traducoes[idiomaSelecionado][chave];
-      }
-    });
-  
-    const placeholders = document.querySelectorAll('[data-i18n="placeholder"], [data-i18n="placeholder1"]');
-    placeholders.forEach(input => {
-      const chave = input.getAttribute('data-i18n');
-      if (traducoes[idiomaSelecionado] && traducoes[idiomaSelecionado][chave]) {
-        input.placeholder = traducoes[idiomaSelecionado][chave];
-      }
-    });
-  }
-  
-  window.onload = trocarIdioma;
-  

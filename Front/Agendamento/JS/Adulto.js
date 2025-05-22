@@ -2,8 +2,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Variáveis de estado
     let mesAtual = new Date().getMonth();
     let anoAtual = new Date().getFullYear();
-    let dataSelecionada = null;
-    let horarioSelecionado = null;
+    window.dataSelecionada = null;
+    window.horarioSelecionado = null;
+
     
     // Elementos DOM
     const btnAgendar = document.getElementById('btnAgendar');
@@ -153,30 +154,5 @@ document.addEventListener('DOMContentLoaded', function() {
         btnAgendar.disabled = true;
       }
     }
-  
-    // Evento de agendamento
-    btnAgendar.addEventListener('click', function() {
-      if (!dataSelecionada || !horarioSelecionado) {
-        mensagemErro.classList.remove('d-none');
-        return;
-      }
-  
-      // Formatar data e hora
-      const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-      const dataFormatada = dataSelecionada.toLocaleDateString('pt-BR', options);
-      
-      // Mostrar modal de confirmação
-      detalhesAgendamento.innerHTML = `
-        Sua consulta com <strong>Vagner</strong> está marcada para:<br>
-        <strong>${dataFormatada}</strong> às <strong>${horarioSelecionado}</strong>
-      `;
-      
-      modalConfirmacao.show();
-      
-      // Aqui você pode adicionar a lógica para enviar para o backend
-      console.log('Agendamento confirmado:', {
-        data: dataSelecionada,
-        horario: horarioSelecionado
-      });
-    });
+
   });
