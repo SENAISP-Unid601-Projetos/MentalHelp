@@ -1,10 +1,13 @@
-// JS/Adulto.js
+// TranslateAdulto.js
+let a = null; // Armazena data formatada
+let b = null; // Armazena dia da semana
+let c = null; // Armazena horário
 
 const translationsAdulto = {
     pt: {
         tituloPagina: "Agendamento",
         tipoAtendimento: "Atendimento selecionado: Adulto",
-        profissionalEncontrada: "Profissional encontrada: Vagner",
+        profissionalEncontrada: "Profissional encontrado: Vagner",
         especialidade: "Especialista em: Desenvolvimento Pessoal",
         mesAnterior: "Mês anterior",
         proximoMes: "Próximo mês",
@@ -21,12 +24,32 @@ const translationsAdulto = {
         dataSelecionada: "Data Selecionada:",
         horarioSelecionado: "Horário Selecionado:",
         confirmarAgendamento: "Confirmar Agendamento",
-        selecioneDiaHorario: "Por favor, selecione um dia e um horário para agendar",
+        meusAgendamentos: "Meus Agendamentos",
+        mensagemErro: "Por favor, selecione um dia e um horário para agendar",
         agendamentoConfirmado: "Agendamento Confirmado!",
         consultaAgendadaSucesso: "Consulta agendada com sucesso!",
-        detalhesAgendamento: "Detalhes do agendamento:",
+        detalhesAgendamento: "Sua consulta com {0} está marcada para: {1} às {2}",
         fecharModal: "Fechar",
-        modalAppointmentDetails: "Sua consulta com Mykael está marcada para: sábado, 22 de julho de 2028 às 17:30",
+        // Traduções para os meses
+        janeiro: "Janeiro",
+        fevereiro: "Fevereiro",
+        marco: "Março",
+        abril: "Abril",
+        maio: "Maio",
+        junho: "Junho",
+        julho: "Julho",
+        agosto: "Agosto",
+        setembro: "Setembro",
+        outubro: "Outubro",
+        novembro: "Novembro",
+        dezembro: "Dezembro",
+        // Traduções para a página Meus Agendamentos
+        tituloMeusAgendamentos: "Meus Agendamentos",
+        semAgendamentos: "Nenhum agendamento encontrado.",
+        dataAgendamento: "Data:",
+        horarioAgendamento: "Horário:",
+        profissionalAgendamento: "Profissional:",
+        cancelarAgendamento: "Excluir"
     },
     en: {
         tituloPagina: "Scheduling",
@@ -48,12 +71,32 @@ const translationsAdulto = {
         dataSelecionada: "Selected Date:",
         horarioSelecionado: "Selected Time:",
         confirmarAgendamento: "Confirm Appointment",
-        selecioneDiaHorario: "Please select a day and time to schedule",
+        meusAgendamentos: "My Appointments",
+        mensagemErro: "Please select a day and time to schedule",
         agendamentoConfirmado: "Appointment Confirmed!",
         consultaAgendadaSucesso: "Appointment scheduled successfully!",
-        detalhesAgendamento: "Appointment details:",
+        detalhesAgendamento: "Your appointment with {0} is scheduled for: {1} at {2}",
         fecharModal: "Close",
-        modalAppointmentDetails: "Your appointment with Mykael is scheduled for: Saturday, July 22, 2028 at 5:30 PM",
+        // Traduções para os meses
+        janeiro: "January",
+        fevereiro: "February",
+        marco: "March",
+        abril: "April",
+        maio: "May",
+        junho: "June",
+        julho: "July",
+        agosto: "August",
+        setembro: "September",
+        outubro: "October",
+        novembro: "November",
+        dezembro: "December",
+        // Traduções para a página Meus Agendamentos
+        tituloMeusAgendamentos: "My Appointments",
+        semAgendamentos: "No appointments found.",
+        dataAgendamento: "Date:",
+        horarioAgendamento: "Time:",
+        profissionalAgendamento: "Professional:",
+        cancelarAgendamento: "Delete"
     },
     es: {
         tituloPagina: "Programación",
@@ -75,29 +118,43 @@ const translationsAdulto = {
         dataSelecionada: "Fecha Seleccionada:",
         horarioSelecionado: "Hora Seleccionada:",
         confirmarAgendamento: "Confirmar Cita",
-        selecioneDiaHorario: "Por favor, seleccione un día y una hora para programar",
+        meusAgendamentos: "Mis Citas",
+        mensagemErro: "Por favor, seleccione un día y una hora para programar",
         agendamentoConfirmado: "¡Cita Confirmada!",
         consultaAgendadaSucesso: "¡Cita programada con éxito!",
-        detalhesAgendamento: "Detalles de la cita:",
+        detalhesAgendamento: "Su cita con {0} está programada para: {1} a las {2}",
         fecharModal: "Cerrar",
-        modalAppointmentDetails: "Su cita con Mykael está programada para: sábado, 22 de julio de 2028 a las 17:30",
-    },
+        // Traduções para os meses
+        janeiro: "Enero",
+        fevereiro: "Febrero",
+        marco: "Marzo",
+        abril: "Abril",
+        maio: "Mayo",
+        junho: "Junio",
+        julho: "Julio",
+        agosto: "Agosto",
+        setembro: "Septiembre",
+        outubro: "Octubre",
+        novembro: "Noviembre",
+        dezembro: "Diciembre",
+        // Traduções para a página Meus Agendamentos
+        tituloMeusAgendamentos: "Mis Citas",
+        semAgendamentos: "No se encontraron citas.",
+        dataAgendamento: "Fecha:",
+        horarioAgendamento: "Hora:",
+        profissionalAgendamento: "Profesional:",
+        cancelarAgendamento: "Eliminar"
+    }
 };
 
 document.addEventListener('DOMContentLoaded', function() {
     const languageSelectAdulto = document.getElementById("languageSelectAdulto");
-    const savedLangAdulto = localStorage.getItem("langAdulto");
+    const savedLangAdulto = localStorage.getItem("langAdulto") || 'pt';
 
-    if (savedLangAdulto) {
-        languageSelectAdulto.value = savedLangAdulto;
-        updateContentAdulto(savedLangAdulto);
-    } else {
-        const defaultLangAdulto = 'pt';
-        languageSelectAdulto.value = defaultLangAdulto;
-        updateContentAdulto(defaultLangAdulto);
-    }
+    languageSelectAdulto.value = savedLangAdulto;
+    updateContentAdulto(savedLangAdulto);
 
-    languageSelectAdulto.addEventListener("change", function () {
+    languageSelectAdulto.addEventListener("change", function() {
         const lang = this.value;
         localStorage.setItem("langAdulto", lang);
         updateContentAdulto(lang);
@@ -106,13 +163,15 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateContentAdulto(lang) {
         const t = translationsAdulto[lang];
 
+        // Atualizar título da página e elementos principais
         document.title = t.tituloPagina;
-        document.getElementById("tipoAtendimento").textContent = t.tipoAtendimento;
-        document.getElementById("profissionalEncontrada").textContent = t.profissionalEncontrada;
-        document.getElementById("especialidade").textContent = t.especialidade;
-        document.getElementById("anterior").setAttribute('aria-label', t.mesAnterior);
-        document.getElementById("proximo").setAttribute('aria-label', t.proximoMes);
+        document.querySelector(".tipo-atendimento").textContent = t.tipoAtendimento;
+        document.querySelector(".reunião").textContent = t.profissionalEncontrada;
+        document.querySelector(".especialidade").textContent = t.especialidade;
+        document.getElementById("anterior").textContent = '‹'; // Mantém o ícone
+        document.getElementById("proximo").textContent = '›'; // Mantém o ícone
 
+        // Atualizar dias da semana
         const diasSemana = document.querySelectorAll(".dias-semana span");
         diasSemana[0].textContent = t.domingo;
         diasSemana[1].textContent = t.segunda;
@@ -122,46 +181,18 @@ document.addEventListener('DOMContentLoaded', function() {
         diasSemana[5].textContent = t.sexta;
         diasSemana[6].textContent = t.sabado;
 
-        // Translate month in calendar
-        const mesElement = document.getElementById("mes");
-        if (mesElement && mesElement.textContent) {
-            const yearMatch = mesElement.textContent.match(/\d{4}/);
-            const year = yearMatch ? parseInt(yearMatch[0]) : new Date().getFullYear();
-            const currentDate = new Date();
-            mesElement.textContent = `${currentDate.toLocaleString(lang, { month: 'long' })} ${year}`.replace(/^\w/, c => c.toUpperCase());
-        }
+        // Atualizar elementos do painel direito
+        document.querySelector(".text-purple").textContent = t.qualHorarioMelhor;
+        document.querySelector(".subtexto").textContent = t.fusoHorario;
 
-        document.getElementById("qualHorarioMelhor").textContent = t.qualHorarioMelhor;
-        document.getElementById("fusoHorario").textContent = t.fusoHorario;
-
+        // Atualizar resumo do agendamento
         const resumoAgendamento = document.getElementById("resumo-agendamento");
         if (resumoAgendamento) {
             const h4Resumo = resumoAgendamento.querySelector("h4");
             if (h4Resumo) h4Resumo.textContent = t.resumoAgendamento;
-
-            const pData = document.getElementById("data-selecionada");
-            if (pData && pData.textContent) {
-                const dateMatch = pData.textContent.match(/\d{2}\/\d{2}\/\d{4}/);
-                if (dateMatch) {
-                    const [day, month, year] = dateMatch[0].split('/');
-                    const date = new Date(`${year}-${month}-${day}`);
-                    pData.textContent = `${t.dataSelecionada} ${date.toLocaleDateString(lang)}`;
-                } else {
-                    pData.textContent = t.dataSelecionada;
-                }
-            }
-
-            const pHora = document.getElementById("horario-selecionado");
-            if (pHora && pHora.textContent) {
-                const timeMatch = pHora.textContent.match(/\d{2}:\d{2}/);
-                if (timeMatch) {
-                    pHora.textContent = `${t.horarioSelecionado} ${timeMatch[0]}`;
-                } else {
-                    pHora.textContent = t.horarioSelecionado;
-                }
-            }
         }
 
+        // Atualizar botões
         const btnAgendar = document.getElementById("btnAgendar");
         if (btnAgendar) {
             const spanText = btnAgendar.querySelector(".btn-text");
@@ -171,24 +202,28 @@ document.addEventListener('DOMContentLoaded', function() {
         const btnVerAgendamentos = document.getElementById("btnVerAgendamentos");
         if (btnVerAgendamentos) {
             const spanText = btnVerAgendamentos.querySelector(".btn-text");
-            if (spanText) spanText.textContent = t.meusAgendamentos || "Meus Agendamentos";
+            if (spanText) spanText.textContent = t.meusAgendamentos;
         }
 
+        // Atualizar mensagem de erro
         const mensagemErro = document.getElementById("mensagemErro");
-        if (mensagemErro) mensagemErro.textContent = t.selecioneDiaHorario;
+        if (mensagemErro) mensagemErro.textContent = t.mensagemErro;
 
+        // Atualizar modal de confirmação
         const modalTitle = document.querySelector("#modalConfirmacao .modal-title");
         if (modalTitle) modalTitle.textContent = t.agendamentoConfirmado;
         const modalBodyH4 = document.querySelector("#modalConfirmacao .modal-body h4");
         if (modalBodyH4) modalBodyH4.textContent = t.consultaAgendadaSucesso;
-
-        // Update modal appointment details
-        const modalBodyP = document.querySelector("#modalConfirmacao .modal-body p");
-        if (modalBodyP) {
-            modalBodyP.textContent = t.modalAppointmentDetails;
-        }
-
         const modalFooterButton = document.querySelector("#modalConfirmacao .modal-footer .btn-primary");
         if (modalFooterButton) modalFooterButton.textContent = t.fecharModal;
+
+        // Atualizar detalhes do agendamento (se variáveis estiverem definidas)
+        const modalBodyP = document.querySelector("#modalConfirmacao .modal-body p");
+        if (modalBodyP && a && c) {
+            modalBodyP.innerHTML = t.detalhesAgendamento
+                .replace("{0}", "Vagner")
+                .replace("{1}", a)
+                .replace("{2}", c);
+        }
     }
 });
