@@ -15,7 +15,7 @@ public class ArquivoEnviado {
     private String nomeArquivo;
     private LocalDateTime dataEnvio;
     @Lob
-    @Column(name = "conteudo", columnDefinition = "LONGBLOB")
+    @Column(name = "conteudo")
     private byte[] conteudo;
 
 

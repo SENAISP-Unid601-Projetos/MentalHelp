@@ -1,7 +1,6 @@
 package com.example.Back.Service;
 
 import com.example.Back.DTO.ProfissionalEntradaDTO;
-import com.example.Back.DTO.ProfissionalLoginDTO;
 import com.example.Back.DTO.ProfissionalSaidaDTO;
 import com.example.Back.Repository.ProfissionalRepository;
 import com.example.Back.entity.Consulta;
@@ -14,22 +13,23 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
 @Service
 public class ProfissionalService {
 
     @Autowired
     private ProfissionalRepository profissionalRepository;
-    public ResponseEntity<ProfissionalSaidaDTO> salvarProfissional(ProfissionalEntradaDTO profissionalEntradaDTO) {
+    public ResponseEntity<?> salvarProfissional(ProfissionalEntradaDTO profissionalEntradaDTO) {
         if (profissionalEntradaDTO.getCrm().length() < 4){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Crm deve ter pelo menos 4 caracteres");
         }
 
         if (profissionalEntradaDTO.getSenha().length() < 6) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Senha deve ter pelo menos 6 caracteres");
         }
 
         if (!profissionalEntradaDTO.getEmail().matches("\\S+@\\S+\\.\\S+")) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email inválido");
         }
 
         boolean crmExiste = profissionalRepository.existsByCrm(profissionalEntradaDTO.getCrm());
@@ -37,13 +37,43 @@ public class ProfissionalService {
         if (crmExiste) {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
-                    .body(null); //
+                    .body("CRM já cadastrado."); //
         }
 
         Profissional profissional = toEntity(profissionalEntradaDTO);
         profissionalRepository.save(profissional);
         return ResponseEntity.status(HttpStatus.CREATED).body(toProfissionalDTO(profissional));
     }
+
+    // Buscar profissional por ID
+    public ResponseEntity<ProfissionalSaidaDTO> buscarProfissionalPorId(Long id) {
+        Optional<Profissional> profissionalOpt = profissionalRepository.findById(id);
+        if (profissionalOpt.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(toProfissionalDTO(profissionalOpt.get()), HttpStatus.OK);
+    }
+
+    // Buscar profissional por CRM
+    public ResponseEntity<ProfissionalSaidaDTO> buscarProfissionalPorCrm(String crm) {
+        Optional<Profissional> profissionalOpt = profissionalRepository.findByCrm(crm);
+        if (profissionalOpt.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(toProfissionalDTO(profissionalOpt.get()), HttpStatus.OK);
+    }
+
+    public ResponseEntity<List<ProfissionalSaidaDTO>> buscarProfissionaisPorEspecialidade(String especialidade) {
+        List<Profissional> profissionais = profissionalRepository.findByEspecialidade(especialidade);
+        if (profissionais.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        List<ProfissionalSaidaDTO> dtos = profissionais.stream()
+                .map(this::toProfissionalDTO)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
+    }
+
 
     public ResponseEntity<List<ProfissionalSaidaDTO>> listarProfissional() {
         List<ProfissionalSaidaDTO> profissionais = profissionalRepository.findAll()
@@ -120,12 +150,6 @@ public class ProfissionalService {
         profissional.setEspecialidade(dto.getEspecialidade());
         profissional.setFoto(dto.getFoto());
         return profissional;
-    }
-
-    public boolean authenticateUser(ProfissionalLoginDTO profissionalLoginDTO) {
-        return profissionalRepository.findByEmail(profissionalLoginDTO.getEmail())
-                .map(profissional -> profissional.getSenha().equals(profissionalLoginDTO.getSenha()))
-                .orElse(false);
     }
 
 }

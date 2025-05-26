@@ -4,16 +4,15 @@ import com.example.Back.Repository.PacienteRepository;
 import com.example.Back.Repository.TelefoneRepository;
 import com.example.Back.entity.Consulta;
 import com.example.Back.entity.Paciente;
+import com.example.Back.entity.Telefone;
 import com.example.Back.entity.Profissional;
 import com.example.Back.entity.Telefone;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,23 +27,26 @@ public class PacienteService {
     @Autowired
     private TelefoneRepository telefoneRepository;
 
-    public ResponseEntity<PacienteSaidaDTO> salvarPaciente(PacienteEntradaDTO pacienteEntradaDTO) {
+    public ResponseEntity<?> salvarPaciente(PacienteEntradaDTO pacienteEntradaDTO) {
         if(pacienteEntradaDTO.getCpf().length() != 11){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("CPF deve conter exatamente 11 dígitos");
         }
 
         if (pacienteEntradaDTO.getSenha().length() < 6) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Senha deve ter pelo menos 6 caracteres");
         }
 
         if (!pacienteEntradaDTO.getEmail().matches("\\S+@\\S+\\.\\S+")) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Email inválido");
         }
 
         boolean cpfExiste = pacienteRepository.existsByCpf(pacienteEntradaDTO.getCpf());
-
         if(cpfExiste){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("CPF já cadastrado no sistema");
         }
 
         Paciente paciente = toEntity(pacienteEntradaDTO);
@@ -102,6 +104,7 @@ public class PacienteService {
                     paciente.getEmail(),
                     paciente.getSenha(),
                     paciente.getFoto(),
+                    paciente.getDataDeNascimento(),
                     null,
                     telefonesNum
             );
@@ -117,6 +120,7 @@ public class PacienteService {
                     paciente.getEmail(),
                     paciente.getSenha(),
                     paciente.getFoto(),
+                    paciente.getDataDeNascimento(),
                     consultaIds,
                     null
             );
@@ -128,6 +132,7 @@ public class PacienteService {
                     paciente.getEmail(),
                     paciente.getSenha(),
                     paciente.getFoto(),
+                    paciente.getDataDeNascimento(),
                     null,
                     null
             );
@@ -147,6 +152,7 @@ public class PacienteService {
                     paciente.getEmail(),
                     paciente.getSenha(),
                     paciente.getFoto(),
+                    paciente.getDataDeNascimento(),
                     consultaIds,
                     telefonesNum
             );
@@ -159,13 +165,40 @@ public class PacienteService {
         paciente.setEmail(dto.getEmail());
         paciente.setSenha(dto.getSenha());
         paciente.setFoto(dto.getFoto());
+        paciente.setDataDeNascimento(dto.getDataDeNascimento());
         return paciente;
     }
 
-    public boolean authenticateUser(PacienteLoginDTO pacienteLoginDTO) {
-        return pacienteRepository.findByEmail(pacienteLoginDTO.getEmail())
-                .map(paciente -> paciente.getSenha().equals(pacienteLoginDTO.getSenha()))
-                .orElse(false);
+    public static class ErrorResponse {
+        private String message;
+
+        public ErrorResponse(String message) {
+            this.message = message;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+    }
+    public Optional<PacienteSaidaDTO> buscarPorId(Long id) {
+        return pacienteRepository.findById(id)
+                .map(this::toPacienteDTO);
+    }
+
+    public Optional<PacienteSaidaDTO> buscarPorCpf(String cpf) {
+        return pacienteRepository.findByCpf(cpf)
+                .map(this::toPacienteDTO);
+    }
+
+    public List<PacienteSaidaDTO> buscarPorNome(String nome) {
+        return pacienteRepository.findByNomeContainingIgnoreCase(nome)
+                .stream()
+                .map(this::toPacienteDTO)
+                .collect(Collectors.toList());
     }
 
 }
