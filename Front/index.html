@@ -9,7 +9,45 @@
     <script src="https://kit.fontawesome.com/be2221d752.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="Principal/CSS/principal.css" />
     <script src="Principal/JS/home.js" defer></script>
-    <script src="Principal/JS/translate.js" defer></script>
+    <!-- <script src="Principal/JS/translate.js" defer></script> -->
+     <script type="module">
+        import loginService from "./Login/src/service/loginService.js";
+
+        const linkMedicoEspecial = document.querySelector('#link-medico-especial');
+        const linkMedicoInfantil = document.querySelector('#link-medico-infantil');
+        const linkMedicoAdulto = document.querySelector('#link-medico-adulto');
+        const token = loginService.getTokenFromURL();
+
+        linkMedicoEspecial.addEventListener('click',(e)=>{
+            e.preventDefault();
+            
+            if(loginService.isValidSession(token)){
+              window.location.href = "./Agendamento/HTML/agendamentoEspecial.html?token=" + encodeURIComponent(token);
+            }else{
+              window.location.href = "./Login/Login.html";
+            }
+        });
+
+        linkMedicoInfantil.addEventListener('click',(e)=>{
+            e.preventDefault();
+        
+            if(loginService.isValidSession(token)){
+              window.location.href = "./Agendamento/HTML/agendamentoInfantil.html?token=" + encodeURIComponent(token);
+            }else{
+              window.location.href = "./Login/Login.html";
+            }
+        })
+
+         linkMedicoAdulto.addEventListener('click',(e)=>{
+            e.preventDefault();
+        
+            if(loginService.isValidSession(token)){
+              window.location.href = "./Agendamento/HTML/agendamentoAdulto.html?token=" + encodeURIComponent(token);
+            }else{
+              window.location.href = "./Login/Login.html";
+            }
+        })
+     </script>
     
 </head>
 
@@ -96,7 +134,7 @@
                     ajudar pequenos pacientes a enfrentarem desafios como ansiedade,
                     dificuldades escolares e problemas de socialização.
                 </p>
-                <a href="Agendamento/HTML/agendamentoEspecial.html" class="btn fw-bold"
+                <a id="link-medico-especial" class="btn fw-bold"
                     style="background-color: #a7afff; color: white">Agende aqui !</a>
             </div>
         </div>
@@ -115,7 +153,7 @@
                     evidências para promover o bem-estar psicológico desde os primeiros
                     anos de vida.
                 </p>
-                <a href="Agendamento/HTML/agendamentoInfantil.html" class="btn fw-bold"
+                <a id="link-medico-infantil" class="btn fw-bold"
                     style="background-color: #a7afff; color: white">Agende aqui !</a>
             </div>
         </div>
@@ -131,7 +169,7 @@
                     TDAH e TEA, o Dr. Eduardo oferece um olhar técnico e acolhedor,
                     atuando em parceria com escolas e famílias para um cuidado integral.
                 </p>
-                <a href="Agendamento/HTML/agendamentoAdulto.html" class="btn fw-bold"
+                <a id="link-medico-adulto" class="btn fw-bold"
                     style="background-color: #a7afff; color: white">Agende aqui !</a>
             </div>
         </div>
