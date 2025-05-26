@@ -8,9 +8,9 @@ function configurarParaPost() {
     }
 
     // TROCAR ESTES VALORES PELO REAL USO
-    const idPaciente = 0;
-    const idProfissional = 123;
-    const valorConsulta = 0;
+    const idPaciente = 1;
+    const idProfissional = 6;
+    const valorConsulta = 200;
 
     const [horas, minutos] = horario.split(':').map(Number);
     const dataComHorario = new Date(data);
@@ -26,9 +26,9 @@ function configurarParaPost() {
         idProfissional: idProfissional
     };
 
-    axios.post('http://10.110.12.52:9500/consultas/post', dadosAgendamento)
+    axios.post('http://10.110.12.40:9500/consultas/post', dadosAgendamento)
         .then(() => {
-            return axios.get(`http://10.110.12.52:9500/profissionais/${idProfissional}`);
+            return axios.get(`http://10.110.12.40:9500/profissional/get/${idProfissional}`);
         })
         .then(response => {
             const profissional = response.data;
