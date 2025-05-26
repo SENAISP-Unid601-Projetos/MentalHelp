@@ -1,13 +1,14 @@
+// Adulto.js
+
 let a = null; // Armazena data formatada
 let b = null; // Armazena dia da semana
 let c = null; // Armazena horário
 
 const translationsAdulto = {
     pt: {
-        voltar: "Voltar",
         tituloPagina: "Agendamento",
         tipoAtendimento: "Atendimento selecionado: Adulto",
-        profissionalEncontrada: "Profissional encontrado: Vagner",
+        profissionalEncontrada: "Profissional encontrada: Vagner",
         especialidade: "Especialista em: Desenvolvimento Pessoal",
         mesAnterior: "Mês anterior",
         proximoMes: "Próximo mês",
@@ -24,8 +25,7 @@ const translationsAdulto = {
         dataSelecionada: "Data Selecionada:",
         horarioSelecionado: "Horário Selecionado:",
         confirmarAgendamento: "Confirmar Agendamento",
-        meusAgendamentos: "Meus Agendamentos",
-        mensagemErro: "Por favor, selecione um dia e um horário para agendar",
+        selecioneDiaHorario: "Por favor, selecione um dia e um horário para agendar",
         agendamentoConfirmado: "Agendamento Confirmado!",
         consultaAgendadaSucesso: "Consulta agendada com sucesso!",
         detalhesAgendamento: "Sua consulta com {0} está marcada para: {1} às {2}",
@@ -52,7 +52,6 @@ const translationsAdulto = {
         cancelarAgendamento: "Excluir"
     },
     en: {
-        voltar: "Back",
         tituloPagina: "Scheduling",
         tipoAtendimento: "Selected Service: Adult",
         profissionalEncontrada: "Professional found: Vagner",
@@ -72,8 +71,7 @@ const translationsAdulto = {
         dataSelecionada: "Selected Date:",
         horarioSelecionado: "Selected Time:",
         confirmarAgendamento: "Confirm Appointment",
-        meusAgendamentos: "My Appointments",
-        mensagemErro: "Please select a day and time to schedule",
+        selecioneDiaHorario: "Please select a day and time to schedule",
         agendamentoConfirmado: "Appointment Confirmed!",
         consultaAgendadaSucesso: "Appointment scheduled successfully!",
         detalhesAgendamento: "Your appointment with {0} is scheduled for: {1} at {2}",
@@ -100,7 +98,6 @@ const translationsAdulto = {
         cancelarAgendamento: "Delete"
     },
     es: {
-        voltar: "Volver",
         tituloPagina: "Programación",
         tipoAtendimento: "Servicio seleccionado: Adulto",
         profissionalEncontrada: "Profesional encontrado: Vagner",
@@ -120,8 +117,7 @@ const translationsAdulto = {
         dataSelecionada: "Fecha Seleccionada:",
         horarioSelecionado: "Hora Seleccionada:",
         confirmarAgendamento: "Confirmar Cita",
-        meusAgendamentos: "Mis Citas",
-        mensagemErro: "Por favor, seleccione un día y una hora para programar",
+        selecioneDiaHorario: "Por favor, seleccione un día y una hora para programar",
         agendamentoConfirmado: "¡Cita Confirmada!",
         consultaAgendadaSucesso: "¡Cita programada con éxito!",
         detalhesAgendamento: "Su cita con {0} está programada para: {1} a las {2}",
@@ -159,33 +155,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Elementos DOM
     const languageSelectAdulto = document.getElementById("languageSelectAdulto");
+    const btnAgendar = document.getElementById('btnAgendar');
+    const btnVerAgendamentos = document.getElementById('btnVerAgendamentos');
+    const mensagemErro = document.getElementById('mensagemErro');
+    const resumoAgendamento = document.getElementById('resumo-agendamento');
+    const dataSelecionadaElement = document.getElementById('data-selecionada');
+    const horarioSelecionadoElement = document.getElementById('horario-selecionado');
+    const modalConfirmacao = new bootstrap.Modal(document.getElementById('modalConfirmacao'));
+    const detalhesAgendamento = document.getElementById('detalhes-agendamento');
+    const horariosContainer = document.querySelector('.horarios');
 
+    // Inicialização
     const savedLangAdulto = localStorage.getItem("langAdulto") || 'pt';
-
     languageSelectAdulto.value = savedLangAdulto;
     updateContentAdulto(savedLangAdulto);
-
-    languageSelectAdulto.addEventListener("change", function() {
-        const lang = this.value;
-        localStorage.setItem("langAdulto", lang);
-        updateContentAdulto(lang);
-    });
-
+    gerarCalendario(mesAtual, anoAtual);
+    configurarHorarios();
+    configurarBotoesNavegacao();
+    atualizarListaHorariosDisponiveis();
 
     // Atualizar conteúdo com base no idioma
     function updateContentAdulto(lang) {
         const t = translationsAdulto[lang] || translationsAdulto['pt'];
 
-        // Atualizar título da página e elementos principais
         document.title = t.tituloPagina;
-        document.querySelector(".tipo-atendimento").textContent = t.tipoAtendimento;
-        document.querySelector(".reunião").textContent = t.profissionalEncontrada;
-        document.querySelector(".especialidade").textContent = t.especialidade;
+        document.getElementById("tipoAtendimento").textContent = t.tipoAtendimento;
+        document.getElementById("profissionalEncontrada").textContent = t.profissionalEncontrada;
+        document.getElementById("especialidade").textContent = t.especialidade;
         document.getElementById("anterior").textContent = '‹'; // Mantém o ícone
-        document.getElementById("proximo").textContent = '›'; 
-        document.getElementById("voltar").textContent = t.voltar;// Mantém o ícone
+        document.getElementById("proximo").textContent = '›'; // Mantém o ícone
 
-        // Atualizar dias da semana
         const diasSemana = document.querySelectorAll(".dias-semana span");
         diasSemana[0].textContent = t.domingo;
         diasSemana[1].textContent = t.segunda;
@@ -195,41 +194,26 @@ document.addEventListener('DOMContentLoaded', function() {
         diasSemana[5].textContent = t.sexta;
         diasSemana[6].textContent = t.sabado;
 
-        // Atualizar elementos do painel direito
-        document.querySelector(".text-purple").textContent = t.qualHorarioMelhor;
-        document.querySelector(".subtexto").textContent = t.fusoHorario;
-
-
-        // Atualizar resumo do agendamento
-        const resumoAgendamento = document.getElementById("resumo-agendamento");
-
+        document.getElementById("qualHorarioMelhor").textContent = t.qualHorarioMelhor;
+        document.getElementById("fusoHorario").textContent = t.fusoHorario;
 
         if (resumoAgendamento) {
             const h4Resumo = resumoAgendamento.querySelector("h4");
             if (h4Resumo) h4Resumo.textContent = t.resumoAgendamento;
         }
 
-
-        // Atualizar botões
-        const btnAgendar = document.getElementById("btnAgendar");
-
         if (btnAgendar) {
             const spanText = btnAgendar.querySelector(".btn-text");
             if (spanText) spanText.textContent = t.confirmarAgendamento;
         }
 
-        const btnVerAgendamentos = document.getElementById("btnVerAgendamentos");
         if (btnVerAgendamentos) {
             const spanText = btnVerAgendamentos.querySelector(".btn-text");
-            if (spanText) spanText.textContent = t.meusAgendamentos;
+            if (spanText) spanText.textContent = t.tituloMeusAgendamentos;
         }
 
-        // Atualizar mensagem de erro
-        const mensagemErro = document.getElementById("mensagemErro");
-        if (mensagemErro) mensagemErro.textContent = t.mensagemErro;
+        if (mensagemErro) mensagemErro.textContent = t.selecioneDiaHorario;
 
-
-        // Atualizar modal de confirmação
         const modalTitle = document.querySelector("#modalConfirmacao .modal-title");
         if (modalTitle) modalTitle.textContent = t.agendamentoConfirmado;
         const modalBodyH4 = document.querySelector("#modalConfirmacao .modal-body h4");
@@ -237,17 +221,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const modalFooterButton = document.querySelector("#modalConfirmacao .modal-footer .btn-primary");
         if (modalFooterButton) modalFooterButton.textContent = t.fecharModal;
 
-
-        // Atualizar detalhes do agendamento (se variáveis estiverem definidas)
-        const modalBodyP = document.querySelector("#modalConfirmacao .modal-body p");
-        if (modalBodyP && a && c) {
-            modalBodyP.innerHTML = t.detalhesAgendamento
-
+        if (detalhesAgendamento && a && c) {
+            detalhesAgendamento.innerHTML = t.detalhesAgendamento
                 .replace("{0}", "Vagner")
                 .replace("{1}", a)
                 .replace("{2}", c);
         }
-
     }
 
     // Função principal para gerar o calendário
@@ -491,7 +470,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 atualizarModalAgendamentos(modalDiv, modal);
             });
         });
-
     }
 
     // Exibir agendamentos
