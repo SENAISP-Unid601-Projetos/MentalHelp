@@ -1,3 +1,5 @@
+//Tradução
+
 const translationsEspecial = {
     pt: {
         tituloPagina: "Agendamento",
@@ -97,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem("langEspecial", lang);
         updateContentEspecial(lang);
     });
-
+//Tradução
     function updateContentEspecial(lang) {
         const t = translationsEspecial[lang];
 

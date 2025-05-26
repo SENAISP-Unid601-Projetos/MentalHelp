@@ -1,108 +1,126 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8" />
-    <title id="tituloPagina">Agendamento</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="../CSS/styles.css" />
-    <script src="../JS/script.js" defer></script>
-    <script src="../JS/translateEspecial.js" defer></script>
-</head> 
+  <meta charset="UTF-8" />
+  <title id="tituloPagina">Agendamento Especial</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../CSS/styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <script src="../JS/translateEspecial.js"></script>
+  <script src="../JS/script.js"></script>
+</head>
 <body>
 
-    <div class="container-fluid d-flex flex-column flex-md-row vh-100 p-0">
-        <div class="left-panel d-flex flex-column align-items-center col-md-6 p-4">
-            <h1 id="tipoAtendimento" class="tipo-atendimento text-center">Atendimento selecionado: Especial</h1>
-            <div class="perfil text-center mt-3">
-                <img src="../IMG/Mykael.png" alt="Foto de Mykael" class="avatar" />
-                <h3 id="agendeReuniao" class="reunião">Agende reunião com Mykael</h3>
-                <h3 id="especialidade" class="especialidade mt-2">Especialista em: Atendimento Especial</h3>
-            </div>
+  <div class="container-fluid d-flex flex-column flex-md-row vh-100 p-0">
+    <!-- Painel Esquerdo - Calendário -->
+    <div class="left-panel d-flex flex-column align-items-center col-md-6 p-4">
+      <a href="../../index.html" class="btn btn-voltar align-self-start mb-3">
+        <span class="btn-icon">←</span>
+        <span class="btn-text">Voltar</span>
+      </a>
+      <h1 id="tipoAtendimento" class="tipo-atendimento text-center">Atendimento selecionado: Especial</h1>
 
-            <div class="calendario w-100 mt-4">
-                <div class="mes-navegacao d-flex justify-content-between align-items-center">
-                    <button id="anterior" aria-label="Mês anterior">‹</button>
-                    <h3 id="mes" class="m-0"></h3>
-                    <button id="proximo" aria-label="Próximo mês">›</button>
-                </div>
-                <div class="dias-semana mt-2 d-grid">
-                    <span id="domingo">DOM</span>
-                    <span id="segunda">SEG</span>
-                    <span id="terca">TER</span>
-                    <span id="quarta">QUA</span>
-                    <span id="quinta">QUI</span>
-                    <span id="sexta">SEX</span>
-                    <span id="sabado">SAB</span>
-                </div>
-                <div class="dias mt-2 d-grid gap-1" id="dias"></div>
-            </div>
+      <div class="perfil text-center mt-3">
+        <img src="../IMG/Mykael.png" alt="Foto de Mykael" class="avatar" />
+        <h3 id="agendeReuniao" class="reunião">Agende reunião com Mykael</h3>
+        <h3 id="especialidade" class="especialidade mt-2">Especialista em: Atendimento Especial</h3>
+      </div>
 
-            <div class="ilustracoes d-flex justify-content-center align-items-end gap-3 mt-auto pb-3">
-                <img class="imgautismo" src="../IMG/autismo.png" alt="Ilustração Autismo" />
-                <img src="../IMG/sindrome.png" alt="Ilustração Síndrome" />
-                <img class="imgtdah" src="../IMG/tdah.png" alt="Ilustração TDAH" />
-            </div>
+      <div class="calendario w-100 mt-4">
+        <div class="mes-navegacao d-flex justify-content-between align-items-center">
+          <button id="anterior" aria-label="Mês anterior">‹</button>
+          <h3 id="mes" class="m-0"></h3>
+          <button id="proximo" aria-label="Próximo mês">›</button>
         </div>
-
-        <div class="right-panel col-md-6 p-4 d-flex flex-column">
-            <div>
-              <select id="languageSelectEspecial" class="form-select form-select-sm mt-3 ms-auto" style="width: 120px;">
-                <option value="pt">Português</option>
-                <option value="en">English</option>
-                <option value="es">Español</option>
-              </select>
-                <h2 id="qualHorarioMelhor" class="text-purple">Qual o horário é melhor?</h2>
-                <p id="fusoHorario" class="subtexto">UTC -3 (Horário de Brasília)</p>
-
-                <div class="horarios d-flex flex-column gap-3">
-                    <button class="btn horario-btn">10:00</button>
-                    <button class="btn horario-btn">11:30</button>
-                    <button class="btn horario-btn">14:30</button>
-                    <button class="btn horario-btn">16:00</button>
-                    <button class="btn horario-btn">17:30</button>
-                    <button class="btn horario-btn">19:00</button>
-                </div>
-            </div>
-
-            <div class="mt-auto pt-4">
-                <div id="resumo-agendamento" class="mb-3 d-none">
-                    <h4 id="resumoAgendamentoTexto">Resumo do Agendamento:</h4>
-                    <p id="data-selecionada" class="mb-1"></p>
-                    <p id="horario-selecionado"></p>
-                </div>
-
-                <button id="btnAgendar" class="btn-agendar w-100" disabled>
-                    <span id="confirmarAgendamentoTexto" class="btn-text">Confirmar Agendamento</span>
-                    <span class="btn-icon">✓</span>
-                </button>
-                <div id="mensagemErro" class="mt-2 text-danger small text-center d-none">
-                    Por favor, selecione um dia e um horário para agendar
-                </div>
-            </div>
+        <div class="dias-semana mt-2 d-grid">
+          <span id="domingo">DOM</span>
+          <span id="segunda">SEG</span>
+          <span id="terca">TER</span>
+          <span id="quarta">QUA</span>
+          <span id="quinta">QUI</span>
+          <span id="sexta">SEX</span>
+          <span id="sabado">SAB</span>
         </div>
+        <div class="dias mt-2 d-grid gap-1" id="dias"></div>
+      </div>
+
+      <div class="ilustracoes d-flex justify-content-center align-items-end gap-3 mt-auto">
+        <img class="imgautismo" src="../IMG/autismo.png" alt="Ilustração Autismo" />
+        <img src="../IMG/sindrome.png" alt="Ilustração Síndrome" />
+        <img class="imgtdah" src="../IMG/tdah.png" alt="Ilustração TDAH" />
+      </div>
     </div>
 
-    <div class="modal fade" id="modalConfirmacao" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 id="agendamentoConfirmadoTexto" class="modal-title">Agendamento Confirmado!</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <div class="mb-3">
-                        <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
-                    </div>
-                    <h4 id="consultaAgendadaSucessoTexto">Consulta agendada com sucesso!</h4>
-                    <p id="detalhes-agendamento" class="lead mt-3"></p>
-                </div>
-                <div class="modal-footer justify-content-center">
-                    <button id="fecharModalBotao" type="button" class="btn btn-primary" data-bs-dismiss="modal">Fechar</button>
-                </div>
-            </div>
+    <!-- Painel Direito - Horários -->
+    <div class="right-panel col-md-6 p-4 d-flex flex-column">
+      <div>
+        <select id="languageSelectEspecial" class="form-select form-select-sm mt-3 ms-auto" style="width: 120px;">
+          <option value="pt">Português</option>
+          <option value="en">English</option>
+          <option value="es">Español</option>
+        </select>
+        <h2 id="qualHorarioMelhor" class="text-purple">Qual o horário é melhor?</h2>
+        <p id="fusoHorario" class="subtexto">UTC -3 (Horário de Brasília)</p>
+
+        <div class="horarios d-flex flex-column gap-3" id="horarios-container">
+          <!-- Horários serão carregados dinamicamente -->
+          <button class="btn horario-btn">10:00</button>
+          <button class="btn horario-btn">11:30</button>
+          <button class="btn horario-btn">14:30</button>
+          <button class="btn horario-btn">16:00</button>
+          <button class="btn horario-btn">17:30</button>
+          <button class="btn horario-btn">19:00</button>
         </div>
+      </div>
+
+      <!-- Área de Confirmação -->
+      <div class="mt-auto pt-4">
+        <div id="resumo-agendamento" class="mb-3 d-none">
+          <h4 id="resumoAgendamentoTexto">Resumo do Agendamento:</h4>
+          <p id="data-selecionada" class="mb-1"></p>
+          <p id="horario-selecionado"></p>
+        </div>
+        
+        <button id="btnAgendar" class="btn-agendar w-100 mb-2" disabled>
+          <span id="confirmarAgendamentoTexto" class="btn-text">Confirmar Agendamento</span>
+          <span class="btn-icon">✓</span>
+        </button>
+        
+        <button id="btnVerAgendamentos" class="btn-agendar w-100 mb-2">
+          <span class="btn-text">Meus Agendamentos</span>
+          <span class="btn-icon">📅</span>
+        </button>
+        
+        <div id="mensagemErro" class="mt-2 text-danger small text-center d-none">
+          Por favor, selecione um dia e um horário para agendar
+        </div>
+      </div>
     </div>
+  </div>
+
+  <!-- Modal de Confirmação -->
+  <div class="modal fade" id="modalConfirmacao" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 id="agendamentoConfirmadoTexto" class="modal-title">Agendamento Confirmado!</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <div class="mb-3">
+            <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+          </div>
+          <h4 id="consultaAgendadaSucessoTexto">Consulta agendada com sucesso!</h4>
+          <p id="detalhes-agendamento" class="lead mt-3"></p>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button id="fecharModalBotao" type="button" class="btn btn-primary" data-bs-dismiss="modal">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../JS/script.js"></script>
 </body>
 </html>
