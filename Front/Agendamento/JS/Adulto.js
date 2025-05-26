@@ -3,9 +3,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Variáveis de estado
     let mesAtual = new Date().getMonth();
     let anoAtual = new Date().getFullYear();
+
     let dataSelecionada = null;
     let horarioSelecionado = null;
     let agendamentos = JSON.parse(localStorage.getItem('agendamentosAdulto')) || [];
+
 
     // Elementos DOM
     const btnAgendar = document.getElementById('btnAgendar');
@@ -187,6 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
             btnAgendar.disabled = true;
         }
     }
+
 
     // Evento de agendamento
     btnAgendar.addEventListener('click', function() {
