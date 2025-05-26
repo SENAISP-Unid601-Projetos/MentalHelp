@@ -1,0 +1,182 @@
+/* === Geral === */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f8f9fa;
+  color: #2c3e50;
+}
+
+/* === Sidebar === */
+.sidebar {
+  width: 250px;
+  background: #2c3e50;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.doctor-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid #3498db;
+  object-fit: cover;
+}
+
+.btn-sidebar {
+  color: #fff;
+  text-align: left;
+  padding: 10px;
+  border-radius: 6px;
+  transition: background 0.3s;
+}
+
+.btn-sidebar:hover {
+  background: #34495e;
+}
+
+.btn-sidebar.active {
+  background: #3498db;
+}
+
+/* === Conteúdo Principal === */
+.main-calendar-container {
+  height: calc(100vh - 150px);
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* === FullCalendar === */
+.fc {
+  height: 100% !important;
+}
+
+.fc-button {
+  background: #3498db !important;
+  border: none !important;
+  border-radius: 5px !important;
+}
+
+.fc-daygrid-day {
+  height: 180px;
+}
+
+.fc-col-header-cell {
+  background: #f1f1f1;
+  font-size: 1.1rem;
+  padding: 8px 0;
+}
+
+.fc-day-today {
+  background: #e3f2fd !important;
+}
+
+.fc-daygrid-day-number {
+  font-size: 1.2rem;
+  padding: 8px;
+}
+
+.fc-event {
+  background: #3498db;
+  border: none;
+  border-radius: 5px;
+  padding: 4px 6px;
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+/* === Controles de Data === */
+.date-controls-container {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.date-input {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  transition: border-color 0.3s;
+}
+
+.date-input:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+/* === Modal Calendário === */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+
+.day-header {
+  text-align: center;
+  padding: 8px;
+  background: #f1f1f1;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.day-cell {
+  padding: 8px;
+  text-align: center;
+  border: 1px solid #eee;
+  min-height: 45px;
+  cursor: pointer;
+  transition: background 0.2s;
+  color: #2c3e50;
+  background: #fff;
+}
+
+.day-cell:hover {
+  background: #f8f9fa;
+}
+
+.day-cell.today {
+  background: #e3f2fd;
+  font-weight: bold;
+}
+
+.day-cell.selected {
+  background: #c8e6c9;
+}
+
+.day-cell.other-month {
+  color: #aaa;
+  background: #f9f9f9;
+}
+
+/* === Responsividade === */
+@media (max-width: 992px) {
+  .sidebar {
+    width: 100%;
+  }
+
+  .main-calendar-container {
+    height: auto;
+    min-height: 600px;
+  }
+}
+
+@media (max-width: 576px) {
+  .fc-daygrid-day {
+    height: 120px;
+  }
+
+  .date-controls {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .filter-button-container {
+    flex-direction: column;
+  }
+
+  .btn-filter,
+  #mostrar-calendario {
+    width: 100%;
+  }
+}
