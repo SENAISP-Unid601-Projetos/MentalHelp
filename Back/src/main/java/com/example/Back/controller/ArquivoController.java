@@ -1,8 +1,8 @@
 package com.example.Back.controller;
 
-import com.example.Back.Repository.ArquivoEnviadoRepository;
-import com.example.Back.Repository.PacienteRepository;
-import com.example.Back.Repository.ProfissionalRepository;
+import com.example.Back.repository.ArquivoEnviadoRepository;
+import com.example.Back.repository.PacienteRepository;
+import com.example.Back.repository.ProfissionalRepository;
 import com.example.Back.entity.ArquivoEnviado;
 import com.example.Back.entity.Paciente;
 import com.example.Back.entity.Profissional;
