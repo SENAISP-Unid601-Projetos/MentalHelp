@@ -173,3 +173,65 @@ body {
 .border-bottom {
   width: 90%;
 }
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .section-tablet-bg {
+    background-image: url('../../Recursos/img/q2.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  #parte-direita {
+    display: none !important;
+  }
+
+  #article-text {
+    background: none !important;
+  }
+
+  .titulo-principal, .text-color-section {
+    color: white;
+  }
+
+  #divBtn {
+    position: absolute;
+    bottom: 0;
+    right: 10px;
+  }
+
+  #btnAgende {
+    background: #a7afff;
+    color: white;
+  }
+
+  #navbar {
+    position: absolute;
+    right: 10px;
+  }
+
+  #paragrafoPrincipal2 {
+    margin-top: 10%;
+  }
+
+  #logoSection {
+    position: relative;
+    z-index: 10;
+  }
+}
+
+@media (max-width: 767px) {
+  #div-section-slogan {
+    width: 100%;
+    padding: 0 !important;
+  }
+
+  #article-text {
+    padding: 10px !important;
+  }
+
+  .titulo-principal {
+    font-size: 4rem;
+  }
+
+}
