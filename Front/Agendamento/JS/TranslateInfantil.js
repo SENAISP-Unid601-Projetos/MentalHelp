@@ -4,6 +4,7 @@ let c = null; // Armazena horário
 
 const translationsInfantil = {
     pt: {
+        voltar: "voltar",
         tituloPagina: "Agendamento",
         tipoAtendimento: "Atendimento selecionado: Infantil",
         profissionalEncontrada: "Profissional encontrada: Gabrielly",
@@ -51,6 +52,7 @@ const translationsInfantil = {
         cancelarAgendamento: "Excluir"
     },
     en: {
+        voltar: "back",
         tituloPagina: "Scheduling",
         tipoAtendimento: "Selected Service: Child Care",
         profissionalEncontrada: "Professional found: Gabrielly",
@@ -98,6 +100,7 @@ const translationsInfantil = {
         cancelarAgendamento: "Delete"
     },
     es: {
+        voltar: "volver",
         tituloPagina: "Programación",
         tipoAtendimento: "Servicio seleccionado: Infantil",
         profissionalEncontrada: "Profesional encontrada: Gabrielly",
@@ -168,7 +171,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector(".reunião").textContent = t.profissionalEncontrada;
         document.querySelector(".especialidade").textContent = t.especialidade;
         document.getElementById("anterior").textContent = '‹'; // Mantém o ícone
-        document.getElementById("proximo").textContent = '›'; // Mantém o ícone
+        document.getElementById("proximo").textContent = '›';
+        document.getElementById("voltar").textContent = t.voltar;// Mantém o ícone
 
         // Atualizar dias da semana
         const diasSemana = document.querySelectorAll(".dias-semana span");
