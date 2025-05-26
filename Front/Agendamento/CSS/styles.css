@@ -13,7 +13,10 @@
   padding: 0;
   box-sizing: border-box;
 }
-
+.container-fluid  .btn-voltar {
+  color: white;
+  background-color: #a855f7;
+}
 
 
 .left-panel {
@@ -235,7 +238,9 @@
   border-radius: 8px;
   border-left: 4px solid #a855f7;
 }
-
+.voltar {
+  background-color: #4b0082;
+}
 @media (max-width: 768px) {
   .container-fluid {
     flex-direction: column;
