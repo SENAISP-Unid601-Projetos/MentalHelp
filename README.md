@@ -45,7 +45,7 @@ Para configurar e rodar o ambiente de homologação:
 
 ### 🌐 Acesso à Aplicação
 
-🔗 Acesse em: [http://10.110.12.52:3000/](http://10.110.12.52:3000/)
+🔗 Acesse em: [http://10.110.12.40:3000/](http://10.110.12.40:3000/)
 
 
 
