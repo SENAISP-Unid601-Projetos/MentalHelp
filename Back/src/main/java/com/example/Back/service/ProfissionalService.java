@@ -1,5 +1,6 @@
 package com.example.Back.service;
 
+import com.example.Back.dto.PacienteSaidaDTO;
 import com.example.Back.dto.ProfissionalEntradaDTO;
 import com.example.Back.dto.ProfissionalSaidaDTO;
 import com.example.Back.repository.ProfissionalRepository;
@@ -46,34 +47,22 @@ public class ProfissionalService {
     }
 
     // Buscar profissional por ID
-    public ResponseEntity<ProfissionalSaidaDTO> buscarProfissionalPorId(Long id) {
-        Optional<Profissional> profissionalOpt = profissionalRepository.findById(id);
-        if (profissionalOpt.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(toProfissionalDTO(profissionalOpt.get()), HttpStatus.OK);
+    public Optional<ProfissionalSaidaDTO> buscarProfissionalPorId(Long id) {
+        return profissionalRepository.findById(id)
+                .map(this::toProfissionalDTO);
     }
 
-    // Buscar profissional por CRM
-    public ResponseEntity<ProfissionalSaidaDTO> buscarProfissionalPorCrm(String crm) {
-        Optional<Profissional> profissionalOpt = profissionalRepository.findByCrm(crm);
-        if (profissionalOpt.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(toProfissionalDTO(profissionalOpt.get()), HttpStatus.OK);
+    public Optional<ProfissionalSaidaDTO> buscarProfissionalPorCrm(String crm) {
+        return profissionalRepository.findByCrm(crm)
+                .map(this::toProfissionalDTO);
     }
 
-    public ResponseEntity<List<ProfissionalSaidaDTO>> buscarProfissionaisPorEspecialidade(String especialidade) {
-        List<Profissional> profissionais = profissionalRepository.findByEspecialidade(especialidade);
-        if (profissionais.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        List<ProfissionalSaidaDTO> dtos = profissionais.stream()
+    public List<ProfissionalSaidaDTO> buscarProfissionaisPorEspecialidade(String especialidade) {
+        return profissionalRepository.findByEspecialidade(especialidade)
+                .stream()
                 .map(this::toProfissionalDTO)
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(dtos, HttpStatus.OK);
+                .toList();
     }
-
 
     public ResponseEntity<List<ProfissionalSaidaDTO>> listarProfissional() {
         List<ProfissionalSaidaDTO> profissionais = profissionalRepository.findAll()

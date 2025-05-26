@@ -105,7 +105,7 @@ public class PacienteController {
     public ResponseEntity<List<PacienteSaidaDTO>> getPacientes() {
         return pacienteService.listarPaciente();
     }
-    @GetMapping("/get/{id}")
+    @GetMapping("/get/id/{id}")
     public ResponseEntity<?> buscarPacientePorId(@PathVariable Long id) {
         Optional<PacienteSaidaDTO> pacienteDTO = pacienteService.buscarPorId(id);
 
@@ -116,7 +116,7 @@ public class PacienteController {
                     .body("Paciente não encontrado com o ID fornecido.");
         }
     }
-    @GetMapping("/get/{cpf}")
+    @GetMapping("/get/cpf/{cpf}")
     public ResponseEntity<?> buscarPacientePorCpf(@PathVariable String cpf) {
         Optional<PacienteSaidaDTO> pacienteDTO = pacienteService.buscarPorCpf(cpf);
 
@@ -127,7 +127,7 @@ public class PacienteController {
                     .body("Paciente não encontrado com o CPF fornecido.");
         }
     }
-    @GetMapping("/get/{nome}")
+    @GetMapping("/get/nome/{nome}")
     public ResponseEntity<?> buscarPacientePorNome(@PathVariable String nome) {
         List<PacienteSaidaDTO> pacientes = pacienteService.buscarPorNome(nome);
 

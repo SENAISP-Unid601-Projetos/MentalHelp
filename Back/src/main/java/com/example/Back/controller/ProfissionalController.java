@@ -1,5 +1,6 @@
 package com.example.Back.controller;
 
+import com.example.Back.dto.PacienteSaidaDTO;
 import com.example.Back.dto.ProfissionalEntradaDTO;
 import com.example.Back.dto.ProfissionalSaidaDTO;
 import com.example.Back.repository.ProfissionalRepository;
@@ -54,47 +55,41 @@ public class ProfissionalController {
     }
 
     // GET por ID
-    @GetMapping("/get/{id}")
-    public ResponseEntity<Map<String, Object>> getProfissionalById(@PathVariable Long id) {
-        Map<String, Object> response = new HashMap<>();
-        ResponseEntity<ProfissionalSaidaDTO> responseEntity = proService.buscarProfissionalPorId(id);
-        if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            response.put("message", messageSource.getMessage("fetch.success", null, Locale.getDefault()));
-            response.put("profissional", responseEntity.getBody());
-            return ResponseEntity.ok(response);
+    @GetMapping("/get/id/{id}")
+    public ResponseEntity<?> getProfissionalById(@PathVariable Long id) {
+        Optional<ProfissionalSaidaDTO> profissionalDTO = proService.buscarProfissionalPorId(id);
+
+        if (profissionalDTO.isPresent()) {
+            return ResponseEntity.ok(profissionalDTO.get());
         } else {
-            response.put("message", messageSource.getMessage("fetch.notfound", null, Locale.getDefault()));
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Profissional não encontrado com o ID fornecido.");
         }
     }
 
     // GET por CRM
-    @GetMapping("/get/{crm}")
-    public ResponseEntity<Map<String, Object>> getProfissionalByCrm(@PathVariable String crm) {
-        Map<String, Object> response = new HashMap<>();
-        ResponseEntity<ProfissionalSaidaDTO> responseEntity = proService.buscarProfissionalPorCrm(crm);
-        if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            response.put("message", messageSource.getMessage("fetch.success", null, Locale.getDefault()));
-            response.put("profissional", responseEntity.getBody());
-            return ResponseEntity.ok(response);
+    @GetMapping("/get/crm/{crm}")
+    public ResponseEntity<?> getProfissionalByCrm(@PathVariable String crm) {
+        Optional<ProfissionalSaidaDTO> profissionalDTO = proService.buscarProfissionalPorCrm(crm);
+
+        if (profissionalDTO.isPresent()) {
+            return ResponseEntity.ok(profissionalDTO.get());
         } else {
-            response.put("message", messageSource.getMessage("fetch.notfound", null, Locale.getDefault()));
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Profissional não encontrado com o CRM fornecido.");
         }
     }
 
     // GET por Especialidade
-    @GetMapping("/get/{especialidade}")
-    public ResponseEntity<Map<String, Object>> getProfissionaisByEspecialidade(@PathVariable String especialidade) {
-        Map<String, Object> response = new HashMap<>();
-        ResponseEntity<List<ProfissionalSaidaDTO>> responseEntity = proService.buscarProfissionaisPorEspecialidade(especialidade);
-        if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            response.put("message", messageSource.getMessage("fetch.success", null, Locale.getDefault()));
-            response.put("profissionais", responseEntity.getBody());
-            return ResponseEntity.ok(response);
+    @GetMapping("/get/especialidade/{especialidade}")
+    public ResponseEntity<?> getProfissionaisByEspecialidade(@PathVariable String especialidade) {
+        List<ProfissionalSaidaDTO> profissionais = proService.buscarProfissionaisPorEspecialidade(especialidade);
+
+        if (profissionais.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Nenhum profissional encontrado com a especialidade fornecida.");
         } else {
-            response.put("message", messageSource.getMessage("fetch.notfound", null, Locale.getDefault()));
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            return ResponseEntity.ok(profissionais);
         }
     }
 
