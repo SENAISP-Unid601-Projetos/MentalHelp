@@ -4,6 +4,7 @@ let c = null; // Armazena horário
 
 const translationsEspecial = {
     pt: {
+        voltar: "Voltar",
         tituloPagina: "Agendamento",
         tipoAtendimento: "Atendimento selecionado: Especial",
         agendeReuniao: "Agende reunião com Mykael",
@@ -50,6 +51,7 @@ const translationsEspecial = {
         cancelarAgendamento: "Excluir"
     },
     en: {
+        voltar: "Back",
         tituloPagina: "Scheduling",
         tipoAtendimento: "Selected Service: Special",
         agendeReuniao: "Schedule meeting with Mykael",
@@ -96,6 +98,7 @@ const translationsEspecial = {
         cancelarAgendamento: "Delete"
     },
     es: {
+        voltar: "Volver",
         tituloPagina: "Programación",
         tipoAtendimento: "Servicio seleccionado: Especial",
         agendeReuniao: "Agendar una reunión con Mykael",
@@ -147,6 +150,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const languageSelectEspecial = document.getElementById("languageSelectEspecial");
     const savedLangEspecial = localStorage.getItem("langEspecial") || 'pt';
 
+    if (!languageSelectEspecial) {
+        console.error('Elemento languageSelectEspecial não encontrado.');
+        return;
+    }
+
     languageSelectEspecial.value = savedLangEspecial;
     updateContentEspecial(savedLangEspecial);
 
@@ -157,68 +165,82 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function updateContentEspecial(lang) {
-        const t = translationsEspecial[lang];
+        const t = translationsEspecial[lang] || translationsEspecial['pt'] || {};
 
         // Atualizar título da página e elementos principais
-        document.title = t.tituloPagina;
-        document.querySelector(".tipo-atendimento").textContent = t.tipoAtendimento;
-        document.querySelector(".reunião").textContent = t.agendeReuniao;
-        document.querySelector(".especialidade").textContent = t.especialidade;
-        document.getElementById("anterior").textContent = '‹'; // Mantém o ícone
-        document.getElementById("proximo").textContent = '›'; // Mantém o ícone
+        document.title = t.tituloPagina || 'Agendamento';
+        const tipoAtendimento = document.querySelector(".tipo-atendimento");
+        if (tipoAtendimento) tipoAtendimento.textContent = t.tipoAtendimento || 'Atendimento selecionado: Especial';
+        const reuniao = document.querySelector(".reunião");
+        if (reuniao) reuniao.textContent = t.agendeReuniao || 'Agende reunião com Mykael';
+        const especialidade = document.querySelector(".especialidade");
+        if (especialidade) especialidade.textContent = t.especialidade || 'Especialista em: Atendimento Especial';
+        const anterior = document.getElementById("anterior");
+        if (anterior) anterior.textContent = '‹'; // Mantém o ícone
+        const proximo = document.getElementById("proximo");
+        if (proximo) proximo.textContent = '›'; // Mantém o ícone
+        const voltar = document.getElementById("voltar");
+        if (voltar) {
+            const spanText = voltar.querySelector(".btn-text");
+            if (spanText) spanText.textContent = t.voltar || 'Voltar';
+        }
 
         // Atualizar dias da semana
         const diasSemana = document.querySelectorAll(".dias-semana span");
-        diasSemana[0].textContent = t.domingo;
-        diasSemana[1].textContent = t.segunda;
-        diasSemana[2].textContent = t.terca;
-        diasSemana[3].textContent = t.quarta;
-        diasSemana[4].textContent = t.quinta;
-        diasSemana[5].textContent = t.sexta;
-        diasSemana[6].textContent = t.sabado;
+        if (diasSemana.length === 7) {
+            diasSemana[0].textContent = t.domingo || 'DOM';
+            diasSemana[1].textContent = t.segunda || 'SEG';
+            diasSemana[2].textContent = t.terca || 'TER';
+            diasSemana[3].textContent = t.quarta || 'QUA';
+            diasSemana[4].textContent = t.quinta || 'QUI';
+            diasSemana[5].textContent = t.sexta || 'SEX';
+            diasSemana[6].textContent = t.sabado || 'SAB';
+        }
 
         // Atualizar elementos do painel direito
-        document.querySelector(".text-purple").textContent = t.qualHorarioMelhor;
-        document.querySelector(".subtexto").textContent = t.fusoHorario;
+        const textPurple = document.querySelector(".text-purple");
+        if (textPurple) textPurple.textContent = t.qualHorarioMelhor || 'Qual o horário é melhor?';
+        const subtexto = document.querySelector(".subtexto");
+        if (subtexto) subtexto.textContent = t.fusoHorario || 'UTC -3 (Horário de Brasília)';
 
         // Atualizar resumo do agendamento
         const resumoAgendamento = document.getElementById("resumo-agendamento");
         if (resumoAgendamento) {
             const h4Resumo = resumoAgendamento.querySelector("h4");
-            if (h4Resumo) h4Resumo.textContent = t.resumoAgendamento;
+            if (h4Resumo) h4Resumo.textContent = t.resumoAgendamento || 'Resumo do Agendamento:';
         }
 
         // Atualizar botões
         const btnAgendar = document.getElementById("btnAgendar");
         if (btnAgendar) {
             const spanText = btnAgendar.querySelector(".btn-text");
-            if (spanText) spanText.textContent = t.confirmarAgendamento;
+            if (spanText) spanText.textContent = t.confirmarAgendamento || 'Confirmar Agendamento';
         }
 
         const btnVerAgendamentos = document.getElementById("btnVerAgendamentos");
         if (btnVerAgendamentos) {
             const spanText = btnVerAgendamentos.querySelector(".btn-text");
-            if (spanText) spanText.textContent = t.meusAgendamentos;
+            if (spanText) spanText.textContent = t.meusAgendamentos || 'Meus Agendamentos';
         }
 
         // Atualizar mensagem de erro
         const mensagemErro = document.getElementById("mensagemErro");
-        if (mensagemErro) mensagemErro.textContent = t.mensagemErro;
+        if (mensagemErro) mensagemErro.textContent = t.mensagemErro || 'Por favor, selecione um dia e um horário para agendar';
 
         // Atualizar modal de confirmação
         const modalTitle = document.querySelector("#modalConfirmacao .modal-title");
-        if (modalTitle) modalTitle.textContent = t.agendamentoConfirmado;
+        if (modalTitle) modalTitle.textContent = t.agendamentoConfirmado || 'Agendamento Confirmado!';
         const modalBodyH4 = document.querySelector("#modalConfirmacao .modal-body h4");
-        if (modalBodyH4) modalBodyH4.textContent = t.consultaAgendadaSucesso;
+        if (modalBodyH4) modalBodyH4.textContent = t.consultaAgendadaSucesso || 'Consulta agendada com sucesso!';
         const modalFooterButton = document.querySelector("#modalConfirmacao .modal-footer .btn-primary");
-        if (modalFooterButton) modalFooterButton.textContent = t.fecharModal;
+        if (modalFooterButton) modalFooterButton.textContent = t.fecharModal || 'Fechar';
 
         // Atualizar detalhes do agendamento (se variáveis disponíveis)
         const modalBodyP = document.querySelector("#modalConfirmacao .modal-body p");
-        if (modalBodyP && b && c) {
-            modalBodyP.innerHTML = t.detalhesAgendamento
+        if (modalBodyP && a && c) {
+            modalBodyP.innerHTML = (t.detalhesAgendamento || 'Sua consulta com <strong>{0}</strong> está marcada para: <strong>{1}</strong> às <strong>{2}</strong>')
                 .replace("{0}", "Mykael")
-                .replace("{1}", b)
+                .replace("{1}", a)
                 .replace("{2}", c);
         }
     }

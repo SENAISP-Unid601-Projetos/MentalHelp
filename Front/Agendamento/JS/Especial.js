@@ -4,7 +4,14 @@ document.addEventListener('DOMContentLoaded', function() {
     let anoAtual = new Date().getFullYear();
     let dataSelecionada = null;
     let horarioSelecionado = null;
-    let agendamentos = JSON.parse(localStorage.getItem('agendamentosEspecial')) || [];
+    let agendamentos = [];
+    
+    // Tratamento de erro para localStorage
+    try {
+        agendamentos = JSON.parse(localStorage.getItem('agendamentosEspecial')) || [];
+    } catch (e) {
+        console.error('Erro ao carregar agendamentos:', e);
+    }
 
     // Elementos DOM
     const btnAgendar = document.getElementById('btnAgendar');
@@ -13,9 +20,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const resumoAgendamento = document.getElementById('resumo-agendamento');
     const dataSelecionadaElement = document.getElementById('data-selecionada');
     const horarioSelecionadoElement = document.getElementById('horario-selecionado');
-    const modalConfirmacao = new bootstrap.Modal(document.getElementById('modalConfirmacao'));
+    const modalConfirmacaoElement = document.getElementById('modalConfirmacao');
     const detalhesAgendamento = document.getElementById('detalhes-agendamento');
     const horariosContainer = document.querySelector('.horarios');
+
+    // Validação de elementos DOM
+    if (!btnAgendar || !btnVerAgendamentos || !mensagemErro || !resumoAgendamento || 
+        !dataSelecionadaElement || !horarioSelecionadoElement || !modalConfirmacaoElement || 
+        !detalhesAgendamento || !horariosContainer) {
+        console.error('Um ou mais elementos DOM não foram encontrados.');
+        return;
+    }
+
+    const modalConfirmacao = new bootstrap.Modal(modalConfirmacaoElement);
 
     // Inicialização
     gerarCalendario(mesAtual, anoAtual);
@@ -27,6 +44,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function gerarCalendario(mes, ano) {
         const diasContainer = document.getElementById('dias');
         const tituloMes = document.getElementById('mes');
+        if (!diasContainer || !tituloMes) return;
+
         diasContainer.innerHTML = '';
 
         const primeiroDia = new Date(ano, mes, 1).getDay();
@@ -35,10 +54,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Usar traduções para o nome do mês
         const lang = localStorage.getItem('langEspecial') || 'pt';
-        const t = translationsEspecial[lang] || translationsEspecial['pt'];
+        const t = translationsEspecial[lang] || translationsEspecial['pt'] || {};
         const monthNames = [
-            t.janeiro, t.fevereiro, t.marco, t.abril, t.maio, t.junho,
-            t.julho, t.agosto, t.setembro, t.outubro, t.novembro, t.dezembro
+            t.janeiro || 'Janeiro', t.fevereiro || 'Fevereiro', t.marco || 'Março', 
+            t.abril || 'Abril', t.maio || 'Maio', t.junho || 'Junho',
+            t.julho || 'Julho', t.agosto || 'Agosto', t.setembro || 'Setembro', 
+            t.outubro || 'Outubro', t.novembro || 'Novembro', t.dezembro || 'Dezembro'
         ];
         tituloMes.textContent = `${monthNames[mes]} ${ano}`;
 
@@ -52,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const botao = document.createElement('button');
             botao.textContent = dia;
             botao.tabIndex = 0;
+            botao.setAttribute('aria-label', `Selecionar dia ${dia} de ${monthNames[mes]} ${ano}`);
 
             // Desabilitar dias passados
             const dataAtual = new Date(ano, mes, dia);
@@ -137,7 +159,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Configurar navegação do calendário
     function configurarBotoesNavegacao() {
-        document.getElementById('anterior').addEventListener('click', () => {
+        const btnAnterior = document.getElementById('anterior');
+        const btnProximo = document.getElementById('proximo');
+        if (!btnAnterior || !btnProximo) return;
+
+        btnAnterior.addEventListener('click', () => {
             mesAtual--;
             if (mesAtual < 0) {
                 mesAtual = 11;
@@ -146,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
             gerarCalendario(mesAtual, anoAtual);
         });
 
-        document.getElementById('proximo').addEventListener('click', () => {
+        btnProximo.addEventListener('click', () => {
             mesAtual++;
             if (mesAtual > 11) {
                 mesAtual = 0;
@@ -159,19 +185,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // Atualizar resumo do agendamento
     function atualizarResumoAgendamento() {
         const lang = localStorage.getItem('langEspecial') || 'pt';
-        const t = translationsEspecial[lang] || translationsEspecial['pt'];
+        const t = translationsEspecial[lang] || translationsEspecial['pt'] || {};
 
         if (dataSelecionada) {
             const options = { weekday: 'long', day: 'numeric', month: 'long' };
             const dataFormatada = dataSelecionada.toLocaleDateString(lang === 'pt' ? 'pt-BR' : lang === 'en' ? 'en-US' : 'es-ES', options);
-            dataSelecionadaElement.textContent = `📅 ${t.dataSelecionada} ${dataFormatada}`;
+            dataSelecionadaElement.textContent = `📅 ${t.dataSelecionada || 'Data Selecionada:'} ${dataFormatada}`;
             resumoAgendamento.classList.remove('d-none');
         } else {
             resumoAgendamento.classList.add('d-none');
         }
 
         if (horarioSelecionado) {
-            horarioSelecionadoElement.textContent = `⏰ ${t.horarioSelecionado} ${horarioSelecionado}`;
+            horarioSelecionadoElement.textContent = `⏰ ${t.horarioSelecionado || 'Horário Selecionado:'} ${horarioSelecionado}`;
         } else {
             horarioSelecionadoElement.textContent = '';
         }
@@ -191,8 +217,8 @@ document.addEventListener('DOMContentLoaded', function() {
     btnAgendar.addEventListener('click', function() {
         if (!dataSelecionada || !horarioSelecionado) {
             const lang = localStorage.getItem('langEspecial') || 'pt';
-            const t = translationsEspecial[lang] || translationsEspecial['pt'];
-            mensagemErro.textContent = t.mensagemErro;
+            const t = translationsEspecial[lang] || translationsEspecial['pt'] || {};
+            mensagemErro.textContent = t.mensagemErro || 'Por favor, selecione um dia e um horário para agendar';
             mensagemErro.classList.remove('d-none');
             return;
         }
@@ -208,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Configurar variáveis a, b, c
         const lang = localStorage.getItem('langEspecial') || 'pt';
-        const t = translationsEspecial[lang] || translationsEspecial['pt'];
+        const t = translationsEspecial[lang] || translationsEspecial['pt'] || {};
         const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
         a = dataSelecionada.toLocaleDateString(lang === 'pt' ? 'pt-BR' : lang === 'en' ? 'en-US' : 'es-ES', options);
         b = dataSelecionada.toLocaleDateString(lang === 'pt' ? 'pt-BR' : lang === 'en' ? 'en-US' : 'es-ES', { weekday: 'long' });
@@ -236,11 +262,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Função auxiliar para atualizar o conteúdo do modal de agendamentos
     function atualizarModalAgendamentos(modalDiv, modal) {
         const lang = localStorage.getItem('langEspecial') || 'pt';
-        const t = translationsEspecial[lang] || translationsEspecial['pt'];
+        const t = translationsEspecial[lang] || translationsEspecial['pt'] || {};
 
         const agendamentosLista = modalDiv.querySelector('.agendamentos-lista');
         agendamentosLista.innerHTML = agendamentos.length === 0
-            ? `<p>${t.semAgendamentos}</p>`
+            ? `<p>${t.semAgendamentos || 'Nenhum agendamento encontrado.'}</p>`
             : agendamentos.map((ag, index) => {
                 const dataFormatada = new Date(ag.data).toLocaleDateString(lang === 'pt' ? 'pt-BR' : lang === 'en' ? 'en-US' : 'es-ES', {
                     weekday: 'long',
@@ -253,10 +279,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <strong>${dataFormatada}</strong><br>
-                                ⏰ ${t.horarioAgendamento} ${ag.horario} - ${t.profissionalAgendamento} ${ag.profissional}
+                                ⏰ ${t.horarioAgendamento || 'Horário:'} ${ag.horario} - ${t.profissionalAgendamento || 'Profissional:'} ${ag.profissional}
                             </div>
                             <button class="btn btn-danger btn-sm btn-excluir" data-index="${index}">
-                                <i class="bi bi-trash"></i> ${t.cancelarAgendamento}
+                                <i class="bi bi-trash"></i> ${t.cancelarAgendamento || 'Excluir'}
                             </button>
                         </div>
                     </div>
@@ -278,21 +304,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // Exibir agendamentos
     btnVerAgendamentos.addEventListener('click', function() {
         const lang = localStorage.getItem('langEspecial') || 'pt';
-        const t = translationsEspecial[lang] || translationsEspecial['pt'];
+        const t = translationsEspecial[lang] || translationsEspecial['pt'] || {};
 
         const modalHTML = `
-            <div class="modal fade" id="modalAgendamentos" tabindex="-1">
+            <div class="modal fade" id="modalAgendamentos" tabindex="-1" aria-labelledby="modalAgendamentosLabel">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">${t.tituloMeusAgendamentos}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            <h5 class="modal-title" id="modalAgendamentosLabel">${t.tituloMeusAgendamentos || 'Meus Agendamentos'}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="agendamentos-lista"></div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">${t.fecharModal}</button>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">${t.fecharModal || 'Fechar'}</button>
                         </div>
                     </div>
                 </div>
