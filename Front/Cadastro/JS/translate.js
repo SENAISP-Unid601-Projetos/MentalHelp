@@ -1,6 +1,7 @@
 const translationsPaciente = {
     pt: {
         tituloCadastro: "Cadastro",
+        mainTitle: "Cadastro",
         nome: "Nome",
         cpf: "CPF",
         email: "Email",
@@ -11,6 +12,7 @@ const translationsPaciente = {
     },
     en: {
         tituloCadastro: "Register",
+        mainTitle: "register",
         nome: "Name",
         cpf: "Social Security Number",
         email: "Email",
@@ -21,6 +23,7 @@ const translationsPaciente = {
     },
     es: {
         tituloCadastro: "Registro",
+        mainTitle: "registro",
         nome: "Nombre",
         cpf: "Número de Identificación Fiscal",
         email: "Correo electrónico",
