@@ -1,12 +1,13 @@
 package com.example.Back.controller;
 
 import com.example.Back.DTO.ProfissionalEntradaDTO;
-import com.example.Back.DTO.ProfissionalLoginDTO;
 import com.example.Back.DTO.ProfissionalSaidaDTO;
 import com.example.Back.Repository.ProfissionalRepository;
 import com.example.Back.Service.ProfissionalService;
+import com.example.Back.config.FotoStorageProperties;
 import com.example.Back.entity.Profissional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 @RestController
@@ -33,25 +35,14 @@ public class ProfissionalController {
     @Autowired
     private MessageSource messageSource;
 
-    @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> authenticateUser(@RequestBody ProfissionalLoginDTO loginDTO) {
-        Map<String, Object> response = new HashMap<>();
-        boolean isAuthenticated = proService.authenticateUser(loginDTO);
-
-        if (isAuthenticated) {
-            response.put("message", messageSource.getMessage("login.success", null, Locale.getDefault()));
-            return ResponseEntity.ok(response);
-        } else {
-            response.put("message", messageSource.getMessage("login.error", null, Locale.getDefault()));
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-        }
-    }
+    @Autowired
+    private FotoStorageProperties fotoStorageProperties;
 
     @PostMapping("/post")
-    public ResponseEntity<Map<String, Object>> createProfissional(@RequestPart("foto") MultipartFile foto, @RequestPart("profissionalEntradaDTO")ProfissionalEntradaDTO profissionalDTO) {
+    public ResponseEntity<Map<String, Object>> createProfissional(@RequestPart("foto") MultipartFile foto, @RequestPart("profissionalEntradaDTO") ProfissionalEntradaDTO profissionalDTO) {
         String fotoPath = saveFoto(foto);
         profissionalDTO.setFoto(fotoPath);
-        ResponseEntity<ProfissionalSaidaDTO> responseEntity = proService.salvarProfissional(profissionalDTO);
+        ResponseEntity<?> responseEntity = proService.salvarProfissional(profissionalDTO);
         Map<String, Object> response = new HashMap<>();
         response.put("message", messageSource.getMessage("create.success", null, Locale.getDefault()));
         response.put("profissional", responseEntity.getBody());
@@ -63,7 +54,52 @@ public class ProfissionalController {
         return proService.listarProfissional();
     }
 
-    @PutMapping("/{id}")
+    // GET por ID
+    @GetMapping("/get/{id}")
+    public ResponseEntity<Map<String, Object>> getProfissionalById(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+        ResponseEntity<ProfissionalSaidaDTO> responseEntity = proService.buscarProfissionalPorId(id);
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            response.put("message", messageSource.getMessage("fetch.success", null, Locale.getDefault()));
+            response.put("profissional", responseEntity.getBody());
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("message", messageSource.getMessage("fetch.notfound", null, Locale.getDefault()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+
+    // GET por CRM
+    @GetMapping("/get/{crm}")
+    public ResponseEntity<Map<String, Object>> getProfissionalByCrm(@PathVariable String crm) {
+        Map<String, Object> response = new HashMap<>();
+        ResponseEntity<ProfissionalSaidaDTO> responseEntity = proService.buscarProfissionalPorCrm(crm);
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            response.put("message", messageSource.getMessage("fetch.success", null, Locale.getDefault()));
+            response.put("profissional", responseEntity.getBody());
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("message", messageSource.getMessage("fetch.notfound", null, Locale.getDefault()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+
+    // GET por Especialidade
+    @GetMapping("/get/{especialidade}")
+    public ResponseEntity<Map<String, Object>> getProfissionaisByEspecialidade(@PathVariable String especialidade) {
+        Map<String, Object> response = new HashMap<>();
+        ResponseEntity<List<ProfissionalSaidaDTO>> responseEntity = proService.buscarProfissionaisPorEspecialidade(especialidade);
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            response.put("message", messageSource.getMessage("fetch.success", null, Locale.getDefault()));
+            response.put("profissionais", responseEntity.getBody());
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("message", messageSource.getMessage("fetch.notfound", null, Locale.getDefault()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+
+    @PutMapping("/update/{id}")
     public ResponseEntity<Map<String, Object>> updateProfissional(@PathVariable Long id, @RequestBody ProfissionalEntradaDTO profissionalDTO) {
         ResponseEntity<ProfissionalSaidaDTO> responseEntity = proService.atualizarProfissional(id, profissionalDTO);
         Map<String, Object> response = new HashMap<>();
@@ -90,18 +126,28 @@ public class ProfissionalController {
         }
     }
 
-    private String saveFoto(MultipartFile foto) {
-        // Gera um nome único para o arquivo
+    public String saveFoto(MultipartFile foto) {
         String fileName = UUID.randomUUID().toString() + "_" + foto.getOriginalFilename();
-        String uploadDir = "src/main/resources/profissionalPictures/";  // Diretório onde as fotos serão armazenadas
+        List<String> diretorios = fotoStorageProperties.getDiretoriosProfissional();
 
-        try {
-            Files.copy(foto.getInputStream(), Paths.get(uploadDir + fileName));
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Falha ao salvar a foto.");
+        for (String dir : diretorios) {
+            try {
+                Path uploadPath = Paths.get(dir.trim());
+
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                Path filePath = uploadPath.resolve(fileName);
+                Files.copy(foto.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+                return filePath.toString();
+            } catch (IOException e) {
+                System.err.println("Erro ao salvar em " + dir + ": " + e.getMessage());
+            }
         }
-        return uploadDir + fileName;
+
+        throw new RuntimeException("Falha ao salvar a foto nos diretórios configurados.");
     }
 
     @GetMapping("/foto/{crm}")

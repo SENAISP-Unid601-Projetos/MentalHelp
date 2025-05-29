@@ -81,3 +81,7 @@ h1.m-0.fw-bold.text-purple {
 .text-center small a:hover {
     color: #36004e;
 }
+
+.Links {
+    text-decoration: none;
+}
