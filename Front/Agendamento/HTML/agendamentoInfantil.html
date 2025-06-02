@@ -2,17 +2,15 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <title  id="tituloPagina">Agendamento Infantil</title>
+  <title id="tituloPagina">Agendamento Infantil</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Adicionando Google Fonts para Signika -->
+  <link href="https://fonts.googleapis.com/css2?family=Signika:wght@300..700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../CSS/styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-  <script src="../JS/TranslateInfantil.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-  
 </head>
 <body>
-
   <div class="container-fluid d-flex flex-column flex-md-row vh-100 p-0">
     <!-- Painel Esquerdo - Calendário -->
     <div class="left-panel d-flex flex-column align-items-center col-md-6 p-4">
@@ -41,7 +39,7 @@
         <div class="dias mt-2 d-grid gap-1" id="dias"></div>
       </div>
 
-      <div class="ilustracoes d-flex justify-content-center align-items-end gap-4 mt-auto ">
+      <div class="ilustracoes d-flex justify-content-center align-items-end gap-4 mt-auto">
         <img class="imgarcoiris" src="../IMG/arco-iris.png" alt="Ilustração arco-íris" />
         <img src="../IMG/abelha.png" alt="Ilustração abelha" />
       </div>
@@ -51,10 +49,10 @@
     <div class="right-panel col-md-6 p-4 d-flex flex-column">
       <div>
         <select id="languageSelectInfantil" class="form-select form-select-sm mt-3 ms-auto" style="width: 120px;">
-            <option value="pt">Português</option>
-            <option value="en">English</option>
-            <option value="es">Español</option>
-          </select>
+          <option value="pt">Português</option>
+          <option value="en">English</option>
+          <option value="es">Español</option>
+        </select>
         <h2 id="qualHorarioMelhor" class="text-purple">Qual o horário é melhor?</h2>
         <p id="fusoHorario" class="subtexto">UTC -3 (Horário de Brasília)</p>
 
@@ -66,7 +64,7 @@
       <!-- Área de Confirmação -->
       <div class="mt-auto pt-4">
         <div id="resumo-agendamento" class="mb-3 d-none">
-          <h4 id="resumoAgendamento"></h4>>Resumo do Agendamento:</h4>
+          <h4 id="resumoAgendamento">Resumo do Agendamento:</h4>
           <p id="data-selecionada" class="mb-1"></p>
           <p id="horario-selecionado"></p>
         </div>
@@ -111,6 +109,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script defer src="../JS/TranslateInfantil.js"></script>
   <script src="../JS/Infantil.js"></script>
 </body>
 </html>

@@ -1,13 +1,13 @@
 @font-face {
-  font-family: 'Signika';
-  src: url('/Agendamento/Recursos/Signika/Signika-VariableFont_wght.ttf') format('truetype');
-  font-weight: 100 900;
+  font-family: 'TAN Aegean';
+  src: url('../Recursos/Fontes/TAN_Aegean/TAN-AEGEAN-Regular.ttf') format('truetype');
+  font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Signika';
-  src: url('../Recursos/Signika/Signika-VariableFont_wght.ttf') format('truetype');
+  src: url('../Recursos/Fontes/Signika/Signika-VariableFont_wght.ttf') format('truetype');
   font-weight: 100 900;
   font-style: normal;
 }
