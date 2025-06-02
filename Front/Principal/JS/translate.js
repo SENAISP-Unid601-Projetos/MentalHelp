@@ -3,7 +3,6 @@ const translations = {
       professionals: "Profissionais",
       contact: "Contato",
       apoioLink: "Apoio",
-      entrar: "Entrar",
       agendeConsulta: "Agende uma Consulta!",
       tituloPrincipal: "Você<br />Não Está<br />Sozinho",
       paragrafoPrincipal1: "Cuidar da mente é um ato de coragem.",
@@ -43,7 +42,6 @@ const translations = {
       professionals: "Professionals",
       contact: "Contact",
       apoioLink: "Support",
-      entrar: "Login",
       agendeConsulta: "Book an Appointment!",
       tituloPrincipal: "You<br />Are Not<br />Alone",
       paragrafoPrincipal1: "Taking care of your mind is an act of courage.",
@@ -83,7 +81,6 @@ const translations = {
       professionals: "Profesionales",
       contact: "Contacto",
       apoioLink: "Apoyo",
-      entrar: "Iniciar Sesión",
       agendeConsulta: "¡Agenda una Consulta!",
       tituloPrincipal: "Tú<br />No Estás<br />Solo",
       paragrafoPrincipal1: "Cuidar de la mente es un acto de valentía.",
@@ -147,7 +144,6 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById("professionals").textContent = t.professionals;
       document.getElementById("contact").textContent = t.contact;
       document.getElementById("apoioLink").textContent = t.apoioLink;
-      document.querySelector("a[href*='Login']").textContent = t.entrar;
       document.getElementById("btnAgende").textContent = t.agendeConsulta;
       document.querySelector(".titulo-principal").innerHTML = t.tituloPrincipal;
       document.querySelector(".text-color").textContent = t.paragrafoPrincipal1;
