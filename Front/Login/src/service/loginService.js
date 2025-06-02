@@ -32,7 +32,7 @@ const loginService = {
     },
     logout(token) {
         localStorage.removeItem(token);
-        window.location.href = "login.html";
+        return true;
     },
     getTokenFromURL() {
         const params = new URLSearchParams(window.location.search);
