@@ -6,6 +6,7 @@ let c = null; // Armazena horário
 
 const translationsAdulto = {
     pt: {
+        voltar: "Voltar",
         tituloPagina: "Agendamento",
         tipoAtendimento: "Atendimento selecionado: Adulto",
         profissionalEncontrada: "Profissional encontrada: Vagner",
@@ -52,6 +53,7 @@ const translationsAdulto = {
         cancelarAgendamento: "Excluir"
     },
     en: {
+        voltar: "Back",
         tituloPagina: "Scheduling",
         tipoAtendimento: "Selected Service: Adult",
         profissionalEncontrada: "Professional found: Vagner",
@@ -98,6 +100,7 @@ const translationsAdulto = {
         cancelarAgendamento: "Delete"
     },
     es: {
+        voltar: "Volver",
         tituloPagina: "Programación",
         tipoAtendimento: "Servicio seleccionado: Adulto",
         profissionalEncontrada: "Profesional encontrado: Vagner",
@@ -184,6 +187,11 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById("especialidade").textContent = t.especialidade;
         document.getElementById("anterior").textContent = '‹'; // Mantém o ícone
         document.getElementById("proximo").textContent = '›'; // Mantém o ícone
+        const voltar = document.getElementById("voltar");
+        if (voltar) {
+            const spanText = voltar.querySelector(".btn-text");
+            if (spanText) spanText.textContent = t.voltar || 'Voltar';
+        }
 
         const diasSemana = document.querySelectorAll(".dias-semana span");
         diasSemana[0].textContent = t.domingo;
