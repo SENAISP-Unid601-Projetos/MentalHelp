@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://10.110.12.31:5432/mentalhelp
+    url: jdbc:postgresql://10.110.12.52:5432/mentalhelp
     username: postgres
     password: 12345
     driver-class-name: org.postgresql.Driver
@@ -14,3 +14,10 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+
+app:
+  fotos:
+    diretoriosProfissional:
+      - /app/profissionalPictures
+    diretoriosPaciente:
+      - app/pacientePictures
