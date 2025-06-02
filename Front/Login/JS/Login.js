@@ -1,3 +1,5 @@
+import loginService from "../src/service/loginService.js";
+
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const emailInput = document.getElementById('email');
@@ -16,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+
     // Validação do formulário de login
     loginForm.addEventListener('submit', async function(event) {
         event.preventDefault(); // Impede o envio do formulário para testar as validações
@@ -23,8 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Define idiomaSelecionado no escopo do evento submit
         const idiomaSelecionado = languageSelect.value || 'pt';
 
-        try {
+     
             // Verifica se o objeto traducoes está disponível
+            console.log('oi');
             if (!window.traducoes || !window.traducoes[idiomaSelecionado]) {
                 console.error('Objeto de traduções não encontrado ou idioma inválido:', idiomaSelecionado);
                 Swal.fire({
@@ -34,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 return;
             }
+            console.log('oi2')
 
             // Verificação básica de campos obrigatórios
             if (!emailInput.value || !senhaInput.value) {
@@ -43,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 return;
             }
-
+            console.log('oi3')
             // Exibe o spinner e desabilita o botão de login
             loginBtn.disabled = true;
 
@@ -84,13 +89,5 @@ document.addEventListener('DOMContentLoaded', () => {
                     icon: 'warning'
                 });
             }
-        } catch (err) {
-            loginBtn.disabled = false;
-            Swal.fire({
-                title: window.traducoes[idiomaSelecionado].ErroRedeTitulo,
-                text: window.traducoes[idiomaSelecionado].ErroRedeTexto,
-                icon: 'error'
-            });
-        }
     });
 });
