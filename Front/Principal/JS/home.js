@@ -1,64 +1,57 @@
 
 document.addEventListener('DOMContentLoaded',()=>{
   const logo = document.querySelector('#logoSection');
-  const contactLinks = document.querySelectorAll('.js-scroll-contact');
-  const professionalLinks = document.querySelectorAll('.js-scroll-professionals');
-  const apoioLinks = document.querySelectorAll('.js-scroll-apoio');
-  const agendeLinks = document.querySelectorAll('#btnAgende'); //.js-scroll-agende
+  const contact = document.querySelector('#contact');
+  const professionals = document.querySelector('#professionals');
+  const apoioLink = document.querySelector('#apoioLink');
+  const agendeBtn = document.querySelector('#btnAgende');
 
-  // Logo scroll to top
   if (logo instanceof HTMLDivElement) {
     logo.addEventListener('click', () => {
       smoothScrollWithEasing(0, 1000);
     });
   }
 
-  // Contato
-  contactLinks.forEach(link => {
-    link.addEventListener('click', function () {
+  if (contact instanceof HTMLAnchorElement) {
+    contact.addEventListener('click', function () {
       const contatoSection = document.querySelector('#contatoFooter');
       if (contatoSection) {
         const top = contatoSection.offsetTop;
         smoothScrollWithEasing(top, 1000);
       }
     });
-  });
+  }
 
-  // Profissionais
-  professionalLinks.forEach(link => {
-    link.addEventListener('click', function () {
+  if (professionals instanceof HTMLAnchorElement) {
+    professionals.addEventListener('click', function () {
       const section = document.querySelector('#vemAqui');
       if (section) {
         const top = section.offsetTop;
         smoothScrollWithEasing(top, 1000);
       }
     });
-  });
+  }
 
-  // Apoio
-  apoioLinks.forEach(link => {
-    link.addEventListener('click', function () {
+  if (apoioLink instanceof HTMLAnchorElement) {
+    apoioLink.addEventListener('click', function () {
       const apoioSection = document.querySelector('#apoio');
       if (apoioSection) {
         const top = apoioSection.offsetTop;
         smoothScrollWithEasing(top, 1000);
       }
     });
-  });
 
-  // Agende
-  agendeLinks.forEach(link => {
-    link.addEventListener('click', function (event) {
-      event.preventDefault();
-      const section = document.querySelector('#vemAqui');
-      if (section) {
-        const top = section.offsetTop;
-        smoothScrollWithEasing(top, 1000);
-      }
-    });
+    if (agendeBtn instanceof HTMLAnchorElement) {
+  agendeBtn.addEventListener('click', function (event) {
+    event.preventDefault(); // impede o comportamento padrão do href
+    const section = document.querySelector('#vemAqui');
+    if (section) {
+      const top = section.offsetTop;
+      smoothScrollWithEasing(top, 1000);
+    }
   });
+  }
 
-  // Scroll function
   function easeInOutQuad(t, b, c, d) {
     t /= d / 2;
     if (t < 1) return c / 2 * t * t + b;
@@ -83,6 +76,11 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
 
     requestAnimationFrame(scrollStep);
+    }
   }
+<<<<<<< HEAD
 })
 
+=======
+} 
+>>>>>>> e6a2dd2fc81e7ae0cc7bb9d93dbad74f8486e5a6
