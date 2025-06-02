@@ -15,44 +15,31 @@ document.addEventListener('DOMContentLoaded', () => {
         prev: document.getElementById('prev-month'),
         next: document.getElementById('next-month'),
         periodo: document.getElementById('periodo-selecionado'),
-        date: document.getElementById('current-date')
+        date: document.getElementById('current-date'),
+        relatoriosBtn: document.getElementById('relatorios-btn'),
+        agendaBtn: document.getElementById('agenda-btn'),
+        relatoriosPanel: document.getElementById('relatorios-panel'),
+        fecharRelatorios: document.getElementById('fechar-relatorios'),
+        relatorioConsultas: document.getElementById('relatorio-consultas'),
+        relatorioPacientes: document.getElementById('relatorio-pacientes'),
+        relatorioProcedimentos: document.getElementById('relatorio-procedimentos'),
+        errorMessage: document.getElementById('error-message')
     };
 
     // Estado inicial
-    let currentMonth = new Date().getMonth();
-    let currentYear = new Date().getFullYear();
-    let selectedStartDate = new Date();
-    let selectedEndDate = new Date();
+    let currentMonth = new Date(2025, 5, 2).getMonth(); // 02/06/2025
+    let currentYear = new Date(2025, 5, 2).getFullYear();
+    let selectedStartDate = new Date(2025, 5, 2); // Início padrão
+    let selectedEndDate = new Date(2025, 5, 2); // Fim padrão
     let tempStartDate = null;
     let tempEndDate = null;
+    let calendar = null;
 
     // Dados
     const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
                        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-    
-    // Exemplo de eventos
-    const sampleEvents = [
-        { 
-            title: 'Consulta - João Silva', 
-            start: getTodayAtHour(9), 
-            end: getTodayAtHour(10), 
-            color: '#3498db' 
-        },
-        { 
-            title: 'Consulta - Maria Oliveira', 
-            start: getTodayAtHour(14), 
-            end: getTodayAtHour(15), 
-            color: '#3498db' 
-        }
-    ];
 
     // Funções auxiliares
-    function getTodayAtHour(hour) {
-        const date = new Date();
-        date.setHours(hour, 0, 0, 0);
-        return date;
-    }
-
     function formatDate(date) {
         if (!date) return '';
         const day = String(date.getDate()).padStart(2, '0');
@@ -67,15 +54,30 @@ document.addEventListener('DOMContentLoaded', () => {
         return new Date(parts[0], parts[1] - 1, parts[2]);
     }
 
+    function formatDateISO(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
     function isSameDay(date1, date2) {
         return date1.getFullYear() === date2.getFullYear() &&
                date1.getMonth() === date2.getMonth() &&
                date1.getDate() === date2.getDate();
     }
 
+    function showError(message) {
+        elements.errorMessage.textContent = message;
+        elements.errorMessage.classList.remove('d-none');
+        setTimeout(() => {
+            elements.errorMessage.classList.add('d-none');
+        }, 5000);
+    }
+
     // Inicialização
     function init() {
-        const today = new Date();
+        const today = new Date(2025, 5, 2, 15, 42); // 02/06/2025, 15:42 -03
         elements.date.textContent = formatDate(today);
         elements.inicio.valueAsDate = today;
         elements.fim.valueAsDate = today;
@@ -85,11 +87,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Inicializa o calendário principal
-    function initCalendar() {
+    async function initCalendar() {
         try {
             const calendarEl = document.getElementById('calendario');
-            const calendar = new FullCalendar.Calendar(calendarEl, {
+            calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'timeGridWeek',
+                initialDate: '2025-06-02', // Força o calendário a iniciar em 02/06/2025
                 locale: 'pt-br',
                 headerToolbar: {
                     left: 'prev,next today',
@@ -102,17 +105,31 @@ document.addEventListener('DOMContentLoaded', () => {
                     week: 'Semana',
                     day: 'Dia'
                 },
-                events: sampleEvents,
-                eventClick: function(info) {
-                    alert(`Consulta: ${info.event.title}`);
+                slotMinTime: '00:00:00', // Ajustado para exibir o dia inteiro
+                slotMaxTime: '24:00:00', // Ajustado para exibir o dia inteiro
+                events: async function(fetchInfo, successCallback, failureCallback) {
+                    try {
+                        const events = await fetchEvents(fetchInfo.startStr, fetchInfo.endStr);
+                        console.log('Eventos enviados ao FullCalendar (inicial):', events);
+                        if (events.length === 0) {
+                            showError('Nenhuma consulta encontrada para o período inicial.');
+                        }
+                        successCallback(events);
+                    } catch (err) {
+                        failureCallback(err);
+                        showError('Erro ao carregar consultas do servidor.');
+                    }
                 },
-                height: 'auto'
+                eventClick: function(info) {
+                    showError(`Consulta: ${info.event.title}\nInício: ${info.event.start.toISOString()}\nFim: ${info.event.end ? info.event.end.toISOString() : 'Não definido'}`);
+                },
+                height: 'auto',
+                allDaySlot: false // Garante que o calendário exiba apenas horários
             });
             calendar.render();
-            return calendar;
         } catch (err) {
             console.error('Erro na inicialização do FullCalendar:', err);
-            return null;
+            showError('Erro ao inicializar o calendário.');
         }
     }
 
@@ -138,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             // Dias do mês atual
-            const today = new Date();
+            const today = new Date(2025, 5, 2, 15, 42); // 02/06/2025
             for (let day = 1; day <= lastDayOfMonth.getDate(); day++) {
                 const currentDate = new Date(currentYear, currentMonth, day);
                 const dayElement = document.createElement('div');
@@ -197,31 +214,57 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Filtra eventos
-    function filterEvents() {
+    async function filterEvents() {
         try {
             const startDate = parseDateInput(elements.inicio.value);
             const endDate = parseDateInput(elements.fim.value);
             
             if (!startDate || !endDate) {
-                alert('Preencha ambas as datas!');
+                showError('Preencha ambas as datas!');
                 return;
             }
             
             if (startDate > endDate) {
-                alert('A data de início não pode ser maior que a data de fim!');
+                showError('A data de início não pode ser maior que a data de fim!');
                 return;
             }
             
             selectedStartDate = new Date(startDate);
             selectedEndDate = new Date(endDate);
             
-            // Aqui você implementaria a lógica real de filtragem
-            // Por enquanto apenas mostra um alerta com o período selecionado
-            alert(`Filtro aplicado para o período: ${formatDate(selectedStartDate)} - ${formatDate(selectedEndDate)}`);
+            // Atualiza o calendário com eventos filtrados
+            calendar.setOption('events', async function(fetchInfo, successCallback, failureCallback) {
+                try {
+                    const events = await fetchFilteredEvents(formatDateISO(startDate), formatDateISO(endDate));
+                    console.log('Eventos filtrados enviados ao FullCalendar:', events);
+                    if (events.length === 0) {
+                        showError('Nenhuma consulta encontrada para o período filtrado.');
+                    }
+                    successCallback(events);
+                } catch (err) {
+                    failureCallback(err);
+                    showError('Erro ao carregar consultas filtradas do servidor.');
+                }
+            });
+            calendar.gotoDate(formatDateISO(startDate)); // Navega para a data inicial do filtro
+            calendar.render();
             
+            showError(`Filtro aplicado para o período: ${formatDate(selectedStartDate)} - ${formatDate(selectedEndDate)}`);
         } catch (err) {
             console.error('Erro ao filtrar eventos:', err);
-            alert('Erro ao aplicar o filtro!');
+            showError('Erro ao aplicar o filtro!');
+        }
+    }
+
+    // Funções do Side Panel
+    function toggleRelatoriosPanel() {
+        elements.relatoriosPanel.classList.toggle('active');
+        elements.relatoriosBtn.classList.toggle('active');
+        elements.agendaBtn.classList.remove('active');
+        if (elements.relatoriosPanel.classList.contains('active')) {
+            document.querySelector('.main-calendar-container').style.display = 'none';
+        } else {
+            document.querySelector('.main-calendar-container').style.display = 'block';
         }
     }
 
@@ -245,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         elements.aplicar.addEventListener('click', () => {
             if (!tempStartDate) {
-                alert('Selecione pelo menos uma data de início!');
+                showError('Selecione pelo menos uma data de início!');
                 return;
             }
             
@@ -288,6 +331,48 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentYear++;
             }
             renderCalendar();
+        });
+        
+        elements.relatoriosBtn.addEventListener('click', toggleRelatoriosPanel);
+        elements.fecharRelatorios.addEventListener('click', toggleRelatoriosPanel);
+        elements.agendaBtn.addEventListener('click', () => {
+            elements.relatoriosPanel.classList.remove('active');
+            elements.relatoriosBtn.classList.remove('active');
+            elements.agendaBtn.classList.add('active');
+            document.querySelector('.main-calendar-container').style.display = 'block';
+        });
+
+        elements.relatorioConsultas.addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                const report = await fetchMonthlyConsultationsReport();
+                showError(JSON.stringify(report, null, 2));
+            } catch (err) {
+                console.error('Erro ao buscar relatório de consultas:', err);
+                showError('Erro ao carregar o relatório de consultas.');
+            }
+        });
+
+        elements.relatorioPacientes.addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                const report = await fetchPatientsReport();
+                showError(JSON.stringify(report, null, 2));
+            } catch (err) {
+                console.error('Erro ao buscar relatório de pacientes:', err);
+                showError('Erro ao carregar o relatório de pacientes.');
+            }
+        });
+
+        elements.relatorioProcedimentos.addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                const report = await fetchProceduresReport();
+                showError(JSON.stringify(report, null, 2));
+            } catch (err) {
+                console.error('Erro ao buscar relatório de procedimentos:', err);
+                showError('Erro ao carregar o relatório de procedimentos.');
+            }
         });
     }
 
