@@ -1,7 +1,7 @@
 @font-face {
-  font-family: 'TAN Aegean';
-  src: url('../Recursos/TAN_Aegean/TAN-AEGEAN-Regular.ttf') format('truetype');
-  font-weight: normal;
+  font-family: 'Signika';
+  src: url('/Agendamento/Recursos/Signika/Signika-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
   font-style: normal;
 }
 
