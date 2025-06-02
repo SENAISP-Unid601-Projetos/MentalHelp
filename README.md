@@ -42,27 +42,27 @@ Para configurar e rodar o ambiente de homologação:
 
 ### 🌐 Acesso à Aplicação
 
-🔗 Acesse em: [http://10.110.12.40:3000/](http://10.110.12.40:3000/)
+🔗 Acesse em: [http://10.110.12.49:3000/](http://10.110.12.49:3000/)
 
 ### 📋 Ferramentas de Gestão
 
 ### 🔧 Jenkins – Build Automático
 
-🔗 [http://10.110.12.40:8080/](http://10.110.12.40:8080/)
+🔗 [http://10.110.12.49:8080/](http://10.110.12.49:8080/)
 
 👤 **Usuário:** `senaisc`  
 🔑 **Senha:** `Senai123`
 
 ### 📦 Portainer – Gestão de Containers
 
-🔗 [http://10.110.12.40:9000/](http://10.110.12.40:9000/)
+🔗 [http://10.110.12.49:9000/](http://10.110.12.49:9000/)
 
 👤 **Usuário:** `admin`  
 🔑 **Senha:** `123456789101112`
 
 ### 🛢️ PGAdmin – Gestão do Banco de Dados
 
-🔗 [http://10.110.12.40:5000/](http://10.110.12.40:5000/)
+🔗 [http://10.110.12.49:5000/](http://10.110.12.49:5000/)
 
 👤 **Usuário:** `senaisc@senai.com`  
 🔑 **Senha:** `123456`
@@ -74,7 +74,7 @@ Para configurar e rodar o ambiente de homologação:
 
 ### 📚 Swagger – Documentação da API
 
-🔗 [http://10.110.12.40:9500/swagger-ui/index.html](http://10.110.12.40:9500/swagger-ui/index.html)
+🔗 [http://10.110.12.49:9500/swagger-ui/index.html](http://10.110.12.49:9500/swagger-ui/index.html)
 
 > ⚠️ **Nota Importante:**  
 > A conexão do servidor de homologação pode sofrer alterações no IP.  
