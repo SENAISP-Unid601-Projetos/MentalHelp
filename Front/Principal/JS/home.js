@@ -1,4 +1,5 @@
-window.onload = function () {
+
+document.addEventListener('DOMContentLoaded',()=>{
   const logo = document.querySelector('#logoSection');
   const contact = document.querySelector('#contact');
   const professionals = document.querySelector('#professionals');
@@ -77,4 +78,5 @@ window.onload = function () {
     requestAnimationFrame(scrollStep);
     }
   }
-} 
+
+})
