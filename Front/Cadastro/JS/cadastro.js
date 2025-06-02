@@ -1,4 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
+
+    // ===============================
+    // Upload de imagem de perfil
+    // ===============================
     function configurarUpload(avatarId, inputId) {
         const avatar = document.getElementById(avatarId);
         const input = document.getElementById(inputId);
@@ -19,16 +23,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
     configurarUpload('avatarPaciente', 'uploadPaciente');
 
+    // ===============================
+    // Mostrar/esconder senha
+    // ===============================
+    function configurarToggleSenha() {
+        const togglePassword = document.querySelector(".toggle-password");
+        const senhaInput = document.getElementById("senhaInput");
+
+        if (togglePassword && senhaInput) {
+            togglePassword.addEventListener("click", () => {
+                const senhaVisivel = senhaInput.type === "text";
+                senhaInput.type = senhaVisivel ? "password" : "text";
+
+                togglePassword.classList.toggle("bi-eye", senhaVisivel);
+                togglePassword.classList.toggle("bi-eye-slash", !senhaVisivel);
+            });
+        }
+    }
+
+    configurarToggleSenha();
+
+    // ===============================
+    // Validação de email
+    // ===============================
+    function validateEmail(email) {
+        const re = /\S+@\S+\.\S+/;
+        return re.test(email);
+    }
+
+    // ===============================
+    // Lógica de envio do formulário
+    // ===============================
     const form = document.querySelector("form");
 
     if (form) {
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
 
-            const nome = form.querySelector('input[placeholder="Nome"]');
-            const cpf = form.querySelector('input[placeholder="CPF"]');
-            const email = form.querySelector('input[placeholder="Email"]');
-            const senha = form.querySelector('input[placeholder="Senha"]');
+            const nome = form.querySelector('#nomeInput');
+            const cpf = form.querySelector('#cpfInput');
+            const email = form.querySelector('#emailInput');
+            const senha = form.querySelector('#senhaInput');
             const fotoInput = document.getElementById('uploadPaciente');
 
             if (!nome.value.trim() || !cpf.value.trim() || !email.value.trim() || !senha.value.trim()) {
@@ -57,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 cpf: cpf.value.trim(),
                 email: email.value.trim(),
                 senha: senha.value.trim(),
-                foto: "temporario"
+                foto: "temporario" // será substituído no backend
             };
 
             formData.append("foto", fotoInput.files[0]);
@@ -66,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }));
 
             try {
-                const response = await axios.post("http://10.110.12.50:5000/profissional/post", formData, {
+                const response = await axios.post("http://10.110.12.40:9500/paciente/post", formData, {
                     headers: {
                         "Content-Type": "multipart/form-data"
                     }
@@ -81,10 +116,5 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert("Erro ao cadastrar paciente. Verifique os dados e tente novamente.");
             }
         });
-    }
-
-    function validateEmail(email) {
-        const re = /\S+@\S+\.\S+/;
-        return re.test(email);
     }
 });
