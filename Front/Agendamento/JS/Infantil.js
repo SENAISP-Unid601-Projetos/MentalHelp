@@ -177,50 +177,50 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     btnAgendar.addEventListener('click', async function () {
-        if (!dataSelecionada || !horarioSelecionado) return;
-
+        if (!dataSelecionada || !horarioSelecionado) {
+            mensagemErro.textContent = 'Por favor, selecione um dia e um horário.';
+            mensagemErro.classList.remove('d-none');
+            return;
+        }
+    
+        // 👉 Aplicar o horário à data
+        const [hora, minuto] = horarioSelecionado.split(':');
+        dataSelecionada.setHours(parseInt(hora), parseInt(minuto), 0, 0);
+    
+        const novoAgendamento = {
+            data: dataSelecionada.toISOString(), // ex: 2025-06-02T15:30:00.000Z
+            valorConsulta: 100, // Não pode ser 0
+            tipoConsulta: 'INFANTIL',
+            idPaciente: 1, // ❗ Substitua pelo ID real do paciente logado
+            idProfissional: 1 // Gabrielly
+        };
+    
         try {
-            const novoAgendamento = {
-                data: dataSelecionada.toISOString().split('T')[0], // YYYY-MM-DD
-                horario: horarioSelecionado,
-                profissional: 'Gabrielly'
-            };
-
             const resposta = await axiosInstance.post('/consultas/post', novoAgendamento);
             console.log('Resposta do POST /consultas/post:', resposta.data);
-
+    
             const lang = localStorage.getItem('langInfantil') || 'pt';
             const t = translationsInfantil[lang] || translationsInfantil['pt'];
-            const dataFormatada = new Date(dataSelecionada).toLocaleDateString(lang === 'pt' ? 'pt-BR' : lang === 'en' ? 'en-US' : 'es-ES', {
-                weekday: 'long',
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            });
-
+    
+            const dataFormatada = new Date(dataSelecionada).toLocaleDateString(
+                lang === 'pt' ? 'pt-BR' : lang === 'en' ? 'en-US' : 'es-ES',
+                { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }
+            );
+    
             detalhesAgendamento.innerHTML = t.detalhesAgendamento
                 .replace("{0}", "Gabrielly")
                 .replace("{1}", dataFormatada)
                 .replace("{2}", horarioSelecionado);
-
+    
             modalConfirmacao.show();
-
-            dataSelecionada = null;
-            horarioSelecionado = null;
-            document.querySelectorAll('.ativo').forEach(el => el.classList.remove('ativo'));
-            btnAgendar.disabled = true;
-            resumoAgendamento.classList.add('d-none');
-            atualizarListaHorariosDisponiveis();
+    
         } catch (erro) {
             console.error('Erro ao agendar:', erro.response ? erro.response.data : erro.message);
-            if (erro.response && erro.response.status === 404) {
-                mensagemErro.textContent = 'Erro: Endpoint /consultas/post não encontrado.';
-            } else {
-                mensagemErro.textContent = 'Erro ao agendar. Tente novamente.';
-            }
+            mensagemErro.textContent = 'Erro ao confirmar o agendamento. Tente novamente.';
             mensagemErro.classList.remove('d-none');
         }
     });
+    
 
     btnVerAgendamentos.addEventListener('click', async function () {
         const lang = localStorage.getItem('langInfantil') || 'pt';
