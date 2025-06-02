@@ -10,7 +10,7 @@ const translationsPaciente = {
         loginLink: "Log in",
     },
     en: {
-        tituloCadastro: "Patient Registration",
+        tituloCadastro: "Registration",
         nome: "Name",
         cpf: "Social Security Number",
         email: "Email",
@@ -20,7 +20,7 @@ const translationsPaciente = {
         loginLink: "Log in",
     },
     es: {
-        tituloCadastro: "Registro de Paciente",
+        tituloCadastro: "Registro",
         nome: "Nombre",
         cpf: "Número de Identificación Fiscal",
         email: "Correo electrónico",
