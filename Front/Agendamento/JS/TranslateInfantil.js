@@ -4,7 +4,7 @@ let c = null; // Armazena horário
 
 const translationsInfantil = {
     pt: {
-        voltar: "voltar",
+        voltar: "Voltar",
         tituloPagina: "Agendamento",
         tipoAtendimento: "Atendimento selecionado: Infantil",
         profissionalEncontrada: "Profissional encontrada: Gabrielly",
@@ -52,7 +52,7 @@ const translationsInfantil = {
         cancelarAgendamento: "Excluir"
     },
     en: {
-        voltar: "back",
+        voltar: "Back",
         tituloPagina: "Scheduling",
         tipoAtendimento: "Selected Service: Child Care",
         profissionalEncontrada: "Professional found: Gabrielly",
@@ -100,7 +100,7 @@ const translationsInfantil = {
         cancelarAgendamento: "Delete"
     },
     es: {
-        voltar: "volver",
+        voltar: "Volver",
         tituloPagina: "Programación",
         tipoAtendimento: "Servicio seleccionado: Infantil",
         profissionalEncontrada: "Profesional encontrada: Gabrielly",
@@ -149,14 +149,14 @@ const translationsInfantil = {
     }
 };
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const languageSelectInfantil = document.getElementById("languageSelectInfantil");
     const savedLangInfantil = localStorage.getItem("langInfantil") || 'pt';
 
     languageSelectInfantil.value = savedLangInfantil;
     updateContentInfantil(savedLangInfantil);
 
-    languageSelectInfantil.addEventListener("change", function() {
+    languageSelectInfantil.addEventListener("change", function () {
         const lang = this.value;
         localStorage.setItem("langInfantil", lang);
         updateContentInfantil(lang);
