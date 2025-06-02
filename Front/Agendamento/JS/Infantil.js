@@ -1,12 +1,14 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Variáveis de estado
+document.addEventListener('DOMContentLoaded', function () {
+    const axiosInstance = axios.create({
+        baseURL: 'http://10.110.12.49:9500/',
+        timeout: 5000
+    });
+
     let mesAtual = new Date().getMonth();
     let anoAtual = new Date().getFullYear();
     let dataSelecionada = null;
     let horarioSelecionado = null;
-    let agendamentos = JSON.parse(localStorage.getItem('agendamentos')) || [];
 
-    // Elementos DOM
     const btnAgendar = document.getElementById('btnAgendar');
     const btnVerAgendamentos = document.getElementById('btnVerAgendamentos');
     const mensagemErro = document.getElementById('mensagemErro');
@@ -17,13 +19,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const detalhesAgendamento = document.getElementById('detalhes-agendamento');
     const horariosContainer = document.querySelector('.horarios');
 
-    // Inicialização
     gerarCalendario(mesAtual, anoAtual);
     configurarHorarios();
     configurarBotoesNavegacao();
     atualizarListaHorariosDisponiveis();
 
-    // Função principal para gerar o calendário
     function gerarCalendario(mes, ano) {
         const diasContainer = document.getElementById('dias');
         const tituloMes = document.getElementById('mes');
@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const totalDias = new Date(ano, mes + 1, 0).getDate();
         const hoje = new Date();
 
-        // Usar traduções para o nome do mês
         const lang = localStorage.getItem('langInfantil') || 'pt';
         const t = translationsInfantil[lang] || translationsInfantil['pt'];
         const monthNames = [
@@ -42,18 +41,13 @@ document.addEventListener('DOMContentLoaded', function() {
         ];
         tituloMes.textContent = `${monthNames[mes]} ${ano}`;
 
-        // Dias vazios no início do mês
         for (let i = 0; i < primeiroDia; i++) {
             diasContainer.appendChild(document.createElement('div'));
         }
 
-        // Dias do mês
         for (let dia = 1; dia <= totalDias; dia++) {
             const botao = document.createElement('button');
             botao.textContent = dia;
-            botao.tabIndex = 0;
-
-            // Desabilitar dias passados
             const dataAtual = new Date(ano, mes, dia);
             if (dataAtual < new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate())) {
                 botao.disabled = true;
@@ -61,25 +55,15 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             botao.addEventListener('click', () => selecionarDia(botao, ano, mes, dia));
-            botao.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    selecionarDia(botao, ano, mes, dia);
-                }
-            });
-
             diasContainer.appendChild(botao);
         }
     }
 
-    // Selecionar dia no calendário
     function selecionarDia(botao, ano, mes, dia) {
-        document.querySelectorAll('.dias button').forEach(btn => {
-            btn.classList.remove('ativo');
-        });
-
+        document.querySelectorAll('.dias button').forEach(btn => btn.classList.remove('ativo'));
         botao.classList.add('ativo');
         dataSelecionada = new Date(ano, mes, dia);
-        dataSelecionada.setHours(0, 0, 0, 0); // Normaliza a data
+        dataSelecionada.setHours(0, 0, 0, 0);
         horarioSelecionado = null;
         document.querySelectorAll('.horario-btn').forEach(btn => btn.classList.remove('ativo'));
         atualizarListaHorariosDisponiveis();
@@ -87,7 +71,6 @@ document.addEventListener('DOMContentLoaded', function() {
         verificarSelecaoCompleta();
     }
 
-    // Configurar listeners para os horários
     function configurarHorarios() {
         horariosContainer.addEventListener('click', (e) => {
             if (e.target.classList.contains('horario-btn')) {
@@ -96,36 +79,32 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Selecionar horário
     function selecionarHorario(botao) {
-        document.querySelectorAll('.horario-btn').forEach(btn => {
-            btn.classList.remove('ativo');
-        });
-
+        document.querySelectorAll('.horario-btn').forEach(btn => btn.classList.remove('ativo'));
         botao.classList.add('ativo');
         horarioSelecionado = botao.textContent;
         atualizarResumoAgendamento();
         verificarSelecaoCompleta();
     }
 
-    // Atualizar lista de horários disponíveis
-    function atualizarListaHorariosDisponiveis() {
+    async function atualizarListaHorariosDisponiveis() {
         const todosHorarios = ['10:00', '11:30', '14:30', '16:00', '17:30', '19:00'];
         let horariosAgendados = [];
 
         if (dataSelecionada) {
-            horariosAgendados = agendamentos
-                .filter(ag => {
-                    const agendamentoData = new Date(ag.data);
-                    return agendamentoData.getFullYear() === dataSelecionada.getFullYear() &&
-                           agendamentoData.getMonth() === dataSelecionada.getMonth() &&
-                           agendamentoData.getDate() === dataSelecionada.getDate();
-                })
-                .map(ag => ag.horario);
+            try {
+                const resposta = await axiosInstance.get('/agendamentos', {
+                    params: {
+                        data: dataSelecionada.toISOString().split('T')[0]
+                    }
+                });
+                horariosAgendados = resposta.data.map(ag => ag.horario);
+            } catch (erro) {
+                console.error("Erro ao carregar horários agendados:", erro);
+            }
         }
 
         const horariosDisponiveis = todosHorarios.filter(h => !horariosAgendados.includes(h));
-
         horariosContainer.innerHTML = '';
         horariosDisponiveis.forEach(horario => {
             const botao = document.createElement('button');
@@ -135,7 +114,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Configurar navegação do calendário
     function configurarBotoesNavegacao() {
         document.getElementById('anterior').addEventListener('click', () => {
             mesAtual--;
@@ -156,7 +134,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Atualizar resumo do agendamento
     function atualizarResumoAgendamento() {
         const lang = localStorage.getItem('langInfantil') || 'pt';
         const t = translationsInfantil[lang] || translationsInfantil['pt'];
@@ -177,108 +154,66 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Verificar se ambos estão selecionados
     function verificarSelecaoCompleta() {
-        if (dataSelecionada && horarioSelecionado) {
-            btnAgendar.disabled = false;
-            mensagemErro.classList.add('d-none');
+        btnAgendar.disabled = !(dataSelecionada && horarioSelecionado);
+        if (btnAgendar.disabled) {
+            mensagemErro.classList.remove('d-none');
         } else {
-            btnAgendar.disabled = true;
+            mensagemErro.classList.add('d-none');
         }
     }
 
-    // Evento de agendamento
-    btnAgendar.addEventListener('click', function() {
-        if (!dataSelecionada || !horarioSelecionado) {
+    btnAgendar.addEventListener('click', async function () {
+        if (!dataSelecionada || !horarioSelecionado) return;
+
+        try {
+            const novoAgendamento = {
+                data: dataSelecionada.toISOString(),
+                horario: horarioSelecionado,
+                profissional: 'Gabrielly'
+            };
+
+            await axiosInstance.post('/agendamentos', novoAgendamento);
+
             const lang = localStorage.getItem('langInfantil') || 'pt';
             const t = translationsInfantil[lang] || translationsInfantil['pt'];
-            mensagemErro.textContent = t.mensagemErro;
-            mensagemErro.classList.remove('d-none');
-            return;
+            const dataFormatada = new Date(dataSelecionada).toLocaleDateString(lang === 'pt' ? 'pt-BR' : lang === 'en' ? 'en-US' : 'es-ES', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+
+            detalhesAgendamento.innerHTML = t.detalhesAgendamento
+                .replace("{0}", "Gabrielly")
+                .replace("{1}", dataFormatada)
+                .replace("{2}", horarioSelecionado);
+
+            modalConfirmacao.show();
+
+            dataSelecionada = null;
+            horarioSelecionado = null;
+            document.querySelectorAll('.ativo').forEach(el => el.classList.remove('ativo'));
+            btnAgendar.disabled = true;
+            resumoAgendamento.classList.add('d-none');
+            atualizarListaHorariosDisponiveis();
+        } catch (erro) {
+            console.error("Erro ao agendar:", erro);
+            alert("Erro ao tentar agendar. Tente novamente mais tarde.");
         }
-
-        // Adicionar aos agendamentos
-        const novoAgendamento = {
-            data: new Date(dataSelecionada),
-            horario: horarioSelecionado,
-            profissional: "Gabrielly"
-        };
-        agendamentos.push(novoAgendamento);
-        localStorage.setItem('agendamentos', JSON.stringify(agendamentos));
-
-        // Configurar variáveis a, b, c
-        const lang = localStorage.getItem('langInfantil') || 'pt';
-        const t = translationsInfantil[lang] || translationsInfantil['pt'];
-        const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-        a = dataSelecionada.toLocaleDateString(lang === 'pt' ? 'pt-BR' : lang === 'en' ? 'en-US' : 'es-ES', options);
-        b = dataSelecionada.toLocaleDateString(lang === 'pt' ? 'pt-BR' : lang === 'en' ? 'en-US' : 'es-ES', { weekday: 'long' });
-        c = horarioSelecionado;
-
-        // Mostrar modal com texto traduzido
-        detalhesAgendamento.innerHTML = t.detalhesAgendamento
-            .replace("{0}", "Gabrielly")
-            .replace("{1}", a)
-            .replace("{2}", c);
-        modalConfirmacao.show();
-
-        // Resetar seleções
-        dataSelecionada = null;
-        horarioSelecionado = null;
-        a = null;
-        b = null;
-        c = null;
-        document.querySelectorAll('.ativo').forEach(el => el.classList.remove('ativo'));
-        btnAgendar.disabled = true;
-        resumoAgendamento.classList.add('d-none');
-        atualizarListaHorariosDisponiveis();
     });
 
-    // Função auxiliar para atualizar o conteúdo do modal de agendamentos
-    function atualizarModalAgendamentos(modalDiv, modal) {
+    btnVerAgendamentos.addEventListener('click', async function () {
         const lang = localStorage.getItem('langInfantil') || 'pt';
         const t = translationsInfantil[lang] || translationsInfantil['pt'];
 
-        const agendamentosLista = modalDiv.querySelector('.agendamentos-lista');
-        agendamentosLista.innerHTML = agendamentos.length === 0
-            ? `<p>${t.semAgendamentos}</p>`
-            : agendamentos.map((ag, index) => {
-                const dataFormatada = new Date(ag.data).toLocaleDateString(lang === 'pt' ? 'pt-BR' : lang === 'en' ? 'en-US' : 'es-ES', {
-                    weekday: 'long',
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric'
-                });
-                return `
-                    <div class="agendamento-item mb-3 p-3 border rounded">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong>${dataFormatada}</strong><br>
-                                ⏰ ${t.horarioAgendamento} ${ag.horario} - ${t.profissionalAgendamento} ${ag.profissional}
-                            </div>
-                            <button class="btn btn-danger btn-sm btn-excluir" data-index="${index}">
-                                <i class="bi bi-trash"></i> ${t.cancelarAgendamento}
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-        // Adicionar eventos de exclusão
-        modalDiv.querySelectorAll('.btn-excluir').forEach(button => {
-            button.addEventListener('click', function() {
-                const index = this.getAttribute('data-index');
-                agendamentos.splice(index, 1);
-                localStorage.setItem('agendamentos', JSON.stringify(agendamentos));
-                atualizarListaHorariosDisponiveis();
-                atualizarModalAgendamentos(modalDiv, modal);
-            });
-        });
-    }
-
-    // Exibir agendamentos
-    btnVerAgendamentos.addEventListener('click', function() {
-        const lang = localStorage.getItem('langInfantil') || 'pt';
-        const t = translationsInfantil[lang] || translationsInfantil['pt'];
+        let agendamentos = [];
+        try {
+            const res = await axiosInstance.get('/agendamentos');
+            agendamentos = res.data;
+        } catch (erro) {
+            console.error("Erro ao buscar agendamentos:", erro);
+        }
 
         const modalHTML = `
             <div class="modal fade" id="modalAgendamentos" tabindex="-1">
@@ -289,7 +224,24 @@ document.addEventListener('DOMContentLoaded', function() {
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="modal-body">
-                            <div class="agendamentos-lista"></div>
+                            <div class="agendamentos-lista">
+                                ${agendamentos.length === 0 ? `<p>${t.semAgendamentos}</p>` :
+            agendamentos.map((ag, i) => {
+                const dataFormatada = new Date(ag.data).toLocaleDateString(lang === 'pt' ? 'pt-BR' : 'en-US', {
+                    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+                });
+                return `
+                                        <div class="agendamento-item mb-3 p-3 border rounded">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <strong>${dataFormatada}</strong><br>
+                                                    ⏰ ${t.horarioAgendamento} ${ag.horario} - ${t.profissionalAgendamento} ${ag.profissional}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `;
+            }).join('')}
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary" data-bs-dismiss="modal">${t.fecharModal}</button>
@@ -299,17 +251,13 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
 
-        // Cria e mostra o modal
         const modalDiv = document.createElement('div');
         modalDiv.innerHTML = modalHTML;
         document.body.appendChild(modalDiv);
 
         const modal = new bootstrap.Modal(modalDiv.querySelector('.modal'));
-        atualizarModalAgendamentos(modalDiv, modal);
         modal.show();
-
-        // Remove o modal do DOM quando fechado
-        modalDiv.querySelector('.modal').addEventListener('hidden.bs.modal', function() {
+        modalDiv.querySelector('.modal').addEventListener('hidden.bs.modal', function () {
             document.body.removeChild(modalDiv);
         });
     });
