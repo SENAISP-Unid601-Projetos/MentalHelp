@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }));
 
             try {
-                const response = await axios.post("http://10.110.12.40:9500/paciente/post", formData, {
+                const response = await axios.post("http://10.110.12.49:9500/paciente/post", formData, {
                     headers: {
                         "Content-Type": "multipart/form-data"
                     }
