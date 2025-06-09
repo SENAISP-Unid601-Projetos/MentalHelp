@@ -1,23 +1,34 @@
-document.addEventListener('DOMContentLoaded', function() {
-  // Variáveis de estado
+document.addEventListener('DOMContentLoaded', function () {
   let mesAtual = new Date().getMonth();
   let anoAtual = new Date().getFullYear();
   let dataSelecionada = null;
   let horarioSelecionado = null;
-  
-  // Elementos DOM
+
   const btnAgendar = document.getElementById('btnAgendar');
   const mensagemErro = document.getElementById('mensagemErro');
   const resumoAgendamento = document.getElementById('resumo-agendamento');
   const dataSelecionadaElement = document.getElementById('data-selecionada');
-  const horarioSelecionadoElement = document.getElementById('horario-selecionado');
-  const modalConfirmacao = new bootstrap.Modal(document.getElementById('modalConfirmacao'));
+  const horarioSelecionadoElement = document.getElementById(
+    'horario-selecionado'
+  );
+  const modalConfirmacao = new bootstrap.Modal(
+    document.getElementById('modalConfirmacao')
+  );
   const detalhesAgendamento = document.getElementById('detalhes-agendamento');
 
-  // Nomes dos meses
   const nomesMeses = [
-    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    'Janeiro',
+    'Fevereiro',
+    'Março',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro',
   ];
 
   // Inicialização
@@ -25,7 +36,6 @@ document.addEventListener('DOMContentLoaded', function() {
   configurarHorarios();
   configurarBotoesNavegacao();
 
-  // Função principal para gerar o calendário
   function gerarCalendario(mes, ano) {
     const diasContainer = document.getElementById('dias');
     const tituloMes = document.getElementById('mes');
@@ -37,79 +47,73 @@ document.addEventListener('DOMContentLoaded', function() {
 
     tituloMes.textContent = `${nomesMeses[mes]} ${ano}`;
 
-    // Dias vazios no início do mês
+    // Dias vazios para começar no dia correto da semana
     for (let i = 0; i < primeiroDia; i++) {
       diasContainer.appendChild(document.createElement('div'));
     }
 
-    // Dias do mês
+    // Cria os botões para cada dia do mês
     for (let dia = 1; dia <= totalDias; dia++) {
       const botao = document.createElement('button');
       botao.textContent = dia;
       botao.tabIndex = 0;
-      
-      // Desabilitar dias passados
+
       const dataAtual = new Date(ano, mes, dia);
-      if (dataAtual < new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate())) {
+
+      // Desabilita dias passados
+      if (
+        dataAtual <
+        new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate())
+      ) {
         botao.disabled = true;
-        botao.classList.add('text-muted');
+        botao.classList.add('text-muted', 'dia-passado');
       }
 
-      botao.addEventListener('click', () => selecionarDia(botao, ano, mes, dia));
+      botao.addEventListener('click', () =>
+        selecionarDia(botao, ano, mes, dia)
+      );
       botao.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           selecionarDia(botao, ano, mes, dia);
         }
       });
-      
+
       diasContainer.appendChild(botao);
     }
   }
 
-  // Selecionar dia no calendário
   function selecionarDia(botao, ano, mes, dia) {
-    // Limpar seleção anterior
-    document.querySelectorAll('.dias button').forEach(btn => {
-      btn.classList.remove('ativo');
-    });
-    
-    // Marcar novo selecionado
+    // Remove seleção de outros dias
+    document
+      .querySelectorAll('#dias button')
+      .forEach((btn) => btn.classList.remove('ativo'));
+
+    // Marca o dia selecionado
     botao.classList.add('ativo');
     dataSelecionada = new Date(ano, mes, dia);
-    
-    // Atualizar resumo
+
     atualizarResumoAgendamento();
     verificarSelecaoCompleta();
   }
 
-  // Selecionar horário
-  function selecionarHorario(botao, horario) {
-    // Limpar seleção anterior
-    document.querySelectorAll('.horario-btn').forEach(btn => {
-      btn.classList.remove('ativo');
-    });
-    
-    // Marcar novo selecionado
-    botao.classList.add('ativo');
-    horarioSelecionado = horario;
-    
-    // Atualizar resumo
-    atualizarResumoAgendamento();
-    verificarSelecaoCompleta();
-  }
-
-  // Configurar listeners para os horários
   function configurarHorarios() {
-    const botoesHorario = document.querySelectorAll('.horario-btn');
-    
-    botoesHorario.forEach(botao => {
+    const horarioBtns = document.querySelectorAll('.horario-btn');
+
+    horarioBtns.forEach((botao) => {
       botao.addEventListener('click', () => {
-        selecionarHorario(botao, botao.textContent);
+        // Remove seleção de outros horários
+        horarioBtns.forEach((b) => b.classList.remove('ativo'));
+
+        // Marca o horário selecionado
+        botao.classList.add('ativo');
+        horarioSelecionado = botao.textContent;
+
+        atualizarResumoAgendamento();
+        verificarSelecaoCompleta();
       });
     });
   }
 
-  // Configurar navegação do calendário
   function configurarBotoesNavegacao() {
     document.getElementById('anterior').addEventListener('click', () => {
       mesAtual--;
@@ -130,11 +134,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Atualizar resumo do agendamento
   function atualizarResumoAgendamento() {
     if (dataSelecionada) {
       const options = { weekday: 'long', day: 'numeric', month: 'long' };
-      const dataFormatada = dataSelecionada.toLocaleDateString('pt-BR', options);
+      const dataFormatada = dataSelecionada.toLocaleDateString(
+        'pt-BR',
+        options
+      );
       dataSelecionadaElement.textContent = `📅 ${dataFormatada}`;
       resumoAgendamento.classList.remove('d-none');
     }
@@ -144,7 +150,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // Verificar se ambos estão selecionados
   function verificarSelecaoCompleta() {
     if (dataSelecionada && horarioSelecionado) {
       btnAgendar.disabled = false;
@@ -154,29 +159,99 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // Evento de agendamento
-  btnAgendar.addEventListener('click', function() {
+  btnAgendar.addEventListener('click', function () {
     if (!dataSelecionada || !horarioSelecionado) {
       mensagemErro.classList.remove('d-none');
       return;
     }
 
-    // Formatar data e hora
-    const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-    const dataFormatada = dataSelecionada.toLocaleDateString('pt-BR', options);
-    
-    // Mostrar modal de confirmação
-    detalhesAgendamento.innerHTML = `
-      Sua consulta com <strong>Mykael</strong> está marcada para:<br>
-      <strong>${dataFormatada}</strong> às <strong>${horarioSelecionado}</strong>
-    `;
-    
-    modalConfirmacao.show();
-    
-    // Aqui você pode adicionar a lógica para enviar para o backend
-    console.log('Agendamento confirmado:', {
-      data: dataSelecionada,
-      horario: horarioSelecionado
-    });
+    // Extrai horas e minutos do horário selecionado
+    const [hora, minuto] = horarioSelecionado.split(':').map(Number);
+
+    // Cria a data no fuso horário local
+    const dataLocal = new Date(
+      dataSelecionada.getFullYear(),
+      dataSelecionada.getMonth(),
+      dataSelecionada.getDate(),
+      hora,
+      minuto,
+      0
+    );
+
+    // Converte para ISO string (UTC) para enviar ao backend
+    const dataUTC = new Date(
+      dataLocal.getTime() - dataLocal.getTimezoneOffset() * 60000
+    );
+
+    // Objeto para enviar ao backend
+    const novaConsulta = {
+      data: dataUTC.toISOString(),
+      valorConsulta: 150,
+      tipoConsulta: 'ESPECIAL',
+      idPaciente: 1,
+      idProfissional: 3,
+    };
+
+    console.log('Dados enviados:', novaConsulta);
+
+    // Envia a requisição para o backend
+    axios
+      .post('http://10.110.12.49:9500/consultas/post', novaConsulta, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
+      })
+      .then((response) => {
+        // Formata a exibição usando a data local original
+        const options = {
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        };
+
+        detalhesAgendamento.innerHTML = `
+              Sua consulta com <strong>Mykael</strong> está marcada para:<br>
+              <strong>${dataLocal.toLocaleDateString('pt-BR', options)}</strong>
+          `;
+
+        modalConfirmacao.show();
+        resetarFormulario();
+      })
+      .catch((error) => {
+        console.error('Erro detalhado:', error);
+
+        let mensagem = 'Erro ao agendar consulta';
+        if (error.response) {
+          mensagem = `Erro ${error.response.status}: ${
+            error.response.data.message || mensagem
+          }`;
+        } else if (error.request) {
+          mensagem = 'Não foi possível conectar ao servidor';
+        }
+
+        mensagemErro.textContent = mensagem;
+        mensagemErro.classList.remove('d-none');
+      });
   });
+
+  function resetarFormulario() {
+    dataSelecionada = null;
+    horarioSelecionado = null;
+    btnAgendar.disabled = true;
+    resumoAgendamento.classList.add('d-none');
+    mensagemErro.classList.add('d-none');
+
+    // Remove seleções visuais
+    document
+      .querySelectorAll('#dias button')
+      .forEach((btn) => btn.classList.remove('ativo'));
+    document
+      .querySelectorAll('.horario-btn')
+      .forEach((btn) => btn.classList.remove('ativo'));
+  }
 });
