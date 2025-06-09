@@ -6,9 +6,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const senhaInput = document.getElementById('senha');
     const loginBtn = document.getElementById('loginBtn');
     const languageSelect = document.getElementById('language');
+    const toggleSenha = document.getElementById('toggleSenha');
 
     // Verifica se todos os elementos necessários estão presentes
-    if (!loginForm || !emailInput || !senhaInput || !loginBtn || !languageSelect) {
+    if (!loginForm || !emailInput || !senhaInput || !loginBtn || !languageSelect || !toggleSenha) {
         console.error('Um ou mais elementos do formulário não foram encontrados no DOM.');
         Swal.fire({
             title: 'Internal Error',
@@ -18,6 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    // Função para alternar a visibilidade da senha
+    toggleSenha.addEventListener('click', () => {
+        const type = senhaInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        senhaInput.setAttribute('type', type);
+        toggleSenha.classList.toggle('bi-eye-slash');
+        toggleSenha.classList.toggle('bi-eye');
+    });
 
     // Validação do formulário de login
     loginForm.addEventListener('submit', async function(event) {
