@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+
   let mesAtual = new Date().getMonth();
   let anoAtual = new Date().getFullYear();
   let dataSelecionada = null;
@@ -8,14 +9,18 @@ document.addEventListener('DOMContentLoaded', function() {
   const mensagemErro = document.getElementById('mensagemErro');
   const resumoAgendamento = document.getElementById('resumo-agendamento');
   const dataSelecionadaElement = document.getElementById('data-selecionada');
-  const horarioSelecionadoElement = document.getElementById('horario-selecionado');
-  const modalConfirmacao = new bootstrap.Modal(document.getElementById('modalConfirmacao'));
+  const horarioSelecionadoElement = document.getElementById(
+    'horario-selecionado'
+  );
+  const modalConfirmacao = new bootstrap.Modal(
+    document.getElementById('modalConfirmacao')
+  );
   const detalhesAgendamento = document.getElementById('detalhes-agendamento');
 
   const nomesMeses = [
+
       'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
       'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-  ];
 
   // Inicialização
   gerarCalendario(mesAtual, anoAtual);
@@ -23,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
   configurarBotoesNavegacao();
 
   function gerarCalendario(mes, ano) {
+
       const diasContainer = document.getElementById('dias');
       const tituloMes = document.getElementById('mes');
       diasContainer.innerHTML = '';
@@ -90,6 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
               atualizarResumoAgendamento();
               verificarSelecaoCompleta();
           });
+
       });
   }
 
@@ -124,6 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (horarioSelecionado) {
           horarioSelecionadoElement.textContent = `⏰ Horário: ${horarioSelecionado}`;
       }
+
   }
 
   function verificarSelecaoCompleta() {
@@ -134,6 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
           btnAgendar.disabled = true;
       }
   }
+
 
   btnAgendar.addEventListener('click', function() {
       if (!dataSelecionada || !horarioSelecionado) {
@@ -207,6 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
           
           mensagemErro.textContent = mensagem;
           mensagemErro.classList.remove('d-none');
+
       });
   });
 

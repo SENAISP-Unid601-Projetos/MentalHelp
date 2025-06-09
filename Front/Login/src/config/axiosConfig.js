@@ -2,7 +2,7 @@
 const setupAxiosConfig = {
     axiosInit(){
         const instance = axios.create({
-            baseURL:'http://10.110.12.52:9500/',
+            baseURL:'http://10.110.12.49:9500',
             timeout:'1000',
             headers:{
                 "Content-Type": "application/json"
