@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Elementos do DOM
     const elements = {
+        areaSelect: document.getElementById('areaSelect'),
         inicio: document.getElementById('dataInicio'),
         fim: document.getElementById('dataFim'),
         filtrar: document.getElementById('filtrar'),
@@ -15,40 +16,44 @@ document.addEventListener('DOMContentLoaded', () => {
         prev: document.getElementById('prev-month'),
         next: document.getElementById('next-month'),
         periodo: document.getElementById('periodo-selecionado'),
-        date: document.getElementById('current-date'),
-        relatoriosBtn: document.getElementById('relatorios-btn'),
+        doctorName: document.getElementById('doctor-name'),
+        doctorSpecialty: document.getElementById('doctor-specialty'),
+        currentDate: document.getElementById('current-date'),
         agendaBtn: document.getElementById('agenda-btn'),
-        relatoriosPanel: document.getElementById('relatorios-panel'),
-        fecharRelatorios: document.getElementById('fechar-relatorios'),
-        relatorioConsultas: document.getElementById('relatorio-consultas'),
-        relatorioPacientes: document.getElementById('relatorio-pacientes'),
-        relatorioProcedimentos: document.getElementById('relatorio-procedimentos'),
         errorMessage: document.getElementById('error-message'),
-        mainCalendarContainer: document.querySelector('.main-calendar-container'),
         calendario: document.getElementById('calendario')
     };
 
-    // Verificar se elementos essenciais estão presentes
-    const requiredElements = ['inicio', 'fim', 'filtrar', 'calendario', 'errorMessage'];
+    // Verificar elementos essenciais
+    const requiredElements = ['areaSelect', 'inicio', 'fim', 'filtrar', 'calendario', 'errorMessage', 'doctorName', 'doctorSpecialty'];
     for (const key of requiredElements) {
         if (!elements[key]) {
-            console.error(`Elemento ${key} não encontrado no DOM. Verifique o HTML.`);
+            console.error(`Elemento ${key} não encontrado no DOM.`);
             return;
         }
     }
 
     // Estado inicial
-    let currentMonth = new Date(2025, 5, 2).getMonth(); // Junho 2025
-    let currentYear = new Date(2025, 5, 2).getFullYear();
-    let selectedStartDate = new Date(2025, 5, 2); // 02/06/2025
-    let selectedEndDate = new Date(2025, 5, 2);
+    const today = new Date();
+    let currentMonth = today.getMonth();
+    let currentYear = today.getFullYear();
+    let selectedArea = 'infantil';
+    let selectedStartDate = null;
+    let selectedEndDate = null;
     let tempStartDate = null;
     let tempEndDate = null;
     let calendar = null;
 
+    // Mapeamento de áreas para médicos e especialidades
+    const areaMapping = {
+        infantil: { name: 'Dra. Gabrielly', specialty: 'Pediatra' },
+        adulto: { name: 'Dr. Vagner', specialty: 'Clínico Geral' },
+        especial: { name: 'Dr. Mykael', specialty: 'Especialista' }
+    };
+
     // Dados
     const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-                        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+                       'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
     // Funções auxiliares
     function formatDate(date) {
@@ -90,168 +95,192 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Atualiza a sidebar
+    function updateSidebar() {
+        const { name, specialty } = areaMapping[selectedArea];
+        elements.doctorName.textContent = name;
+        elements.doctorSpecialty.textContent = specialty;
+    }
+
     // Inicialização
     function init() {
-        const today = new Date(2025, 5, 2, 16, 16); // 02/06/2025, 16:16 -03
-        elements.date.textContent = formatDate(today);
-        if (elements.inicio && elements.fim) {
-            elements.inicio.value = formatDateISO(today);
-            elements.fim.value = formatDateISO(today);
-        }
+        elements.currentDate.textContent = formatDate(today);
+        elements.inicio.value = '';
+        elements.fim.value = '';
+        elements.areaSelect.value = selectedArea;
+        updateSidebar();
         initCalendar();
         renderCalendar();
     }
 
     // Inicializa o FullCalendar
-    let isLoadingDynamically = false;
+    function initCalendar() {
+        try {
+            const calendarEl = elements.calendario;
+            if (!calendarEl) throw new Error('Elemento do calendário não encontrado');
 
-async function initCalendar() {
-    try {
-        
-        if (typeof calendar === 'undefined') {
-            console.log('FullCalendar disponível:', typeof calendar);
-            throw new Error('Biblioteca FullCalendar não foi carregada corretamente');
-        }
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridWeek',
+                initialDate: today,
+                locale: 'pt-br',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                buttonText: {
+                    today: 'Hoje',
+                    month: 'Mês',
+                    week: 'Semana',
+                    day: 'Dia'
+                },
+                slotMinTime: '08:00:00',
+                slotMaxTime: '20:00:00',
+                events: async (fetchInfo, successCallback, failureCallback) => {
+                    try {
+                        const start = selectedStartDate && selectedEndDate
+                            ? new Date(Math.max(fetchInfo.start, selectedStartDate))
+                            : fetchInfo.start;
+                        const end = selectedStartDate && selectedEndDate
+                            ? new Date(Math.min(fetchInfo.end, selectedEndDate))
+                            : fetchInfo.end;
+                        const events = await fetchEvents(start, end, selectedArea);
+                        successCallback(events);
+                    } catch (err) {
+                        console.error('Erro ao buscar eventos:', err);
+                        failureCallback(err);
+                        showError('Erro ao carregar consultas');
+                    }
+                },
+                eventClick: (info) => {
+                    const start = info.event.start.toLocaleString('pt-BR');
+                    const end = info.event.end ? info.event.end.toLocaleString('pt-BR') : 'Sem horário de término';
+                    showError(`Consulta: ${info.event.title}\nInício: ${start}\nFim: ${end}`);
+                },
+                height: 'auto',
+                allDaySlot: false,
+                nowIndicator: true,
+                dayMaxEvents: true
+            });
 
-        // Verifica se o elemento existe
-        const calendarEl = document.getElementById('calendario');
-        if (!calendarEl) {
-            throw new Error('Elemento do calendário não encontrado no DOM');
-        }
-
-        // Cria a instância do calendário
-        calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'timeGridWeek',
-            initialDate: new Date('2025-06-02T20:03:00-03:00'), // 05:03 PM -03
-            locale: 'pt-br',
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            },
-            buttonText: {
-                today: 'Hoje',
-                month: 'Mês',
-                week: 'Semana',
-                day: 'Dia'
-            },
-            slotMinTime: '08:00:00',
-            slotMaxTime: '20:00:00',
-            events: async (fetchInfo, successCallback, failureCallback) => {
-                try {
-                    const events = await fetchEvents(fetchInfo.startStr, fetchInfo.endStr);
-                    console.log('Eventos carregados:', events);
-                    successCallback(events);
-                } catch (err) {
-                    console.error('Erro ao buscar eventos:', err);
-                    failureCallback(err);
-                    showError('Erro ao carregar consultas');
-                }
-            },
-            eventClick: (info) => {
-                const start = info.event.start.toLocaleString('pt-BR');
-                const end = info.event.end ? info.event.end.toLocaleString('pt-BR') : 'Sem horário de término';
-                showError(`Consulta: ${info.event.title}\nInício: ${start}\nFim: ${end}`);
-            },
-            height: 'auto',
-            allDaySlot: false,
-            nowIndicator: true,
-            dayMaxEvents: true
-        });
-        
-        calendar.render();
-        console.log('Calendário inicializado com sucesso');
-        calendar.refetchEvents();
-    } catch (err) {
-        console.error('Falha na inicialização do calendário:', err);
-        showError('Não foi possível carregar o calendário. Recarregue a página.');
-        if (err.message.includes('FullCalendar')) {
-            loadFullCalendarDynamically();
+            calendar.render();
+        } catch (err) {
+            console.error('Falha na inicialização do calendário:', err);
+            showError('Não foi possível carregar o calendário. Recarregue a página.');
         }
     }
-}
 
-function loadFullCalendarDynamically() {
-    if (isLoadingDynamically) return;
-    isLoadingDynamically = true;
-    console.log('Tentando carregar FullCalendar dinamicamente...');
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/main.min.js';
-    script.onload = () => {
-        console.log('FullCalendar carregado com sucesso, carregando locales...');
-        const localeScript = document.createElement('script');
-        localeScript.src = 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/locales-all.min.js';
-        localeScript.onload = () => {
-            console.log('Locales carregados, reiniciando calendário...');
-            initCalendar();
-            isLoadingDynamically = false;
-        };
-        localeScript.onerror = () => console.error('Falha ao carregar locales-all.min.js');
-        document.head.appendChild(localeScript);
-    };
-    script.onerror = () => {
-        console.error('Falha ao carregar FullCalendar dinamicamente');
-        showError('Erro crítico: Biblioteca do calendário não disponível');
-        isLoadingDynamically = false;
-    };
-    document.head.appendChild(script);
-}
+    // Função para buscar eventos
+    async function fetchEvents(start, end, area) {
+        // Para integração com backend:
+        /*
+        try {
+            const response = await fetch(`/api/consultas?area=${area}&start=${formatDateISO(start)}&end=${formatDateISO(end)}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) throw new Error('Erro ao buscar consultas');
+            const events = await response.json();
+            return events.map(event => ({
+                id: event.id,
+                title: event.title,
+                start: event.start,
+                end: event.end,
+                color: event.color || '#a855ff',
+            }));
+        } catch (err) {
+            console.error('Erro ao buscar eventos:', err);
+            throw err;
+        }
+        */
 
-// Renderiza o mini-calendário no modal
-function renderCalendar() {
-    try {
-        if (!elements.grid || !elements.month) throw new Error('Elementos do mini-calendário não encontrados');
-        const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
-        const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
-        const startingDayOfWeek = firstDayOfMonth.getDay();
+        // Simulação de eventos
+        const events = [];
+        const days = Math.floor((end - start) / (1000 * 60 * 60 * 24));
+        const doctorName = areaMapping[area].name;
 
-        elements.month.textContent = `${monthNames[currentMonth]} ${currentYear}`;
-        while (elements.grid.children.length > 7) elements.grid.removeChild(elements.grid.lastChild);
+        for (let i = 0; i < Math.min(days, 14); i++) {
+            const eventDate = new Date(start);
+            eventDate.setDate(start.getDate() + i);
 
-        for (let i = 0; i < startingDayOfWeek; i++) {
-            const emptyDay = document.createElement('div');
-            emptyDay.className = 'day-cell other-month';
-            elements.grid.appendChild(emptyDay);
+            const numEvents = Math.floor(Math.random() * 3) + 1;
+
+            for (let j = 0; j < numEvents; j++) {
+                const hour = 8 + Math.floor(Math.random() * 10);
+                const startTime = new Date(eventDate);
+                startTime.setHours(hour, 0, 0);
+
+                const endTime = new Date(startTime);
+                endTime.setHours(startTime.getHours() + 1);
+
+                events.push({
+                    title: `Consulta ${j + 1} - ${doctorName} (${area})`,
+                    start: startTime,
+                    end: endTime,
+                    color: '#a855ff'
+                });
+            }
         }
 
-        const today = new Date('2025-06-02T20:03:00-03:00'); // 05:03 PM -03
-        for (let day = 1; day <= lastDayOfMonth.getDate(); day++) {
-            const currentDate = new Date(currentYear, currentMonth, day);
-            const dayElement = document.createElement('div');
-            dayElement.className = 'day-cell';
-            dayElement.textContent = day;
-            dayElement.dataset.date = currentDate.toISOString();
+        return events;
+    }
 
-            if (isSameDay(currentDate, today)) dayElement.classList.add('today');
-            if (tempStartDate && tempEndDate && currentDate >= tempStartDate && currentDate <= tempEndDate) {
-                dayElement.classList.add('selected');
-            } else if (tempStartDate && !tempEndDate && isSameDay(currentDate, tempStartDate)) {
-                dayElement.classList.add('selected');
+    // Renderiza o mini-calendário
+    function renderCalendar() {
+        try {
+            if (!elements.grid || !elements.month) throw new Error('Elementos do mini-calendário não encontrados');
+            const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
+            const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
+            const startingDayOfWeek = firstDayOfMonth.getDay();
+
+            elements.month.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+            while (elements.grid.children.length > 7) elements.grid.removeChild(elements.grid.lastChild);
+
+            for (let i = 0; i < startingDayOfWeek; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'day-cell other-month';
+                elements.grid.appendChild(emptyDay);
             }
 
-            dayElement.addEventListener('click', () => handleDayClick(currentDate));
-            elements.grid.appendChild(dayElement);
+            for (let day = 1; day <= lastDayOfMonth.getDate(); day++) {
+                const currentDate = new Date(currentYear, currentMonth, day);
+                const dayElement = document.createElement('div');
+                dayElement.className = 'day-cell';
+                dayElement.textContent = day;
+                dayElement.dataset.date = currentDate.toISOString();
+
+                if (isSameDay(currentDate, today)) dayElement.classList.add('today');
+                if (tempStartDate && tempEndDate && currentDate >= tempStartDate && currentDate <= tempEndDate) {
+                    dayElement.classList.add('selected');
+                } else if (tempStartDate && !tempEndDate && isSameDay(currentDate, tempStartDate)) {
+                    dayElement.classList.add('selected');
+                }
+
+                dayElement.addEventListener('click', () => handleDayClick(currentDate));
+                elements.grid.appendChild(dayElement);
+            }
+
+            updateSelectedPeriodInfo();
+        } catch (err) {
+            console.error('Erro ao renderizar mini-calendário:', err);
+            showError('Erro ao renderizar o calendário.');
         }
-
-        updateSelectedPeriodInfo();
-    } catch (err) {
-        console.error('Erro ao renderizar mini-calendário:', err);
-        showError('Erro ao renderizar o calendário.');
     }
-}
 
-function handleDayClick(date) {
-    if (!tempStartDate || (tempStartDate && tempEndDate)) {
-        tempStartDate = new Date(date);
-        tempEndDate = null;
-    } else if (date > tempStartDate) {
-        tempEndDate = new Date(date);
-    } else {
-        tempEndDate = new Date(tempStartDate);
-        tempStartDate = new Date(date);
+    function handleDayClick(date) {
+        if (!tempStartDate || (tempStartDate && tempEndDate)) {
+            tempStartDate = new Date(date);
+            tempEndDate = null;
+        } else if (date > tempStartDate) {
+            tempEndDate = new Date(date);
+        } else {
+            tempEndDate = new Date(tempStartDate);
+            tempStartDate = new Date(date);
+        }
+        renderCalendar();
     }
-    renderCalendar();
-}
 
     function updateSelectedPeriodInfo() {
         if (tempStartDate && tempEndDate) {
@@ -270,7 +299,7 @@ function handleDayClick(date) {
             const startDate = parseDateInput(elements.inicio.value);
             const endDate = parseDateInput(elements.fim.value);
 
-            if (!startDate || !endDate || isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+            if (!startDate || !endDate) {
                 showError('Preencha ambas as datas corretamente!');
                 return;
             }
@@ -284,57 +313,45 @@ function handleDayClick(date) {
             selectedEndDate = new Date(endDate);
 
             if (calendar) {
-                calendar.setOption('events', async (fetchInfo, successCallback, failureCallback) => {
-                    try {
-                        const events = await fetchFilteredEvents(formatDateISO(startDate), formatDateISO(endDate));
-                        console.log('Eventos filtrados:', events);
-                        if (events.length === 0) showError('Nenhuma consulta encontrada para o período filtrado.');
-                        successCallback(events);
-                    } catch (err) {
-                        console.error('Erro ao buscar eventos filtrados:', err);
-                        failureCallback(err);
-                        showError('Erro ao carregar consultas filtradas.');
-                    }
-                });
-                calendar.gotoDate(formatDateISO(startDate));
-                calendar.render();
-                showError(`Filtro aplicado: ${formatDate(selectedStartDate)} - ${formatDate(selectedEndDate)}`);
+                calendar.refetchEvents();
+                calendar.gotoDate(startDate);
+                showError(`Filtro aplicado: ${formatDate(selectedStartDate)} - ${formatDate(selectedEndDate)} (Área: ${areaMapping[selectedArea].name})`);
             } else {
                 showError('Calendário não inicializado. Tente novamente.');
             }
         } catch (err) {
             console.error('Erro ao filtrar eventos:', err);
-            showError('Erro ao aplicar o filtro!');
-        }
-    }
-
-    // Funções do Side Panel
-    function toggleRelatoriosPanel() {
-        if (elements.relatoriosPanel && elements.mainCalendarContainer) {
-            elements.relatoriosPanel.classList.toggle('active');
-            elements.relatoriosBtn.classList.toggle('active');
-            elements.agendaBtn.classList.remove('active');
-            elements.mainCalendarContainer.style.display = elements.relatoriosPanel.classList.contains('active') ? 'none' : 'block';
+            showError('Erro ao aplicar o filtro. Tente novamente.');
         }
     }
 
     // Event Listeners
     function setupEventListeners() {
-        elements.filtrar?.addEventListener('click', filterEvents);
-        elements.mostrar?.addEventListener('click', () => {
-            if (elements.inicio && elements.fim) {
-                tempStartDate = elements.inicio.value ? new Date(elements.inicio.value) : null;
-                tempEndDate = elements.fim.value ? new Date(elements.fim.value) : null;
-                renderCalendar();
-                elements.modal?.show();
+        elements.areaSelect?.addEventListener('change', (e) => {
+            selectedArea = e.target.value;
+            updateSidebar();
+            if (calendar) {
+                calendar.refetchEvents();
+                showError(`Área alterada para ${areaMapping[selectedArea].name}`);
             }
         });
+
+        elements.filtrar?.addEventListener('click', filterEvents);
+
+        elements.mostrar?.addEventListener('click', () => {
+            tempStartDate = elements.inicio.value ? parseDateInput(elements.inicio.value) : null;
+            tempEndDate = elements.fim.value ? parseDateInput(elements.fim.value) : null;
+            renderCalendar();
+            elements.modal?.show();
+        });
+
         elements.fechar?.addEventListener('click', () => {
-            elements.modal?.hide();
             tempStartDate = selectedStartDate ? new Date(selectedStartDate) : null;
             tempEndDate = selectedEndDate ? new Date(selectedEndDate) : null;
             renderCalendar();
+            elements.modal?.hide();
         });
+
         elements.aplicar?.addEventListener('click', () => {
             if (!tempStartDate) {
                 showError('Selecione pelo menos uma data de início!');
@@ -349,135 +366,48 @@ function handleDayClick(date) {
             elements.modal?.hide();
             filterEvents();
         });
+
         elements.cancelar?.addEventListener('click', () => {
-            tempStartDate = null;
-            tempEndDate = null;
-            elements.modal?.hide();
+            tempStartDate = selectedStartDate ? new Date(selectedStartDate) : null;
+            tempEndDate = selectedEndDate ? new Date(selectedEndDate) : null;
             renderCalendar();
+            elements.modal?.hide();
         });
+
         elements.limpar?.addEventListener('click', () => {
             tempStartDate = null;
             tempEndDate = null;
+            selectedStartDate = null;
+            selectedEndDate = null;
+            elements.inicio.value = '';
+            elements.fim.value = '';
+            elements.areaSelect.value = 'infantil';
+            selectedArea = 'infantil';
+            updateSidebar();
+            elements.periodo.textContent = 'Nenhum período selecionado';
             renderCalendar();
+            if (calendar) {
+                calendar.refetchEvents();
+                calendar.gotoDate(today);
+                showError('Filtros limpos. Exibindo agenda padrão.');
+            }
         });
+
         elements.prev?.addEventListener('click', () => {
             currentMonth--;
             if (currentMonth < 0) { currentMonth = 11; currentYear--; }
             renderCalendar();
         });
+
         elements.next?.addEventListener('click', () => {
             currentMonth++;
             if (currentMonth > 11) { currentMonth = 0; currentYear++; }
             renderCalendar();
         });
-        elements.relatoriosBtn?.addEventListener('click', toggleRelatoriosPanel);
-        elements.fecharRelatorios?.addEventListener('click', toggleRelatoriosPanel);
+
         elements.agendaBtn?.addEventListener('click', () => {
-            if (elements.relatoriosPanel && elements.mainCalendarContainer) {
-                elements.relatoriosPanel.classList.remove('active');
-                elements.relatoriosBtn.classList.remove('active');
-                elements.agendaBtn.classList.add('active');
-                elements.mainCalendarContainer.style.display = 'block';
-            }
+            elements.agendaBtn.classList.add('active');
         });
-        elements.relatorioConsultas?.addEventListener('click', async (e) => {
-            e.preventDefault();
-            try {
-                const report = await fetchMonthlyConsultationsReport();
-                showError(JSON.stringify(report, null, 2));
-            } catch (err) {
-                console.error('Erro ao buscar relatório de consultas:', err);
-                showError('Erro ao carregar relatório de consultas.');
-            }
-        });
-        elements.relatorioPacientes?.addEventListener('click', async (e) => {
-            e.preventDefault();
-            try {
-                const report = await fetchPatientsReport();
-                showError(JSON.stringify(report, null, 2));
-            } catch (err) {
-                console.error('Erro ao buscar relatório de pacientes:', err);
-                showError('Erro ao carregar relatório de pacientes.');
-            }
-        });
-        elements.relatorioProcedimentos?.addEventListener('click', async (e) => {
-            e.preventDefault();
-            try {
-                const report = await fetchProceduresReport();
-                showError(JSON.stringify(report, null, 2));
-            } catch (err) {
-                console.error('Erro ao buscar relatório de procedimentos:', err);
-                showError('Erro ao carregar relatório de procedimentos.');
-            }
-        });
-    }
-
-    // Funções de integração (substitua por chamadas reais à API)
-    async function fetchEvents(start, end) {
-        try {
-            const response = await fetch(`/api/consultas/get?start=${start}&end=${end}`);
-            if (!response.ok) throw new Error('Falha na requisição');
-            const data = await response.json();
-            return data.map(event => ({
-                title: event.tipoConsulta || 'Consulta',
-                start: event.data,
-                end: event.dataFim ? new Date(event.dataFim).toISOString() : new Date(new Date(event.data).getTime() + 60 * 60 * 1000).toISOString(),
-                color: '#a855ff'
-            }));
-        } catch (err) {
-            console.error('Erro ao buscar eventos:', err);
-            return [];
-        }
-    }
-
-    async function fetchFilteredEvents(start, end) {
-        try {
-            const response = await fetch(`/api/consultas/filter?start=${start}&end=${end}`);
-            if (!response.ok) throw new Error('Falha na requisição');
-            const data = await response.json();
-            return data.map(event => ({
-                title: event.tipoConsulta || 'Consulta',
-                start: event.data,
-                end: event.dataFim ? new Date(event.dataFim).toISOString() : new Date(new Date(event.data).getTime() + 60 * 60 * 1000).toISOString(),
-                color: '#a855ff'
-            }));
-        } catch (err) {
-            console.error('Erro ao buscar eventos filtrados:', err);
-            return [];
-        }
-    }
-
-    async function fetchMonthlyConsultationsReport() {
-        try {
-            const response = await fetch('/api/reports/consultations');
-            if (!response.ok) throw new Error('Falha na requisição');
-            return await response.json();
-        } catch (err) {
-            console.error('Erro ao buscar relatório de consultas:', err);
-            return {};
-        }
-    }
-
-    async function fetchPatientsReport() {
-        try {
-            const response = await fetch('/api/reports/patients');
-            if (!response.ok) throw new Error('Falha na requisição');
-            return await response.json();
-        } catch (err) {
-            console.error('Erro ao buscar relatório de pacientes:', err);
-            return {};
-        }
-    }
-
-    async function fetchProceduresReport() {
-        try {
-            const response = await fetch('/api/reports/procedures');
-            if (!response.ok) throw new Error('Falha na requisição');
-            return await response.json();
-        } catch (err) {
-            console.error('Erro ao buscar relatório de procedimentos:', err);
-            return {};
-        }
     }
 
     // Inicializa a aplicação

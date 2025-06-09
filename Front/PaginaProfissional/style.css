@@ -4,26 +4,17 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: #e9d5ff;
   color: #2c3e50;
-  position: relative;
-  overflow-x: hidden;
 }
 
 /* === Sidebar === */
 .sidebar {
   width: 250px;
-  background: #a855ff; /* Roxo principal */
+  background: #a855ff;
   color: #fff;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-}
-
-.doctor-img {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  border: 3px solid #c084fc; /* Roxo mais claro para borda */
-  object-fit: cover;
+  padding: 20px;
 }
 
 .btn-sidebar {
@@ -31,52 +22,18 @@ body {
   text-align: left;
   padding: 10px;
   border-radius: 6px;
-  transition: all 0.3s ease;
   background: transparent;
   border: none;
-  margin-bottom: 5px;
+  transition: background 0.3s ease;
 }
 
 .btn-sidebar:hover {
-  background: #9333ea; /* Roxo mais escuro no hover */
-  transform: translateX(5px);
+  background: #9333ea;
 }
 
 .btn-sidebar.active {
-  background: #c084fc; /* Roxo médio */
+  background: #c084fc;
   font-weight: 500;
-  box-shadow: 2px 0 0 #fff inset;
-}
-
-/* === Side Panel === */
-.side-panel {
-  position: fixed;
-  top: 0;
-  right: -300px;
-  width: 300px;
-  height: 100%;
-  background: #fff;
-  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
-  transition: right 0.3s ease;
-  z-index: 1000;
-}
-
-.side-panel.active {
-  right: 0;
-}
-
-.side-panel-content {
-  padding: 20px;
-}
-
-.side-panel .list-group-item {
-  border-radius: 5px;
-  margin-bottom: 5px;
-  transition: background 0.2s ease;
-}
-
-.side-panel .list-group-item:hover {
-  background: #f3e8ff;
 }
 
 /* === Conteúdo Principal === */
@@ -88,54 +45,31 @@ body {
 }
 
 /* === FullCalendar === */
-.fc {
-  height: 100% !important;
-}
-
 .fc-button {
-  background: #a855ff !important; /* Roxo principal */
+  background: #a855ff !important;
   border: none !important;
   border-radius: 5px !important;
-  transition: all 0.2s ease !important;
 }
 
 .fc-button:hover {
-  background: #9333ea !important; /* Roxo mais escuro */
-  transform: translateY(-1px);
-}
-
-.fc-daygrid-day {
-  height: 180px;
+  background: #9333ea !important;
 }
 
 .fc-col-header-cell {
-  background: #f3e8ff; /* Roxo muito claro */
-  font-size: 1.1rem;
-  padding: 8px 0;
-  color: #4c1d95; /* Roxo escuro para texto */
-}
-
-.fc-day-today {
-  background: #f3e8ff !important; /* Roxo muito claro */
-}
-
-.fc-daygrid-day-number {
-  font-size: 1.2rem;
-  padding: 8px;
+  background: #f3e8ff;
+  color: #4c1d95;
 }
 
 .fc-event {
-  background: #a855ff; /* Roxo principal */
+  background: #a855ff;
   border: none;
   border-radius: 5px;
-  padding: 4px 6px;
-  font-size: 0.9rem;
   color: #fff;
 }
 
 /* === Modal Calendário === */
 .modal-header {
-  background: #a855ff !important; /* Roxo principal */
+  background: #a855ff !important;
   color: white;
 }
 
@@ -148,19 +82,16 @@ body {
 .day-header {
   text-align: center;
   padding: 8px;
-  background: #f3e8ff; /* Roxo muito claro */
+  background: #f3e8ff;
   font-weight: bold;
-  color: #4c1d95; /* Roxo escuro */
+  color: #4c1d95;
 }
 
 .day-cell {
   padding: 8px;
   text-align: center;
   border: 1px solid #e9d5ff;
-  min-height: 45px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  color: #2c3e50;
   background: #fff;
 }
 
@@ -169,21 +100,21 @@ body {
 }
 
 .day-cell.today {
-  background: #d8b4fe; /* Roxo médio */
+  background: #d8b4fe;
   font-weight: bold;
 }
 
 .day-cell.selected {
-  background: #c084fc; /* Roxo médio */
+  background: #c084fc;
   color: white;
 }
 
 .day-cell.other-month {
-  color: #a78bfa; /* Roxo claro */
-  background: #faf5ff; /* Roxo muito muito claro */
+  color: #a78bfa;
+  background: #faf5ff;
 }
 
-/* === Botões === */
+/* === Botões e Dropdown === */
 .btn-primary {
   background-color: #a855ff;
   border-color: #a855ff;
@@ -204,39 +135,30 @@ body {
   color: white;
 }
 
+.form-select {
+  border-color: #a855ff;
+  color: #2c3e50;
+}
+
+.form-select:focus {
+  border-color: #9333ea;
+  box-shadow: 0 0 0 0.25rem rgba(168, 85, 255, 0.25);
+}
+
 /* === Responsividade === */
 @media (max-width: 992px) {
   .sidebar {
-    width: 100%;
+      width: 100%;
   }
 
   .main-calendar-container {
-    height: auto;
-    min-height: 600px;
-  }
-
-  .side-panel {
-    width: 100%;
-    right: -100%;
+      height: auto;
+      min-height: 600px;
   }
 }
 
 @media (max-width: 576px) {
   .fc-daygrid-day {
-    height: 120px;
-  }
-
-  .date-controls {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .filter-button-container {
-    flex-direction: column;
-  }
-
-  .btn-filter,
-  #mostrar-calendario {
-    width: 100%;
+      height: 120px;
   }
 }

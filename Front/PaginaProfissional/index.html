@@ -9,16 +9,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="d-flex min-vh-100">
+<body class=" d-flex min-vh-100">
     <div class="sidebar d-flex flex-column p-3 bg-dark text-white">
         <div class="text-center mb-3">
-            <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Dr. Carlos" class="rounded-circle mb-2" width="100">
-            <h2 class="fs-5">Dr. Carlos</h2>
-            <p class="text-muted">Cardiologista</p>
+            <h2 class="fs-5" id="doctor-name">Dra. Gabrielly</h2>
+            <p class="text-muted" id="doctor-specialty">Pediatra</p>
         </div>
         <div class="flex-grow-1">
             <button class="btn btn-sidebar active w-100 mb-2" id="agenda-btn"><i class="bi bi-calendar-week me-2"></i>Agenda</button>
-            <button class="btn btn-sidebar w-100" id="relatorios-btn"><i class="bi bi-file-earmark-text me-2"></i>Relatórios</button>
         </div>
         <button class="btn btn-danger w-100"><i class="bi bi-box-arrow-left me-2"></i>Sair</button>
     </div>
@@ -29,6 +27,14 @@
         </div>
         <div class="bg-white p-3 rounded shadow-sm mb-3">
             <div class="d-flex gap-2 flex-wrap">
+                <div class="flex-grow-1">
+                    <label for="areaSelect" class="form-label fw-medium">Área</label>
+                    <select id="areaSelect" class="form-select">
+                        <option value="infantil" selected>Infantil</option>
+                        <option value="adulto">Adulto</option>
+                        <option value="especial">Especial</option>
+                    </select>
+                </div>
                 <div class="flex-grow-1">
                     <label for="dataInicio" class="form-label fw-medium">Início</label>
                     <input type="date" id="dataInicio" class="form-control">
@@ -71,19 +77,6 @@
                         <button id="cancelar-periodo" class="btn btn-secondary">Cancelar</button>
                         <button id="limpar-periodo" class="btn btn-outline-danger">Limpar</button>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="side-panel" id="relatorios-panel">
-            <div class="side-panel-content">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h2 class="fs-4">Relatórios</h2>
-                    <button class="btn btn-close" id="fechar-relatorios"></button>
-                </div>
-                <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action" id="relatorio-consultas"><i class="bi bi-bar-chart me-2"></i>Relatório de Consultas</a>
-                    <a href="#" class="list-group-item list-group-item-action" id="relatorio-pacientes"><i class="bi bi-people me-2"></i>Relatório de Pacientes</a>
-                    <a href="#" class="list-group-item list-group-item-action" id="relatorio-procedimentos"><i class="bi bi-clipboard me-2"></i>Relatório de Procedimentos</a>
                 </div>
             </div>
         </div>
