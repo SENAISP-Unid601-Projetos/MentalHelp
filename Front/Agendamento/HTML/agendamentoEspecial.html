@@ -8,13 +8,18 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link rel="stylesheet" href="../CSS/styles.css" />
-    <script src="../JS/script.js" defer></script>
-    <script src="../JS/translateEspecial.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="../JS/Especial.js" defer></script>
 </head> 
 <body>
 
     <div class="container-fluid d-flex flex-column flex-md-row vh-100 p-0">
+        <!-- Painel Esquerdo - Calendário -->
         <div class="left-panel d-flex flex-column align-items-center col-md-6 p-4">
+            <a id="voltar" href="../../index.html" class="btn btn-voltar  align-self-start mb-3">
+                <span class="btn-icon">←</span>
+                <span class="btn-text">Voltar</span>
+            </a>
             <h1 id="tipoAtendimento" class="tipo-atendimento text-center">Atendimento selecionado: Especial</h1>
             <div class="perfil text-center mt-3">
                 <img src="../IMG/Mykael.png" alt="Foto de Mykael" class="avatar" />
@@ -29,13 +34,7 @@
                     <button id="proximo" aria-label="Próximo mês">›</button>
                 </div>
                 <div class="dias-semana mt-2 d-grid">
-                    <span id="domingo">DOM</span>
-                    <span id="segunda">SEG</span>
-                    <span id="terca">TER</span>
-                    <span id="quarta">QUA</span>
-                    <span id="quinta">QUI</span>
-                    <span id="sexta">SEX</span>
-                    <span id="sabado">SAB</span>
+                    <span id="domingo">DOM</span><span id="segunda">SEG</span><span id="terca">TER</span><span id="quarta">QUA</span><span id="quinta">QUI</span><span id="sexta">SEX</span><span id="sabado">SAB</span>
                 </div>
                 <div class="dias mt-2 d-grid gap-1" id="dias"></div>
             </div>
@@ -47,6 +46,7 @@
             </div>
         </div>
 
+        <!-- Painel Direito - Horários -->
         <div class="right-panel col-md-6 p-4 d-flex flex-column">
             <div>
               <select id="languageSelectEspecial" class="form-select form-select-sm mt-3 ms-auto" style="width: 120px;">
@@ -57,14 +57,7 @@
                 <h2 id="qualHorarioMelhor" class="text-purple">Qual o horário é melhor?</h2>
                 <p id="fusoHorario" class="subtexto">UTC -3 (Horário de Brasília)</p>
 
-                <div class="horarios d-flex flex-column gap-3">
-                    <button class="btn horario-btn">10:00</button>
-                    <button class="btn horario-btn">11:30</button>
-                    <button class="btn horario-btn">14:30</button>
-                    <button class="btn horario-btn">16:00</button>
-                    <button class="btn horario-btn">17:30</button>
-                    <button class="btn horario-btn">19:00</button>
-                </div>
+                <div class="horarios d-flex flex-column gap-3" id="horarios-container"></div>
             </div>
 
             <div class="mt-auto pt-4">
@@ -74,10 +67,16 @@
                     <p id="horario-selecionado"></p>
                 </div>
 
-                <button id="btnAgendar" class="btn-agendar w-100" disabled>
+                <button id="btnAgendar" class="btn-agendar w-100 mb-2" disabled>
                     <span id="confirmarAgendamentoTexto" class="btn-text">Confirmar Agendamento</span>
                     <span class="btn-icon">✓</span>
                 </button>
+                
+                <button id="btnVerAgendamentos" class="btn-agendar w-100 mb-2">
+                    <span class="btn-text">Meus Agendamentos</span>
+                    <span class="btn-icon">📅</span>
+                </button>
+                
                 <div id="mensagemErro" class="mt-2 text-danger small text-center d-none">
                     Por favor, selecione um dia e um horário para agendar
                 </div>
@@ -85,6 +84,7 @@
         </div>
     </div>
 
+    <!-- Modal de Confirmação -->
     <div class="modal fade" id="modalConfirmacao" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
