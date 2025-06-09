@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,47 +10,51 @@
     <script src="JS/base.js"></script>
     <script src="Principal/JS/home.js" defer></script>
     <script src="Principal/JS/translate.js" defer></script>
-     <script type="module">
-        import loginService from "./Login/src/service/loginService.js";
+    <script type="module">
+      import loginService from "./JS/loginService.js";
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const logoutButton = document.getElementById('btnLogout');
+        logoutButton.addEventListener('click', () => {
+          const token = loginService.getTokenFromURL();
+          loginService.logout(token);
+          window.location.href = "./Login/Login.html";
+        });
 
         const linkMedicoEspecial = document.querySelector('#link-medico-especial');
         const linkMedicoInfantil = document.querySelector('#link-medico-infantil');
         const linkMedicoAdulto = document.querySelector('#link-medico-adulto');
         const token = loginService.getTokenFromURL();
 
-        linkMedicoEspecial.addEventListener('click',(e)=>{
-            e.preventDefault();
-            
-            if(loginService.isValidSession(token)){
-              window.location.href = "./Agendamento/HTML/agendamentoEspecial.html?token=" + encodeURIComponent(token);
-            }else{
-              window.location.href = "./Login/Login.html";
-            }
+        linkMedicoEspecial.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (loginService.isValidSession(token)) {
+            window.location.href = "./Agendamento/HTML/agendamentoEspecial.html?token=" + encodeURIComponent(token);
+          } else {
+            window.location.href = "./Login/Login.html";
+          }
         });
 
-        linkMedicoInfantil.addEventListener('click',(e)=>{
-            e.preventDefault();
-        
-            if(loginService.isValidSession(token)){
-              window.location.href = "./Agendamento/HTML/agendamentoInfantil.html?token=" + encodeURIComponent(token);
-            }else{
-              window.location.href = "./Login/Login.html";
-            }
-        })
+        linkMedicoInfantil.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (loginService.isValidSession(token)) {
+            window.location.href = "./Agendamento/HTML/agendamentoInfantil.html?token=" + encodeURIComponent(token);
+          } else {
+            window.location.href = "./Login/Login.html";
+          }
+        });
 
-         linkMedicoAdulto.addEventListener('click',(e)=>{
-            e.preventDefault();
-        
-            if(loginService.isValidSession(token)){
-              window.location.href = "./Agendamento/HTML/agendamentoAdulto.html?token=" + encodeURIComponent(token);
-            }else{
-              window.location.href = "./Login/Login.html";
-            }
-        })
-     </script>
-    
+        linkMedicoAdulto.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (loginService.isValidSession(token)) {
+            window.location.href = "./Agendamento/HTML/agendamentoAdulto.html?token=" + encodeURIComponent(token);
+          } else {
+            window.location.href = "./Login/Login.html";
+          }
+        });
+      });
+    </script>
 </head>
-
 <body>  
     <div class="position-sticky top-0 z-3 bg-white">
         <div class="container-fluid">
@@ -61,15 +64,19 @@
                         <img src="Recursos/img/Logo.png" alt="Logo" class="w-25" />
                         <span class="text-colorLogo">MentalHelp</span>
                     </div>
-                    <nav class="d-none d-md-flex gap-5">
+                    <nav class="d-none d-md-flex gap-5 align-items-center">
                         <a id="professionals" class="text-decoration-none textHeader nav-link-hover">Profissionais</a>
                         <a id="contact" class="text-decoration-none textHeader nav-link nav-link-hover">Contato</a>
                         <a id="apoioLink" class="text-decoration-none textHeader nav-link nav-link-hover">Apoio</a>
-                        <select id="languageSelect" class=" form-select-sm" style="width: 120px;">
+                        <select id="languageSelect" class="form-select-sm" style="width: 120px;">
                             <option value="pt">Português</option>
                             <option value="en">English</option>
                             <option value="es">Español</option>
                         </select>
+                        <button id="btnLogout" class="btn btn-outline-danger btn-sm">
+                          <span class="btn-text">Sair</span>
+                          <span class="btn-icon"><i class="bi bi-box-arrow-right"></i></span>
+                        </button>
                     </nav>
                 </div>
             </div>
@@ -81,11 +88,9 @@
             style="width: 33.33vw" />
     </div>
 
-    <div class="container-fluid d-flex p-0 position-relative border-bottom  p-5" style="z-index: 2">
+    <div class="container-fluid d-flex p-0 position-relative border-bottom p-5" style="z-index: 2">
         <div class="col-md-8 bg-white d-flex flex-column justify-content-between p-5 pt-0">
-
-
-            <div class="d-flex flex-column align-items-start mt-10 text-start ">
+            <div class="d-flex flex-column align-items-start mt-10 text-start">
                 <h1 class="fw-semibold titulo-principal lh-base" id="tituloPrincipal">
                     Você<br />Não Está<br />Sozinho
                 </h1>
@@ -106,7 +111,7 @@
         </div>
     </div>
 
-    <section id="vemAqui" class="p-5 ">
+    <section id="vemAqui" class="p-5">
         <div class="row align-items-center mb-5">
             <div class="col-md-2 text-center">
                 <img src="Recursos/img/Mykael.png" alt="Dr. Mykael Balbino" class="img-fluid" />
@@ -185,56 +190,4 @@
             </div>
         </div>
 
-        <div class="mb-5 border-2 border-primary pt-3">
-            <h5 class="fw-semibold text-color" id="depressaoTitulo">Depressão Maior (Transtorno Depressivo Maior)</h5>
-            <p class="text-colorParagrafo lh-base" id="depressaoDescricao">
-                A Depressão Maior é um transtorno mental sério que vai muito além da tristeza passageira.
-                Ela se caracteriza por um estado persistente de desânimo, perda de interesse em atividades antes prazerosas,
-                cansaço constante,
-                alterações no sono e no apetite, dificuldades de concentração e, em casos mais graves, pensamentos de
-                inutilidade ou suicídio.
-                Em crianças e adolescentes, pode se manifestar como irritabilidade, isolamento, baixo rendimento escolar e
-                mudanças bruscas de comportamento.
-                O diagnóstico deve ser feito por um profissional, e o tratamento pode envolver psicoterapia, apoio familiar e,
-                em alguns casos, medicação.
-                Reconhecer os sinais precocemente é essencial para garantir uma intervenção eficaz e o bem-estar da pessoa
-                afetada.
-            </p>
-            <div class="ratio ratio-16x9">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/l16BskCD0cM?si=CdGuBt9gWeCgH7OG"
-                    title="YouTube video player" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            </div>
-        </div>
-    </section>
-    <footer id="contatoFooter" class="footer text-white text-center py-4">
-        <div class="container text-colorFooter ">
-            <div class="row align-items-center mb-3">
-                <div class="col-md-4 mb-3 mb-md-0 d-flex align-items-center justify-content-center">
-                    <img src="Recursos/img/Logo.png" alt="Logo" class="w-25">
-                    <strong>MentalHelp</strong>
-                </div>
-                <div class="col-md-4">
-                    <h5 class="fw-bold footerTitle" id="contatoTitulo">Contato Emergencial</h5>
-                </div>
-            </div>
-
-            <div class="row text-center justify-content-center mb-3">
-                <div class="col-md-2 mb-2">
-                    <i class="fab fa-instagram fa-lg me-1"></i> @mentalhelp
-                </div>
-                <div class="col-md-3 mb-2">
-                    <i class="fas fa-envelope fa-lg me-1"></i> MentalHelp@gmail.com
-                </div>
-                <div class="col-md-2 mb-2">
-                    <i class="fas fa-phone fa-lg me-1"></i> 188
-                </div>
-            </div>
-
-            <p class="mb-0 small">© <span id="direitos">Direitos Reservados a MentalHelp 2025. All Rights Reserved.</span></p>
-        </div>
-    </footer>
-</body>
-
-</html>
+        <div class="mb
