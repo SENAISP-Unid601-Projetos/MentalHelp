@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
       'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-
+  ]
   // Inicialização
   gerarCalendario(mesAtual, anoAtual);
   configurarHorarios();
