@@ -19,6 +19,11 @@
   font-family: 'Signika', sans-serif;
 }
 
+.container-fluid  .btn-voltar {
+  color: white;
+  background-color: #a855f7;
+}
+
 body {
   overflow-x: hidden;
   font-family: 'Signika', sans-serif;
@@ -275,6 +280,10 @@ body {
   margin-bottom: 1rem;
   transition: all 0.3s;
 }
+.voltar {
+  background-color: #4b0082;
+}
+
 
 #resumo-agendamento h4 {
   color: #6b21a8;
@@ -328,6 +337,7 @@ body {
 }
 
 /* RESPONSIVO */
+
 @media (max-width: 768px) {
   .container-fluid {
     flex-direction: column;
