@@ -1,294 +1,302 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialize variables
-    let currentMonth = new Date().getMonth();
-    let currentYear = new Date().getFullYear();
-    let selectedDate = null;
-    let selectedTime = null;
-    let appointments = JSON.parse(localStorage.getItem('agendamentosAdulto')) || [];
+import { getTranslations, updatePageContent, setupMyAppointmentsModal } from './translateGeral.js';
 
-    // DOM elements
-    const bookButton = document.getElementById('btnAgendar');
-    const viewAppointmentsButton = document.getElementById('btnVerAgendamentos');
-    const errorMessage = document.getElementById('mensagemErro');
-    const appointmentSummary = document.getElementById('resumo-agendamento');
-    const selectedDateElement = document.getElementById('data-selecionada');
-    const selectedTimeElement = document.getElementById('horario-selecionado');
-    const confirmationModal = new bootstrap.Modal(document.getElementById('modalConfirmacao'));
-    const appointmentDetails = document.getElementById('detalhes-agendamento');
-    const timesContainer = document.querySelector('.horarios');
+document.addEventListener('DOMContentLoaded', function() {
+    let mesAtual = new Date().getMonth();
+    let anoAtual = new Date().getFullYear();
+    let dataSelecionada = null;
+    let horarioSelecionado = null;
+    let agendamentos = JSON.parse(localStorage.getItem('agendamentosAdulto')) || [];
 
-    let appointmentsModal = null;
-    let appointmentsModalElement = null;
+    const languageSelectAdulto = document.getElementById("languageSelectAdulto");
+    const btnAgendar = document.getElementById('btnAgendar');
+    const mensagemErro = document.getElementById('mensagemErro');
+    const resumoAgendamento = document.getElementById('resumo-agendamento');
+    const dataSelecionadaElement = document.getElementById('data-selecionada');
+    const horarioSelecionadoElement = document.getElementById('horario-selecionado');
+    const modalConfirmacao = new bootstrap.Modal(document.getElementById('modalConfirmacao'));
+    const detalhesAgendamento = document.getElementById('detalhes-agendamento');
+    const diasContainer = document.getElementById('dias');
+    const tituloMes = document.getElementById('mes');
+    const btnMesAnterior = document.getElementById('anterior');
+    const btnProximoMes = document.getElementById('proximo');
+    const botoesHorario = document.querySelectorAll('.horario-btn');
+    const horariosContainer = document.querySelector('.horarios');
 
-    // Initialize
-    generateCalendar(currentMonth, currentYear);
-    setupTimeSelection();
-    setupNavigationButtons();
-    updateAvailableTimes();
+    const nomesMeses = [
+        'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    ];
 
-    function generateCalendar(month, year) {
-        const daysContainer = document.getElementById('dias');
-        const monthTitle = document.getElementById('mes');
-        if (!daysContainer || !monthTitle) {
-            console.error('Required DOM elements not found');
-            return;
+    function inicializar() {
+        const savedLang = localStorage.getItem("langAdulto") || 'pt';
+        if (languageSelectAdulto) {
+            languageSelectAdulto.value = savedLang;
+            languageSelectAdulto.addEventListener("change", function() {
+                const lang = this.value;
+                localStorage.setItem("langAdulto", lang);
+                updatePageContent(lang, getFormattedSelectionForTranslation());
+                gerarCalendario(mesAtual, anoAtual);
+                atualizarResumoAgendamento();
+            });
         }
+        
+        updatePageContent(savedLang, getFormattedSelectionForTranslation());
+        gerarCalendario(mesAtual, anoAtual);
+        configurarHorarios();
+        configurarBotoesNavegacao();
+        atualizarListaHorariosDisponiveis();
+        verificarSelecaoCompleta();
+        setupMyAppointmentsModal(agendamentos);
 
-        daysContainer.innerHTML = '';
-        const firstDay = new Date(year, month, 1).getDay();
-        const totalDays = new Date(year, month + 1, 0).getDate();
-        const today = new Date(new Date().setHours(0, 0, 0, 0));
+        document.addEventListener('agendamentosAtualizados', () => {
+            agendamentos = JSON.parse(localStorage.getItem('agendamentosAdulto')) || [];
+            atualizarListaHorariosDisponiveis();
+        });
+    }
+
+    function gerarCalendario(mes, ano) {
+        diasContainer.innerHTML = '';
+        const primeiroDiaDoMes = new Date(ano, mes, 1).getDay();
+        const totalDiasNoMes = new Date(ano, mes + 1, 0).getDate();
+        const hoje = new Date();
+        const dataDeHoje = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+
         const lang = localStorage.getItem('langAdulto') || 'pt';
-        const t = translationsAdulto[lang] || translationsAdulto['pt'];
-
-        const monthNames = [
+        const t = getTranslations(lang);
+        const translatedMonthNames = [
             t.janeiro, t.fevereiro, t.marco, t.abril, t.maio, t.junho,
             t.julho, t.agosto, t.setembro, t.outubro, t.novembro, t.dezembro
         ];
-        monthTitle.textContent = `${monthNames[month]} ${year}`;
+        tituloMes.textContent = `${translatedMonthNames[mes]} ${ano}`;
 
-        for (let i = 0; i < firstDay; i++) {
-            daysContainer.appendChild(document.createElement('div'));
+        for (let i = 0; i < primeiroDiaDoMes; i++) {
+            diasContainer.appendChild(document.createElement('div'));
         }
 
-        for (let day = 1; day <= totalDays; day++) {
-            const button = document.createElement('button');
-            button.textContent = day;
-            button.tabIndex = 0;
+        for (let dia = 1; dia <= totalDiasNoMes; dia++) {
+            const botao = document.createElement('button');
+            botao.textContent = dia;
+            botao.tabIndex = 0;
 
-            const currentDate = new Date(year, month, day);
-            if (currentDate < today) {
-                button.disabled = true;
-                button.classList.add('text-muted');
-            } else {
-                button.addEventListener('click', () => selectDay(button, year, month, day));
-                button.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        selectDay(button, year, month, day);
-                    }
-                });
+            const dataAtual = new Date(ano, mes, dia);
+
+            if (dataAtual < dataDeHoje) {
+                botao.disabled = true;
+                botao.classList.add('text-muted');
             }
 
-            daysContainer.appendChild(button);
+            if (dataSelecionada && dataAtual.toDateString() === dataSelecionada.toDateString()) {
+                botao.classList.add('ativo');
+            }
+
+            botao.addEventListener('click', () => selecionarDia(botao, ano, mes, dia));
+            botao.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    selecionarDia(botao, ano, mes, dia);
+                }
+            });
+
+            diasContainer.appendChild(botao);
         }
     }
 
-    function selectDay(button, year, month, day) {
-        document.querySelectorAll('.dias button').forEach(btn => btn.classList.remove('ativo'));
-        button.classList.add('ativo');
-        selectedDate = new Date(year, month, day);
-        console.log('Selected Date:', selectedDate.toISOString());
-        selectedTime = null;
+    function selecionarDia(botao, ano, mes, dia) {
+        document.querySelectorAll('.dias button').forEach(btn => {
+            btn.classList.remove('ativo');
+        });
+
+        botao.classList.add('ativo');
+        dataSelecionada = new Date(ano, mes, dia);
+        dataSelecionada.setHours(0, 0, 0, 0);
+        horarioSelecionado = null;
         document.querySelectorAll('.horario-btn').forEach(btn => btn.classList.remove('ativo'));
-        updateAvailableTimes();
-        updateAppointmentSummary();
-        checkSelectionComplete();
+        atualizarListaHorariosDisponiveis();
+        atualizarResumoAgendamento();
+        verificarSelecaoCompleta();
     }
 
-    function setupTimeSelection() {
-        timesContainer.addEventListener('click', (e) => {
+    function configurarHorarios() {
+        horariosContainer.addEventListener('click', (e) => {
             if (e.target.classList.contains('horario-btn')) {
-                document.querySelectorAll('.horario-btn').forEach(btn => btn.classList.remove('ativo'));
-                e.target.classList.add('ativo');
-                selectedTime = e.target.textContent;
-                console.log('Selected Time:', selectedTime);
-                updateAppointmentSummary();
-                checkSelectionComplete();
+                selecionarHorario(e.target);
             }
         });
     }
 
-    function updateAvailableTimes() {
-        const allTimes = ['10:00', '11:30', '14:30', '16:00', '17:30', '19:00'];
-        const bookedTimes = selectedDate
-            ? appointments
-                .filter(ag => new Date(ag.data).toDateString() === selectedDate.toDateString())
-                .map(ag => ag.horario)
-            : [];
-
-        const availableTimes = allTimes.filter(time => !bookedTimes.includes(time));
-        timesContainer.innerHTML = availableTimes.map(time => `
-            <button class="btn horario-btn">${time}</button>
-        `).join('');
-    }
-
-    function setupNavigationButtons() {
-        document.getElementById('anterior').addEventListener('click', () => {
-            currentMonth--;
-            if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
-            }
-            generateCalendar(currentMonth, currentYear);
+    function selecionarHorario(botao) {
+        document.querySelectorAll('.horario-btn').forEach(btn => {
+            btn.classList.remove('ativo');
         });
 
-        document.getElementById('proximo').addEventListener('click', () => {
-            currentMonth++;
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            }
-            generateCalendar(currentMonth, currentYear);
-        });
+        botao.classList.add('ativo');
+        horarioSelecionado = botao.textContent;
+        atualizarResumoAgendamento();
+        verificarSelecaoCompleta();
     }
 
-    function updateAppointmentSummary() {
-        const lang = localStorage.getItem('langAdulto') || 'pt';
-        const t = translationsAdulto[lang] || translationsAdulto['pt'];
+    function atualizarListaHorariosDisponiveis() {
+        const todosHorarios = ['10:00', '11:30', '14:30', '16:00', '17:30', '19:00'];
+        let horariosAgendados = [];
 
-        if (selectedDate) {
-            const options = { weekday: 'long', day: 'numeric', month: 'long' };
-            const formattedDate = selectedDate.toLocaleDateString(lang === 'pt' ? 'pt-BR' : lang === 'en' ? 'en-US' : 'es-ES', options);
-            selectedDateElement.textContent = `📅 ${t.dataSelecionada} ${formattedDate}`;
-            appointmentSummary.classList.remove('d-none');
-        } else {
-            appointmentSummary.classList.add('d-none');
+        agendamentos = JSON.parse(localStorage.getItem('agendamentosAdulto')) || [];
+
+        if (dataSelecionada) {
+            horariosAgendados = agendamentos
+                .filter(ag => {
+                    const agendamentoData = new Date(ag.data);
+                    return agendamentoData.getFullYear() === dataSelecionada.getFullYear() &&
+                           agendamentoData.getMonth() === dataSelecionada.getMonth() &&
+                           agendamentoData.getDate() === dataSelecionada.getDate();
+                })
+                .map(ag => ag.horario);
         }
 
-        selectedTimeElement.textContent = selectedTime
-            ? `⏰ ${t.horarioSelecionado} ${selectedTime}`
-            : '';
+        const horariosDisponiveis = todosHorarios.filter(h => !horariosAgendados.includes(h));
+
+        horariosContainer.innerHTML = '';
+        horariosDisponiveis.forEach(horario => {
+            const botao = document.createElement('button');
+            botao.className = 'btn horario-btn';
+            botao.textContent = horario;
+            horariosContainer.appendChild(botao);
+        });
     }
 
-    function checkSelectionComplete() {
-        bookButton.disabled = !(selectedDate && selectedTime);
-        errorMessage.classList.add('d-none');
+    function configurarBotoesNavegacao() {
+        btnMesAnterior.addEventListener('click', () => {
+            mesAtual--;
+            if (mesAtual < 0) {
+                mesAtual = 11;
+                anoAtual--;
+            }
+            gerarCalendario(mesAtual, anoAtual);
+            resetarSelecoesAposMudancaDeMes();
+        });
+
+        btnProximoMes.addEventListener('click', () => {
+            mesAtual++;
+            if (mesAtual > 11) {
+                mesAtual = 0;
+                anoAtual++;
+            }
+            gerarCalendario(mesAtual, anoAtual);
+            resetarSelecoesAposMudancaDeMes();
+        });
     }
 
-    bookButton.addEventListener('click', async () => {
+    function resetarSelecoesAposMudancaDeMes() {
+        dataSelecionada = null;
+        horarioSelecionado = null;
+        document.querySelectorAll('.dias button.ativo').forEach(btn => btn.classList.remove('ativo'));
+        document.querySelectorAll('.horario-btn.ativo').forEach(btn => btn.classList.remove('ativo'));
+        atualizarResumoAgendamento();
+        atualizarListaHorariosDisponiveis();
+        verificarSelecaoCompleta();
+    }
+
+    function getFormattedSelectionForTranslation() {
         const lang = localStorage.getItem('langAdulto') || 'pt';
-        const t = translationsAdulto[lang] || translationsAdulto['pt'];
+        let formattedDate = null;
+        if (dataSelecionada) {
+            const options = { weekday: 'long', day: 'numeric', month: 'long' };
+            formattedDate = {
+                date: dataSelecionada.toLocaleDateString(lang === 'pt' ? 'pt-BR' : lang === 'en' ? 'en-US' : 'es-ES', options),
+                fullDate: dataSelecionada.toLocaleDateString(lang === 'pt' ? 'pt-BR' : lang === 'en' ? 'en-US' : 'es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+            };
+        }
+        return {
+            dataSelecionadaFormatada: formattedDate,
+            horarioSelecionadoString: horarioSelecionado
+        };
+    }
 
-        if (!selectedDate || !selectedTime) {
-            errorMessage.textContent = t.mensagemErro;
-            errorMessage.classList.remove('d-none');
-            console.error('Missing date or time:', { selectedDate, selectedTime });
+    function atualizarResumoAgendamento() {
+        const { dataSelecionadaFormatada, horarioSelecionadoString } = getFormattedSelectionForTranslation();
+        updatePageContent(localStorage.getItem('langAdulto') || 'pt', { dataSelecionadaFormatada, horarioSelecionadoString });
+    }
+
+    function verificarSelecaoCompleta() {
+        if (dataSelecionada && horarioSelecionado) {
+            btnAgendar.disabled = false;
+            mensagemErro.classList.add('d-none');
+        } else {
+            btnAgendar.disabled = true;
+        }
+    }
+
+    btnAgendar.addEventListener('click', async function() {
+        if (!dataSelecionada || !horarioSelecionado) {
+            const t = getTranslations(localStorage.getItem('langAdulto') || 'pt');
+            mensagemErro.textContent = t.selecioneDiaHorario;
+            mensagemErro.classList.remove('d-none');
             return;
         }
 
-        // Create appointment datetime
-        const appointmentDate = new Date(selectedDate);
-        const [hours, minutes] = selectedTime.split(':').map(Number);
-        appointmentDate.setHours(hours, minutes, 0, 0);
-        const appointmentISO = appointmentDate.toISOString();
-        console.log('Appointment ISO Date:', appointmentISO);
+        const [horas, minutos] = horarioSelecionado.split(':').map(Number);
 
-        // Save to local storage
-        const newAppointment = {
-            data: appointmentISO,
-            horario: selectedTime,
-            profissional: "Vagner"
-        };
-        appointments.push(newAppointment);
-        localStorage.setItem('agendamentosAdulto', JSON.stringify(appointments));
+        const dataEHoraCombinadas = new Date(
+            dataSelecionada.getFullYear(),
+            dataSelecionada.getMonth(),
+            dataSelecionada.getDate(),
+            horas,
+            minutos
+        );
 
-        // Update confirmation modal
+        const t = getTranslations(localStorage.getItem('langAdulto') || 'pt');
         const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-        const formattedDate = appointmentDate.toLocaleDateString(lang === 'pt' ? 'pt-BR' : lang === 'en' ? 'en-US' : 'es-ES', options);
-        appointmentDetails.innerHTML = t.detalhesAgendamento
-            .replace("{0}", "Vagner")
-            .replace("{1}", formattedDate)
-            .replace("{2}", selectedTime);
+        const dataFormatada = dataEHoraCombinadas.toLocaleDateString(localStorage.getItem('langAdulto') === 'pt' ? 'pt-BR' : localStorage.getItem('langAdulto') === 'en' ? 'en-US' : 'es-ES', options);
 
-        // Prepare API request
-        const apiData = {
-            data: appointmentISO,
+        detalhesAgendamento.innerHTML = t.detalhesAgendamento
+            .replace("{0}", "Vagner")
+            .replace("{1}", dataFormatada)
+            .replace("{2}", horarioSelecionado);
+
+        const dadosConsulta = {
+            data: dataEHoraCombinadas.toISOString(),
             valorConsulta: 100,
             tipoConsulta: "ADULTO",
             idPaciente: 1,
             idProfissional: 1
         };
-        console.log('API Request Data:', apiData);
 
         try {
-            const response = await axios.post('http://10.110.12.59:8080/consultas/post', apiData);
-            console.log('API Response:', response.data);
-            confirmationModal.show();
+            const response = await axios.post('http://192.168.56.1:8080/consultas/post', dadosConsulta);
+
+            if (response.status === 200 || response.status === 201) {
+                const novoAgendamento = {
+                    data: dataEHoraCombinadas.toISOString(),
+                    horario: horarioSelecionado,
+                    profissional: "Vagner"
+                };
+                agendamentos.push(novoAgendamento);
+                localStorage.setItem('agendamentosAdulto', JSON.stringify(agendamentos));
+
+                modalConfirmacao.show();
+
+                dataSelecionada = null;
+                horarioSelecionado = null;
+                document.querySelectorAll('.ativo').forEach(el => el.classList.remove('ativo'));
+                btnAgendar.disabled = true;
+                resumoAgendamento.classList.add('d-none');
+                gerarCalendario(mesAtual, anoAtual);
+                atualizarListaHorariosDisponiveis();
+                verificarSelecaoCompleta();
+            } else {
+                mensagemErro.classList.remove('d-none');
+                mensagemErro.textContent = `${t.erroAgendamento}: ${response.data.message || 'Ocorreu um erro desconhecido.'}`;
+            }
+
         } catch (error) {
-            console.error('Axios Error:', error.message, error.response?.data);
-            errorMessage.textContent = t.erroAgendamento || 'Erro ao agendar. Tente novamente.';
-            errorMessage.classList.remove('d-none');
-            // Optionally revert local storage change if API fails
-            appointments.pop();
-            localStorage.setItem('agendamentosAdulto', JSON.stringify(appointments));
-            return;
+            mensagemErro.classList.remove('d-none');
+            if (error.response) {
+                mensagemErro.textContent = `${t.erroServidor} ${error.response.data.message || 'Falha no agendamento.'}`;
+            } else if (error.request) {
+                mensagemErro.textContent = `${t.semResposta} Verifique sua conexão ou tente mais tarde.`;
+            } else {
+                mensagemErro.textContent = `${t.erroConfig} Erro inesperado ao preparar o agendamento.`;
+            }
         }
-
-        // Reset UI
-        selectedDate = null;
-        selectedTime = null;
-        document.querySelectorAll('.ativo').forEach(el => el.classList.remove('ativo'));
-        bookButton.disabled = true;
-        appointmentSummary.classList.add('d-none');
-        updateAvailableTimes();
     });
 
-    function updateAppointmentsModal() {
-        const lang = localStorage.getItem('langAdulto') || 'pt';
-        const t = translationsAdulto[lang] || translationsAdulto['pt'];
-        const list = appointmentsModalElement.querySelector('.agendamentos-lista');
-
-        list.innerHTML = appointments.length === 0
-            ? `<p>${t.semAgendamentos}</p>`
-            : appointments.map((ag, index) => {
-                const date = new Date(ag.data);
-                const formattedDate = date.toLocaleDateString(lang === 'pt' ? 'pt-BR' : lang === 'en' ? 'en-US' : 'es-ES', {
-                    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
-                });
-                return `
-                    <div class="agendamento-item mb-3 p-3 border rounded">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong>${formattedDate}</strong><br>
-                                ⏰ ${t.horarioAgendamento} ${ag.horario} - ${t.profissionalAgendamento} ${ag.profissional}
-                            </div>
-                            <button class="btn btn-danger btn-sm btn-excluir" data-index="${index}">
-                                <i class="bi bi-trash"></i> ${t.cancelarAgendamento}
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-        list.querySelectorAll('.btn-excluir').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const index = btn.getAttribute('data-index');
-                appointments.splice(index, 1);
-                localStorage.setItem('agendamentosAdulto', JSON.stringify(appointments));
-                updateAvailableTimes();
-                updateAppointmentsModal();
-            });
-        });
-    }
-
-    viewAppointmentsButton.addEventListener('click', () => {
-        const lang = localStorage.getItem('langAdulto') || 'pt';
-        const t = translationsAdulto[lang] || translationsAdulto['pt'];
-
-        if (!appointmentsModal) {
-            appointmentsModalElement = document.createElement('div');
-            appointmentsModalElement.innerHTML = `
-                <div class="modal fade" id="modalAgendamentos" tabindex="-1">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">${t.tituloMeusAgendamentos}</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="agendamentos-lista"></div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">${t.fecharModal}</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            appointmentsModal = new bootstrap.Modal(appointmentsModalElement.querySelector('.modal'));
-        }
-
-        updateAppointmentsModal();
-        appointmentsModal.show();
-    });
+    inicializar();
 });
