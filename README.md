@@ -18,12 +18,6 @@ Para rodar o projeto localmente, siga os passos abaixo:
 4. 💬 Insira o seguinte código:
 
    ```
-   -Dspring.profiles.active=dev
-   ```
-
----
-
-## 🧪 Ambiente de Homologação
 
 Para configurar e rodar o ambiente de homologação:
 
